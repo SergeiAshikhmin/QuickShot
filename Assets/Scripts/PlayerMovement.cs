@@ -8,6 +8,11 @@ public class PlayerMovement : MonoBehaviour
     [Header("Movement")] 
     public float speed = 5f;
 
+    [Header("Advanced Movement")]
+    public float acceleration = 20f;
+    public float deceleration = 40f;
+    public float maxSpeed = 7f;
+
     public float jumpForce = 10f;
     
     private Rigidbody2D rb;
@@ -39,7 +44,16 @@ public class PlayerMovement : MonoBehaviour
     {
         // Check if the player is grounded
         isGrounded = Physics2D.OverlapCircle(groundCheck.position, checkRadius, groundLayer);
-        // Apply velocity to the RigidBody2D
-        rb.velocity = new Vector2(moveInput * speed, rb.velocity.y);
+
+        float targetSpeed = moveInput * maxSpeed;
+        float speedDiff = targetSpeed - rb.velocity.x;
+        float accelRate = (Mathf.Abs(targetSpeed) > 0.01f) ? acceleration : deceleration;
+        float movement = accelRate * speedDiff;
+
+        rb.AddForce(Vector2.right * movement);
+
+        // Limit speed
+        if (Mathf.Abs(rb.velocity.x) > maxSpeed)
+            rb.velocity = new Vector2(Mathf.Sign(rb.velocity.x) * maxSpeed, rb.velocity.y);
     }
 }
