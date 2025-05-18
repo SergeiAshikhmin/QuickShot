@@ -34,6 +34,8 @@ public class PlayerMovement : MonoBehaviour
     private bool isTouchingWall;
     public float yOffset = 0.65f;
 
+    private bool jumpRequested;
+
 
     // Start is called before the first frame update
     void Start()
@@ -54,8 +56,36 @@ public class PlayerMovement : MonoBehaviour
         moveInput = Input.GetAxis("Horizontal");
 
         if (Input.GetButtonDown("Jump") && coyoteTimeCounter > 0)
-            rb.velocity = new Vector2(rb.velocity.x, jumpForce);
+            jumpRequested = true;
+        
+        // Wall check using two raycasts (upper and lower)
+        float xOffset = 0.5f * Mathf.Sign(moveInput);
+        Vector2 rayOriginTop = transform.position + new Vector3(xOffset, yOffset);
+        Vector2 rayOriginBottom = transform.position + new Vector3(xOffset, -yOffset);
+        Vector2 rayDirection = Vector2.right * Mathf.Sign(moveInput);
+        
+        bool hitTop = Physics2D.Raycast(rayOriginTop, rayDirection, 0.1f, groundLayer);
+        bool hitBottom = Physics2D.Raycast(rayOriginBottom, rayDirection, 0.1f, groundLayer);
+        
+        isTouchingWall = hitTop || hitBottom;
+        
+        Debug.DrawRay(rayOriginTop, rayDirection * 0.1f, Color.red);
+        Debug.DrawRay(rayOriginBottom, rayDirection * 0.1f, Color.red);
+    }
 
+    void FixedUpdate()
+    {
+        if (jumpRequested) {
+            rb.velocity = new Vector2(rb.velocity.x, jumpForce);
+            jumpRequested = false;
+        }
+        
+        // Directly adjust horizontal velocity toward targetSpeed
+        float targetSpeed = moveInput * maxSpeed;
+        float rate = (Mathf.Abs(moveInput) > 0.01f ? acceleration : deceleration);
+        float newX = Mathf.MoveTowards(rb.velocity.x, targetSpeed, rate * Time.fixedDeltaTime);
+        rb.velocity = new Vector2(newX, rb.velocity.y);
+        
         // Apply extra gravity for better jump feel, even on the way up
         if (rb.velocity.y < 0)
         {
@@ -66,36 +96,10 @@ public class PlayerMovement : MonoBehaviour
             rb.velocity += Vector2.up * (Physics2D.gravity.y * (fallMultiplier - 1) * lowJumpMultiplier * Time.deltaTime);
         }
     }
-
-    void FixedUpdate()
+    
+    void OnGUI()
     {
-        // Check if the player is grounded
-        // isGrounded = Physics2D.OverlapCircle(groundCheck.position, checkRadius, groundLayer);
-
-        float targetSpeed = moveInput * maxSpeed;
-        float speedDiff = targetSpeed - rb.velocity.x;
-        float accelRate = (Mathf.Abs(targetSpeed) > 0.01f) ? acceleration : deceleration;
-        float movement = accelRate * speedDiff;
-
-        // Wall check using two raycasts (upper and lower)
-        float xOffset = 0.5f * Mathf.Sign(moveInput);
-        Vector2 rayOriginTop = transform.position + new Vector3(xOffset, yOffset);
-        Vector2 rayOriginBottom = transform.position + new Vector3(xOffset, -yOffset);
-        Vector2 rayDirection = Vector2.right * Mathf.Sign(moveInput);
-
-        bool hitTop = Physics2D.Raycast(rayOriginTop, rayDirection, 0.1f, groundLayer);
-        bool hitBottom = Physics2D.Raycast(rayOriginBottom, rayDirection, 0.1f, groundLayer);
-
-        isTouchingWall = hitTop || hitBottom;
-
-        Debug.DrawRay(rayOriginTop, rayDirection * 0.1f, Color.red);
-        Debug.DrawRay(rayOriginBottom, rayDirection * 0.1f, Color.red);
-
-        if (!isTouchingWall)
-            rb.AddForce(Vector2.right * movement);
-
-        // Limit speed
-        if (Mathf.Abs(rb.velocity.x) > maxSpeed)
-            rb.velocity = new Vector2(Mathf.Sign(rb.velocity.x) * maxSpeed, rb.velocity.y);
+        GUI.Label(new Rect(10, 10, 300, 20), $"Velocity: {rb.velocity}");
+        GUI.Label(new Rect(10, 30, 300, 20), $"Speed: {rb.velocity.magnitude:F2}");
     }
 }
