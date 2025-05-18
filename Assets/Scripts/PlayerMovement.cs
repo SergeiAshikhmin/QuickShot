@@ -27,6 +27,11 @@ public class PlayerMovement : MonoBehaviour
     public float checkRadius = 0.2f;
     public LayerMask groundLayer;
     
+    [Header("Wall Check")]
+    public Vector2 wallBoxSize = new Vector2(0.1f, 1f); // Width x Height
+    private bool isTouchingWall;
+    
+    
     // Start is called before the first frame update
     void Start()
     {
@@ -62,8 +67,23 @@ public class PlayerMovement : MonoBehaviour
         float speedDiff = targetSpeed - rb.velocity.x;
         float accelRate = (Mathf.Abs(targetSpeed) > 0.01f) ? acceleration : deceleration;
         float movement = accelRate * speedDiff;
+        
+        // Wall check using two raycasts (upper and lower)
+        float xOffset = 0.5f * Mathf.Sign(moveInput);
+        Vector2 rayOriginTop = transform.position + new Vector3(xOffset, 0.4f);
+        Vector2 rayOriginBottom = transform.position + new Vector3(xOffset, -0.4f);
+        Vector2 rayDirection = Vector2.right * Mathf.Sign(moveInput);
+        
+        bool hitTop = Physics2D.Raycast(rayOriginTop, rayDirection, 0.1f, groundLayer);
+        bool hitBottom = Physics2D.Raycast(rayOriginBottom, rayDirection, 0.1f, groundLayer);
+        
+        isTouchingWall = hitTop || hitBottom;
+        
+        Debug.DrawRay(rayOriginTop, rayDirection * 0.1f, Color.red);
+        Debug.DrawRay(rayOriginBottom, rayDirection * 0.1f, Color.red);
 
-        rb.AddForce(Vector2.right * movement);
+        if (!isTouchingWall)
+            rb.AddForce(Vector2.right * movement);
 
         // Limit speed
         if (Mathf.Abs(rb.velocity.x) > maxSpeed)
