@@ -188,7 +188,7 @@ Rigidbody2D:
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
-  m_Constraints: 0
+  m_Constraints: 4
 --- !u!212 &215337967
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -273,7 +273,9 @@ MonoBehaviour:
   acceleration: 30
   deceleration: 100
   maxSpeed: 7
-  jumpForce: 8
+  fallMultiplier: 2.5
+  lowJumpMultiplier: 1.75
+  jumpForce: 10
   groundCheck: {fileID: 870437453}
   checkRadius: 0.2
   groundLayer:

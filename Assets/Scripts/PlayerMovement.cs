@@ -13,6 +13,9 @@ public class PlayerMovement : MonoBehaviour
     public float deceleration = 40f;
     public float maxSpeed = 7f;
 
+    [Header("Jump Tuning")]
+    public float fallMultiplier = 2.5f;
+    public float lowJumpMultiplier = 2f;
     public float jumpForce = 10f;
     
     private Rigidbody2D rb;
@@ -38,6 +41,16 @@ public class PlayerMovement : MonoBehaviour
         
         if (Input.GetButtonDown("Jump") && isGrounded)
             rb.velocity = new Vector2(rb.velocity.x, jumpForce);
+        
+        // Apply extra gravity for better jump feel, even on the way up
+        if (rb.velocity.y < 0)
+        {
+            rb.velocity += Vector2.up * (Physics2D.gravity.y * (fallMultiplier - 1) * Time.deltaTime);
+        }
+        else if (rb.velocity.y > 0)
+        {
+            rb.velocity += Vector2.up * (Physics2D.gravity.y * (fallMultiplier - 1) * lowJumpMultiplier * Time.deltaTime);
+        }
     }
 
     void FixedUpdate()
