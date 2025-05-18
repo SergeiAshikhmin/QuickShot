@@ -5,7 +5,7 @@ using UnityEngine;
 public class PlayerMovement : MonoBehaviour
 {
 
-    [Header("Movement")] 
+    [Header("Movement")]
     public float speed = 5f;
 
     [Header("Advanced Movement")]
@@ -17,21 +17,23 @@ public class PlayerMovement : MonoBehaviour
     public float fallMultiplier = 2.5f;
     public float lowJumpMultiplier = 2f;
     public float jumpForce = 10f;
-    
+
     private Rigidbody2D rb;
     private float moveInput;
     private bool isGrounded;
 
-    [Header("Ground Check")] 
+    [Header("Ground Check")]
     public Transform groundCheck;
     public float checkRadius = 0.2f;
     public LayerMask groundLayer;
-    
+    public float coyoteTime = 0.1f;
+    private float coyoteTimeCounter;
+
     [Header("Wall Check")]
     public Vector2 wallBoxSize = new Vector2(0.1f, 1f); // Width x Height
     private bool isTouchingWall;
-    
-    
+
+
     // Start is called before the first frame update
     void Start()
     {
@@ -41,12 +43,18 @@ public class PlayerMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        // Check if the player is grounded
+        isGrounded = Physics2D.OverlapCircle(groundCheck.position, checkRadius, groundLayer);
+
+        if (isGrounded) coyoteTimeCounter = coyoteTime;
+        else coyoteTimeCounter -= Time.deltaTime;
+
         // Get horizontal input (-1 for left, 1 for right)
         moveInput = Input.GetAxis("Horizontal");
-        
-        if (Input.GetButtonDown("Jump") && isGrounded)
+
+        if (Input.GetButtonDown("Jump") && coyoteTimeCounter > 0)
             rb.velocity = new Vector2(rb.velocity.x, jumpForce);
-        
+
         // Apply extra gravity for better jump feel, even on the way up
         if (rb.velocity.y < 0)
         {
@@ -61,24 +69,24 @@ public class PlayerMovement : MonoBehaviour
     void FixedUpdate()
     {
         // Check if the player is grounded
-        isGrounded = Physics2D.OverlapCircle(groundCheck.position, checkRadius, groundLayer);
+        // isGrounded = Physics2D.OverlapCircle(groundCheck.position, checkRadius, groundLayer);
 
         float targetSpeed = moveInput * maxSpeed;
         float speedDiff = targetSpeed - rb.velocity.x;
         float accelRate = (Mathf.Abs(targetSpeed) > 0.01f) ? acceleration : deceleration;
         float movement = accelRate * speedDiff;
-        
+
         // Wall check using two raycasts (upper and lower)
         float xOffset = 0.5f * Mathf.Sign(moveInput);
         Vector2 rayOriginTop = transform.position + new Vector3(xOffset, 0.4f);
         Vector2 rayOriginBottom = transform.position + new Vector3(xOffset, -0.4f);
         Vector2 rayDirection = Vector2.right * Mathf.Sign(moveInput);
-        
+
         bool hitTop = Physics2D.Raycast(rayOriginTop, rayDirection, 0.1f, groundLayer);
         bool hitBottom = Physics2D.Raycast(rayOriginBottom, rayDirection, 0.1f, groundLayer);
-        
+
         isTouchingWall = hitTop || hitBottom;
-        
+
         Debug.DrawRay(rayOriginTop, rayDirection * 0.1f, Color.red);
         Debug.DrawRay(rayOriginBottom, rayDirection * 0.1f, Color.red);
 
@@ -88,5 +96,21 @@ public class PlayerMovement : MonoBehaviour
         // Limit speed
         if (Mathf.Abs(rb.velocity.x) > maxSpeed)
             rb.velocity = new Vector2(Mathf.Sign(rb.velocity.x) * maxSpeed, rb.velocity.y);
+    }
+
+    void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (((1 << collision.gameObject.layer) & groundLayer) != 0)
+        {
+            isTouchingWall = true;
+        }
+    }
+    
+    void OnCollisionExit2D(Collision2D collision)
+    {
+        if (((1 << collision.gameObject.layer) & groundLayer) != 0)
+        {
+            isTouchingWall = false;
+        }
     }
 }
