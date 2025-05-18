@@ -80,9 +80,22 @@ public class PlayerMovement : MonoBehaviour
             jumpRequested = false;
         }
         
-        // Directly adjust horizontal velocity toward targetSpeed
         float targetSpeed = moveInput * maxSpeed;
-        float rate = (Mathf.Abs(moveInput) > 0.01f ? acceleration : deceleration);
+
+        // Use deceleration when input opposes current velocity, otherwise use acceleration/braking rates
+        float rate;
+        if (Mathf.Abs(moveInput) > 0.01f) {
+            // If changing direction, brake harder
+            if (rb.velocity.x != 0f && Mathf.Sign(moveInput) != Mathf.Sign(rb.velocity.x))
+                rate = deceleration;
+            else
+                rate = acceleration;
+        } else {
+            // No input: decelerate
+            rate = deceleration;
+        }
+
+        // Move velocity towards target speed
         float newX = Mathf.MoveTowards(rb.velocity.x, targetSpeed, rate * Time.fixedDeltaTime);
         rb.velocity = new Vector2(newX, rb.velocity.y);
         
