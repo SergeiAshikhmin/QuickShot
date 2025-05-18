@@ -32,6 +32,7 @@ public class PlayerMovement : MonoBehaviour
     [Header("Wall Check")]
     public Vector2 wallBoxSize = new Vector2(0.1f, 1f); // Width x Height
     private bool isTouchingWall;
+    public float yOffset = 0.65f;
 
 
     // Start is called before the first frame update
@@ -78,8 +79,8 @@ public class PlayerMovement : MonoBehaviour
 
         // Wall check using two raycasts (upper and lower)
         float xOffset = 0.5f * Mathf.Sign(moveInput);
-        Vector2 rayOriginTop = transform.position + new Vector3(xOffset, 0.4f);
-        Vector2 rayOriginBottom = transform.position + new Vector3(xOffset, -0.4f);
+        Vector2 rayOriginTop = transform.position + new Vector3(xOffset, yOffset);
+        Vector2 rayOriginBottom = transform.position + new Vector3(xOffset, -yOffset);
         Vector2 rayDirection = Vector2.right * Mathf.Sign(moveInput);
 
         bool hitTop = Physics2D.Raycast(rayOriginTop, rayDirection, 0.1f, groundLayer);
