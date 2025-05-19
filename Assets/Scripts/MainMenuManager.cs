@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement; // Needed for scene loading
 
 public class MainMenuManager : MonoBehaviour
 {
@@ -6,10 +7,9 @@ public class MainMenuManager : MonoBehaviour
     public GameObject levelSelectPanel;
     public GameObject optionsPanel;
 
-
     void Start()
     {
-        ShowMainMenu(); 
+        ShowMainMenu();
     }
 
     public void ShowMainMenu()
@@ -37,5 +37,21 @@ public class MainMenuManager : MonoBehaviour
     {
         Application.Quit();
         Debug.Log("Quit called");
+    }
+
+    // Load different scenes
+    public void StartFuture()
+    {
+        SceneManager.LoadScene("Future");
+    }
+
+    public void StartTutorial()
+    {
+        SceneManager.LoadScene("tutorial-level");
+    }
+
+    public void StartLevel()
+    {
+        SceneManager.LoadScene("Scene3");
     }
 }
