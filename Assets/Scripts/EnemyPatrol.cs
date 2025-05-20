@@ -10,7 +10,7 @@ public class EnemyPatrol : MonoBehaviour
     public float checkDistance = 0.6f;
     public float jumpRange = 2f;
     public float maxJumpHeight = 2f;
-    public float maxDropHeight = 2.5f; // New: how far it can fall
+    public float maxDropHeight = 2.5f;
 
     [Header("Ground Check Settings")]
     public float groundRayLength = 0.1f;
@@ -50,7 +50,7 @@ public class EnemyPatrol : MonoBehaviour
 
         if (!groundHit.collider)
         {
-            // Step 2: Try jumping up to a reachable platform
+            // Step 2a: Check up-forward for a platform
             Vector2 jumpUpOrigin = origin + new Vector2(dir.x * 0.6f, 0f);
             Vector2 jumpUpDirection = new Vector2(dir.x, 1f).normalized;
             RaycastHit2D jumpUpHit = Physics2D.Raycast(jumpUpOrigin, jumpUpDirection, jumpRange, groundLayer);
@@ -62,7 +62,20 @@ public class EnemyPatrol : MonoBehaviour
                 return;
             }
 
-            // Step 3: Try looking down to see if there's a fallable platform
+            // Step 2b: Check ahead using OverlapBox for a reachable platform
+            Vector2 boxCenter = origin + new Vector2(dir.x * (jumpRange * 0.75f), -0.5f);
+            Vector2 boxSize = new Vector2(1f, 1f); // Width and height of the detection box
+            Collider2D platformAhead = Physics2D.OverlapBox(boxCenter, boxSize, 0f, groundLayer);
+            Debug.DrawLine(boxCenter - boxSize * 0.5f, boxCenter + new Vector2(boxSize.x, -boxSize.y), Color.magenta);
+            Debug.DrawLine(boxCenter - boxSize * 0.5f, boxCenter + new Vector2(-boxSize.x, boxSize.y), Color.magenta);
+
+            if (platformAhead != null)
+            {
+                rb.velocity = new Vector2(rb.velocity.x, jumpForce);
+                return;
+            }
+
+            // Step 3: Check forward-down for a lower platform
             Vector2 dropOrigin = origin + new Vector2(dir.x * 0.6f, 0f);
             Vector2 dropDirection = new Vector2(dir.x, -1f).normalized;
             RaycastHit2D dropHit = Physics2D.Raycast(dropOrigin, dropDirection, maxDropHeight, groundLayer);
@@ -70,11 +83,11 @@ public class EnemyPatrol : MonoBehaviour
 
             if (dropHit.collider && origin.y - dropHit.point.y <= maxDropHeight)
             {
-                // Fall toward it by continuing forward, no need to flip
+                // Let it fall naturally
                 return;
             }
 
-            // Step 4: Nowhere to go, so flip
+            // Step 4: Nothing reachable — flip
             Flip();
         }
     }
@@ -85,5 +98,16 @@ public class EnemyPatrol : MonoBehaviour
         Vector3 scale = transform.localScale;
         scale.x *= -1;
         transform.localScale = scale;
+    }
+
+    // Debug visualization in Scene View
+    void OnDrawGizmosSelected()
+    {
+        Vector2 origin = transform.position;
+        Vector2 dir = movingRight ? Vector2.right : Vector2.left;
+        Vector2 boxCenter = origin + new Vector2(dir.x * (jumpRange * 0.75f), -0.5f);
+        Vector2 boxSize = new Vector2(1f, 1f);
+        Gizmos.color = Color.magenta;
+        Gizmos.DrawWireCube(boxCenter, boxSize);
     }
 }
