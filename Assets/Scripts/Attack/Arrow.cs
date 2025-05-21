@@ -7,6 +7,7 @@ public class Arrow : MonoBehaviour
 {
     private Rigidbody2D rb;
     private bool hasHit = false;
+    private bool isWaitingToDespawn = false;
 
     private void Awake()
     {
@@ -35,5 +36,19 @@ public class Arrow : MonoBehaviour
         transform.localScale = Vector3.one;       // this prevents sprite stretching
         
         Destroy(gameObject, 3f);
+    }
+
+    void OnBecameInvisible()
+    {
+        Debug.Log("Arrow went off-screen");
+        if (isWaitingToDespawn) return;
+        
+        isWaitingToDespawn = true;
+        Invoke(nameof(SelfDestruct), 3f);
+    }
+
+    void SelfDestruct()
+    {
+        Destroy(gameObject);
     }
 }
