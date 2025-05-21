@@ -225,7 +225,7 @@ MonoBehaviour:
   playerPrefab: {fileID: 215337964}
   shootForce: 10
   shootCooldown: 0.5
-  pushbackForce: 5
+  pushbackForce: 10
 --- !u!1 &101689445
 GameObject:
   m_ObjectHideFlags: 0
