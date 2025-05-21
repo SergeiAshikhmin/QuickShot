@@ -15,6 +15,8 @@ public class Attack : MonoBehaviour
     public float shootForce = 10f;
     public float shootCooldown = 0.5f;
     public float pushbackForce = 5;
+
+    [Header("Testing")] public bool useVelocityPush = false;
     
     private Rigidbody2D playerRB;
 
@@ -49,6 +51,7 @@ public class Attack : MonoBehaviour
         
         // Pushback player in the opposite direction
         Vector2 pushDirection = -firePoint.right.normalized;
-        playerRB.AddForce(pushDirection * pushbackForce, ForceMode2D.Impulse);
+        // playerRB.AddForce(pushDirection * pushbackForce, ForceMode2D.Impulse); // Adding force
+        playerRB.velocity = pushDirection * pushbackForce;
     }
 }
