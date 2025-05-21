@@ -40,7 +40,6 @@ public class Arrow : MonoBehaviour
 
     void OnBecameInvisible()
     {
-        Debug.Log("Arrow went off-screen");
         if (isWaitingToDespawn) return;
         
         isWaitingToDespawn = true;

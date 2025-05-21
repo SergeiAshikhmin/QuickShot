@@ -222,8 +222,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   arrowPrefab: {fileID: 6547274378827822751, guid: 8a591b333d7e0476dbdf1e8827a17870, type: 3}
   firePoint: {fileID: 1177229135}
+  playerPrefab: {fileID: 215337964}
   shootForce: 10
   shootCooldown: 0.5
+  pushbackForce: 5
 --- !u!1 &101689445
 GameObject:
   m_ObjectHideFlags: 0

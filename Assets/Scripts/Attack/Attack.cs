@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,12 +6,23 @@ using UnityEngine;
 public class Attack : MonoBehaviour
 {
 
+    [Header("References")]
     public GameObject arrowPrefab;
     public Transform firePoint;
+    public GameObject playerPrefab;
 
-    [Header("Charging Settings")] 
+    [Header("Settings")] 
     public float shootForce = 10f;
     public float shootCooldown = 0.5f;
+    public float pushbackForce = 5;
+    
+    private Rigidbody2D playerRB;
+
+    private void Awake()
+    {
+        playerRB = playerPrefab.GetComponent<Rigidbody2D>();
+    }
+
 
     // Update is called once per frame
     void Update()
@@ -30,8 +42,13 @@ public class Attack : MonoBehaviour
 
     void Shoot()
     {
+        // Instantiate and shoot the arrow
         GameObject arrow = Instantiate(arrowPrefab, firePoint.position, firePoint.rotation);
         Rigidbody2D rb = arrow.GetComponent<Rigidbody2D>();
         rb.AddForce(firePoint.right * shootForce, ForceMode2D.Impulse);
+        
+        // Pushback player in the opposite direction
+        Vector2 pushDirection = -firePoint.right.normalized;
+        playerRB.AddForce(pushDirection * pushbackForce, ForceMode2D.Impulse);
     }
 }
