@@ -18,8 +18,12 @@ public class EnemyPatrol : MonoBehaviour
     [Header("Environment Layers")]
     public LayerMask groundLayer;
 
+    [Header("Effects")]
+    public GameObject deathEffectPrefab; // Assign Impact01 prefab here
+
     private Rigidbody2D rb;
     private bool movingRight = true;
+    private bool isDead = false; // To ensure Die() only runs once
 
     void Start()
     {
@@ -28,6 +32,8 @@ public class EnemyPatrol : MonoBehaviour
 
     void FixedUpdate()
     {
+        if (isDead) return; // Prevents movement after death
+
         // Move horizontally
         rb.velocity = new Vector2((movingRight ? 1 : -1) * moveSpeed, rb.velocity.y);
 
@@ -109,5 +115,30 @@ public class EnemyPatrol : MonoBehaviour
         Vector2 boxSize = new Vector2(1f, 1f);
         Gizmos.color = Color.magenta;
         Gizmos.DrawWireCube(boxCenter, boxSize);
+    }
+
+    // --- Projectile Collision Handling Below ---
+
+    void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (!isDead && collision.gameObject.layer == LayerMask.NameToLayer("Projectile"))
+        {
+            Die();
+        }
+    }
+
+    // Handles the enemy dying and playing the animation
+    void Die()
+    {
+        if (isDead) return; // Safeguard: only die once
+        isDead = true;
+
+        // Play death animation/effect if assigned
+        if (deathEffectPrefab != null)
+        {
+            Instantiate(deathEffectPrefab, transform.position, Quaternion.identity);
+        }
+
+        Destroy(gameObject);
     }
 }
