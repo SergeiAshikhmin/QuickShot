@@ -1,64 +1,68 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class Attack : MonoBehaviour
+public class Pistol : MonoBehaviour
 {
     [Header("References")]
-    public GameObject arrowPrefab;
+    public GameObject bulletPrefab;
+    public GameObject muzzleFlashPrefab;
     public Transform firePoint;
-    // public GameObject playerPrefab; // No longer needed! Remove or comment this out.
 
-    [Header("Settings")] 
-    public float shootForce = 10f;
-    public float shootCooldown = 0.5f;
-    public float pushbackForce = 5;
+    [Header("Settings")]
+    public float shootForce = 20f;
+    public float shootCooldown = 0.25f;
+    public float pushbackForce = 2f;
 
-    [Header("Testing")] public bool useVelocityPush = false;
-    
     private Rigidbody2D playerRB;
+    private float lastShotTime;
 
     private void Awake()
     {
-        // Find the player GameObject on the Player layer
         FindPlayerRB();
     }
 
     void Update()
     {
-        // Always re-find playerRB if lost (respawn case)
+        // Always re-find player if lost (respawn case)
         if (playerRB == null)
             FindPlayerRB();
 
-        // Aim toward mouse
         Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         Vector2 direction = mousePos - transform.position;
         float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
         transform.rotation = Quaternion.Euler(0, 0, angle);
 
-        // Shoot on click with cooldown
-        if (Input.GetMouseButtonDown(0))
+        // Flip Y to avoid upside down weapon
+        Vector3 localScale = Vector3.one;
+        localScale.y = (direction.x < 0) ? -1 : 1;
+        transform.localScale = localScale;
+
+        // Shooting
+        if (Input.GetMouseButtonDown(0) && Time.time >= lastShotTime + shootCooldown)
         {
             Shoot();
+            lastShotTime = Time.time;
         }
     }
 
     void Shoot()
     {
-        // Instantiate and shoot the arrow
-        GameObject arrow = Instantiate(arrowPrefab, firePoint.position, firePoint.rotation);
-        Rigidbody2D rb = arrow.GetComponent<Rigidbody2D>();
+        GameObject bullet = Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
+        Rigidbody2D rb = bullet.GetComponent<Rigidbody2D>();
         rb.AddForce(firePoint.right * shootForce, ForceMode2D.Impulse);
-    
-        // Pushback player in the opposite direction
-        Vector2 pushDirection = -firePoint.right.normalized;
+
+        if (muzzleFlashPrefab)
+        {
+            GameObject flash = Instantiate(muzzleFlashPrefab, firePoint.position, firePoint.rotation);
+            Destroy(flash, 0.1f);
+        }
+
         if (playerRB != null)
+        {
+            Vector2 pushDirection = -firePoint.right.normalized;
             playerRB.AddForce(pushDirection * pushbackForce, ForceMode2D.Impulse);
+        }
     }
 
-    /// Finds and assigns the player Rigidbody2D on the Player layer.
-    /// This is called in Awake and again in Update if playerRB is lost.
     private void FindPlayerRB()
     {
         int playerLayer = LayerMask.NameToLayer("Player");
