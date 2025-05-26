@@ -26,17 +26,18 @@ public class Arrow : MonoBehaviour
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
-    {
-        hasHit = true;
-        rb.velocity = Vector2.zero;
-        // rb.isKinematic = true;
-        rb.simulated = false;
-        
-        // transform.rotation = Quaternion.identity; // optional: reset rotation
-        transform.localScale = Vector3.one;       // this prevents sprite stretching
-        
-        Destroy(gameObject, 3f);
-    }
+{
+    hasHit = true;
+    rb.velocity = Vector2.zero;
+    rb.simulated = false;
+    // Remove Collider2D only
+    Collider2D col = GetComponent<Collider2D>();
+    if (col) Destroy(col);
+
+    transform.localScale = Vector3.one;
+    Destroy(gameObject, 3f);
+}
+
 
     void OnBecameInvisible()
     {
