@@ -47,7 +47,11 @@ public class Checkpoint : MonoBehaviour
     {
         if (playerPrefab != null)
         {
-            Instantiate(playerPrefab, transform.position, Quaternion.identity);
+            GameObject player = Instantiate(playerPrefab, transform.position, Quaternion.identity);
+
+            // Assign the camera to follow the new player
+            if (CameraFollowAssigner.Instance != null)
+                CameraFollowAssigner.Instance.AssignFollowToPlayer();
         }
         else
         {
