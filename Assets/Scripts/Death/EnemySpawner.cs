@@ -13,12 +13,14 @@ public class EnemySpawner : MonoBehaviour
     public float spawnRadius = 1f;
     public float spawnCooldown = 2f;
 
+    [Header("Enemy Tracking")]
+    public string enemyTag = "Enemy";  // Set this in Inspector!
+
     [Header("Visuals")]
     public Sprite normalSprite;
     public GameObject destroyedPrefab;     // Drag your Impact03 prefab here
     public GameObject hitEffectPrefab;     // Drag your HitEffect prefab here
 
-    private List<GameObject> spawnedEnemies = new List<GameObject>();
     private SpriteRenderer sr;
     private bool isDestroyed = false;
     private bool canSpawn = true;
@@ -34,9 +36,11 @@ public class EnemySpawner : MonoBehaviour
     void Update()
     {
         if (isDestroyed) return;
-        spawnedEnemies.RemoveAll(e => e == null);
 
-        if (canSpawn && spawnedEnemies.Count < targetEnemyCount)
+        // Count all objects with the selected tag
+        int currentEnemyCount = GameObject.FindGameObjectsWithTag(enemyTag).Length;
+
+        if (canSpawn && currentEnemyCount < targetEnemyCount)
         {
             StartCoroutine(SpawnEnemyAfterDelay(spawnCooldown));
         }
@@ -55,7 +59,10 @@ public class EnemySpawner : MonoBehaviour
         if (!enemyPrefab || isDestroyed) return;
         Vector2 spawnPos = (Vector2)transform.position + Random.insideUnitCircle * spawnRadius;
         GameObject enemy = Instantiate(enemyPrefab, spawnPos, Quaternion.identity);
-        spawnedEnemies.Add(enemy);
+
+        // Set the correct tag if needed
+        if (!string.IsNullOrEmpty(enemyTag))
+            enemy.tag = enemyTag;
     }
 
     void OnCollisionEnter2D(Collision2D collision)

@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 9118308845392609943}
   m_Layer: 9
   m_Name: Robot.Controller
-  m_TagString: Untagged
+  m_TagString: Robot
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
