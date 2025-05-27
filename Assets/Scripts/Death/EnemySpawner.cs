@@ -15,18 +15,20 @@ public class EnemySpawner : MonoBehaviour
 
     [Header("Visuals")]
     public Sprite normalSprite;
-    public Sprite hitSprite;
-    public GameObject destroyedPrefab;  // Drag your Impact03 prefab here
+    public GameObject destroyedPrefab;     // Drag your Impact03 prefab here
+    public GameObject hitEffectPrefab;     // Drag your HitEffect prefab here
 
     private List<GameObject> spawnedEnemies = new List<GameObject>();
     private SpriteRenderer sr;
     private bool isDestroyed = false;
     private bool canSpawn = true;
+    private int projectileLayer;
 
     void Awake()
     {
         sr = GetComponent<SpriteRenderer>();
         if (normalSprite && sr) sr.sprite = normalSprite;
+        projectileLayer = LayerMask.NameToLayer("Projectile");
     }
 
     void Update()
@@ -56,36 +58,26 @@ public class EnemySpawner : MonoBehaviour
         spawnedEnemies.Add(enemy);
     }
 
-    void OnTriggerEnter2D(Collider2D other)
-{
-    if (isDestroyed) return;
-    if (other.CompareTag("Projectile"))
+    void OnCollisionEnter2D(Collision2D collision)
     {
-        // Disable the projectile collider immediately so only one hit is counted
-        Collider2D projCol = other.GetComponent<Collider2D>();
-        if (projCol) projCol.enabled = false;
-
-        Destroy(other.gameObject);
-
-        hitPoints--;
-
-        if (hitPoints > 0)
+        if (isDestroyed) return;
+        if (collision.gameObject.layer == projectileLayer)
         {
-            StartCoroutine(FlashHit());
-        }
-        else if (hitPoints == 0)
-        {
-            StartCoroutine(ExplodeAndDestroy());
-        }
-    }
-}
+            Destroy(collision.gameObject);
 
+            hitPoints--;
 
-    IEnumerator FlashHit()
-    {
-        if (hitSprite && sr) sr.sprite = hitSprite;
-        yield return new WaitForSeconds(0.2f);
-        if (normalSprite && sr && !isDestroyed) sr.sprite = normalSprite;
+            if (hitPoints > 0)
+            {
+                // Spawn a hit effect at the point of contact
+                if (hitEffectPrefab)
+                    Instantiate(hitEffectPrefab, collision.contacts[0].point, Quaternion.identity);
+            }
+            else if (hitPoints == 0)
+            {
+                StartCoroutine(ExplodeAndDestroy());
+            }
+        }
     }
 
     IEnumerator ExplodeAndDestroy()

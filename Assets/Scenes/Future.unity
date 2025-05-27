@@ -134,6 +134,8 @@ GameObject:
   - component: {fileID: 97223413}
   - component: {fileID: 97223412}
   - component: {fileID: 97223415}
+  - component: {fileID: 97223416}
+  - component: {fileID: 97223417}
   m_Layer: 0
   m_Name: EnemySpawner
   m_TagString: Untagged
@@ -154,13 +156,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemyPrefab: {fileID: 9118308845392609939, guid: 4c304a3ba9e17e443a1a4db105147271, type: 3}
-  targetEnemyCount: 3
-  hitPoints: 3
+  targetEnemyCount: 6
+  hitPoints: 1000
   spawnRadius: 2
   spawnCooldown: 2
   normalSprite: {fileID: 0}
-  hitSprite: {fileID: -265167422, guid: c1c62c101ee1cac418bbfdf542a925da, type: 3}
   destroyedPrefab: {fileID: 8038344524183138613, guid: 0277167a12290af47801444830a2be97, type: 3}
+  hitEffectPrefab: {fileID: 0}
 --- !u!212 &97223413
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -238,12 +240,53 @@ CapsuleCollider2D:
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
   m_Size: {x: 1, y: 2}
   m_Direction: 0
+--- !u!50 &97223416
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 97223411}
+  m_BodyType: 2
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDrag: 0
+  m_AngularDrag: 0.05
+  m_GravityScale: 1
+  m_Material: {fileID: 0}
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 0
+--- !u!114 &97223417
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 97223411}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 219e755a9fb73804c90415bdc1c9e084, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  enemyPrefab: {fileID: 9118308845392609939, guid: 4c304a3ba9e17e443a1a4db105147271, type: 3}
+  targetEnemyCount: 3
+  hitPoints: 3
+  spawnRadius: 1
+  spawnCooldown: 2
+  normalSprite: {fileID: 0}
+  destroyedPrefab: {fileID: 8038344524183138613, guid: 0277167a12290af47801444830a2be97, type: 3}
+  hitEffectPrefab: {fileID: 3585113927565912773, guid: 2287d351e7a87e546b217ece7bb15d1b, type: 3}
 --- !u!1 &381279145
 GameObject:
   m_ObjectHideFlags: 0
