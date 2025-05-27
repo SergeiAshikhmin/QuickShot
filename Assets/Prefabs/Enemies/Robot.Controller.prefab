@@ -12,8 +12,8 @@ GameObject:
   - component: {fileID: 9118308845392609941}
   - component: {fileID: 9118308845392609940}
   - component: {fileID: 9118308845392610153}
-  - component: {fileID: 9118308845392610152}
   - component: {fileID: 9118308845392609943}
+  - component: {fileID: 7005974586677335169}
   m_Layer: 9
   m_Name: Robot.Controller
   m_TagString: Robot
@@ -130,32 +130,6 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
---- !u!61 &9118308845392610152
-BoxCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9118308845392609939}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 0.65625, y: 1}
-    newSize: {x: 0.65625, y: 1}
-    adaptiveTilingThreshold: 0.5
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  serializedVersion: 2
-  m_Size: {x: 0.65625, y: 1}
-  m_EdgeRadius: 0
 --- !u!114 &9118308845392609943
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -179,3 +153,19 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   deathEffectPrefab: {fileID: 4794043405585894037, guid: 37138c0c33167b04fa1fb90b7f5a794f, type: 3}
+--- !u!70 &7005974586677335169
+CapsuleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9118308845392609939}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 6200000, guid: 960b47a33590a456198cb8155c79aaff, type: 2}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0.026528}
+  m_Size: {x: 0.65625, y: 1.0795839}
+  m_Direction: 0

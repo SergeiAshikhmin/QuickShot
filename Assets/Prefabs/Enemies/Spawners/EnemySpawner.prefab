@@ -101,14 +101,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemyPrefab: {fileID: 9118308845392609939, guid: 4c304a3ba9e17e443a1a4db105147271, type: 3}
-  targetEnemyCount: 6
-  hitPoints: 1000
-  spawnRadius: 2
+  targetEnemyCount: 3
+  hitPoints: 3
+  spawnRadius: 1
   spawnCooldown: 2
-  enemyTag: Enemy
+  enemyTag: Robot
   normalSprite: {fileID: 0}
   destroyedPrefab: {fileID: 8038344524183138613, guid: 0277167a12290af47801444830a2be97, type: 3}
-  hitEffectPrefab: {fileID: 0}
+  hitEffectPrefab: {fileID: 3585113927565912773, guid: 2287d351e7a87e546b217ece7bb15d1b, type: 3}
 --- !u!70 &969069648455542198
 CapsuleCollider2D:
   m_ObjectHideFlags: 0

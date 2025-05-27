@@ -189,79 +189,6 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!1001 &584036290
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 969069648455542194, guid: c9f8a485903a4134bbe90c75d6253854, type: 3}
-      propertyPath: m_Name
-      value: EnemySpawner
-      objectReference: {fileID: 0}
-    - target: {fileID: 969069648455542197, guid: c9f8a485903a4134bbe90c75d6253854, type: 3}
-      propertyPath: enemyTag
-      value: Robot
-      objectReference: {fileID: 0}
-    - target: {fileID: 969069648455542197, guid: c9f8a485903a4134bbe90c75d6253854, type: 3}
-      propertyPath: hitPoints
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 969069648455542197, guid: c9f8a485903a4134bbe90c75d6253854, type: 3}
-      propertyPath: spawnRadius
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 969069648455542197, guid: c9f8a485903a4134bbe90c75d6253854, type: 3}
-      propertyPath: targetEnemyCount
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 969069648455542199, guid: c9f8a485903a4134bbe90c75d6253854, type: 3}
-      propertyPath: m_RootOrder
-      value: 8
-      objectReference: {fileID: 0}
-    - target: {fileID: 969069648455542199, guid: c9f8a485903a4134bbe90c75d6253854, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 3.06
-      objectReference: {fileID: 0}
-    - target: {fileID: 969069648455542199, guid: c9f8a485903a4134bbe90c75d6253854, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 7.01
-      objectReference: {fileID: 0}
-    - target: {fileID: 969069648455542199, guid: c9f8a485903a4134bbe90c75d6253854, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 969069648455542199, guid: c9f8a485903a4134bbe90c75d6253854, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 969069648455542199, guid: c9f8a485903a4134bbe90c75d6253854, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 969069648455542199, guid: c9f8a485903a4134bbe90c75d6253854, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 969069648455542199, guid: c9f8a485903a4134bbe90c75d6253854, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 969069648455542199, guid: c9f8a485903a4134bbe90c75d6253854, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 969069648455542199, guid: c9f8a485903a4134bbe90c75d6253854, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 969069648455542199, guid: c9f8a485903a4134bbe90c75d6253854, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: c9f8a485903a4134bbe90c75d6253854, type: 3}
 --- !u!1001 &630905467
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -343,6 +270,63 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: daab1e5736f27924b869093878240a6d, type: 3}
+--- !u!1001 &793432354
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 969069648455542194, guid: c9f8a485903a4134bbe90c75d6253854, type: 3}
+      propertyPath: m_Name
+      value: EnemySpawner
+      objectReference: {fileID: 0}
+    - target: {fileID: 969069648455542199, guid: c9f8a485903a4134bbe90c75d6253854, type: 3}
+      propertyPath: m_RootOrder
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 969069648455542199, guid: c9f8a485903a4134bbe90c75d6253854, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 3.06
+      objectReference: {fileID: 0}
+    - target: {fileID: 969069648455542199, guid: c9f8a485903a4134bbe90c75d6253854, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 7.01
+      objectReference: {fileID: 0}
+    - target: {fileID: 969069648455542199, guid: c9f8a485903a4134bbe90c75d6253854, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 969069648455542199, guid: c9f8a485903a4134bbe90c75d6253854, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 969069648455542199, guid: c9f8a485903a4134bbe90c75d6253854, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 969069648455542199, guid: c9f8a485903a4134bbe90c75d6253854, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 969069648455542199, guid: c9f8a485903a4134bbe90c75d6253854, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 969069648455542199, guid: c9f8a485903a4134bbe90c75d6253854, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 969069648455542199, guid: c9f8a485903a4134bbe90c75d6253854, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 969069648455542199, guid: c9f8a485903a4134bbe90c75d6253854, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: c9f8a485903a4134bbe90c75d6253854, type: 3}
 --- !u!1 &1109325717
 GameObject:
   m_ObjectHideFlags: 0
@@ -1192,7 +1176,7 @@ CompositeCollider2D:
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
-  m_GeometryType: 0
+  m_GeometryType: 1
   m_GenerationType: 0
   m_EdgeRadius: 0
   m_ColliderPaths:
