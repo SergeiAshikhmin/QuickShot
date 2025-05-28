@@ -132,6 +132,6 @@ MonoBehaviour:
   bulletPrefab: {fileID: 4960676514343839139, guid: 440f4da25914f6f4e80f9edecf9d5cc3, type: 3}
   muzzleFlashPrefab: {fileID: 149611724043862359, guid: 76afb3c970eff2b4eaa63adfde20c795, type: 3}
   firePoint: {fileID: 5186437209135751927}
-  shootForce: 25
+  shootForce: 40
   fireRate: 0.2
   pushbackForce: 8

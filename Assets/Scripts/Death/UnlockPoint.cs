@@ -8,6 +8,15 @@ public class UnlockPoint : MonoBehaviour
 
     private bool triggered = false;
 
+    void Awake() // or use Start()
+    {
+        // If weapon is already unlocked, disable (or destroy) this UnlockPoint
+        if (PlayerPrefs.GetInt("WeaponUnlocked_" + weaponID, 0) == 1)
+        {
+            gameObject.SetActive(false); // Or Destroy(gameObject);
+        }
+    }
+
     void OnTriggerEnter2D(Collider2D other)
     {
         if (triggered) return;

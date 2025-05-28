@@ -133,5 +133,5 @@ MonoBehaviour:
   muzzleFlashPrefab: {fileID: 149611724043862359, guid: 76afb3c970eff2b4eaa63adfde20c795, type: 3}
   firePoint: {fileID: 5186437209135751927}
   shootForce: 50
-  shootCooldown: 0.3
+  shootCooldown: 0.25
   pushbackForce: 16
