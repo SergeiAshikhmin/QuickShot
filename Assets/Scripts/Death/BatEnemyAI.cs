@@ -21,7 +21,7 @@ public class BatEnemyAI : MonoBehaviour
     public float attackRange = 0.9f;
     public float attackCooldown = 1.2f;
     public int attackDamage = 1;
-    public float attackColliderExtension = 1.2f; // how far to extend collider forward
+    public float attackColliderExtension = 1.2f;
     private float lastAttackTime = -999f;
     private bool isAttacking = false;
 
@@ -36,7 +36,7 @@ public class BatEnemyAI : MonoBehaviour
     private int currentHealth;
     private Animator animator;
     private Vector2 startPoint;
-    private int direction = 1;
+    private int direction = 1; // 1 for right, -1 for left
     private Rigidbody2D rb;
     private Transform player;
     private SpriteRenderer sr;
@@ -59,6 +59,7 @@ public class BatEnemyAI : MonoBehaviour
             rb.gravityScale = 0f;
         if (rb != null)
             rb.freezeRotation = true;
+
         Vector3 pos = transform.position;
         transform.position = new Vector3(pos.x, pos.y, 0f);
 
@@ -97,12 +98,15 @@ public class BatEnemyAI : MonoBehaviour
         }
         else
         {
-            ChaseAndAttackPlayer();
+            StopAndAttackPlayer();
         }
     }
 
     void Patrol()
     {
+        animator.SetBool("isWalking", true);
+        animator.SetBool("isAttacking", false);
+
         Vector2 origin = (Vector2)transform.position + Vector2.right * direction * raycastHorizontalOffset;
         RaycastHit2D hit = Physics2D.Raycast(origin, Vector2.down, edgeDetectDistance, groundLayer);
 
@@ -112,8 +116,8 @@ public class BatEnemyAI : MonoBehaviour
         {
             rb.velocity = new Vector2(direction * patrolSpeed, 0);
 
-            if (sr != null)
-                sr.flipX = (direction < 0);
+            // Flip object, NOT just sprite
+            transform.localScale = new Vector3(Mathf.Abs(transform.localScale.x) * direction, transform.localScale.y, 1);
 
             if (Mathf.Abs(transform.position.x - startPoint.x) > patrolDistance)
             {
@@ -135,44 +139,61 @@ public class BatEnemyAI : MonoBehaviour
         }
     }
 
-    void ChaseAndAttackPlayer()
+    void StopAndAttackPlayer()
     {
-        if (player == null || isAttacking) return;
+        if (player == null) return;
 
-        float distance = Vector2.Distance(transform.position, player.position);
+        float dx = player.position.x - transform.position.x;
+        float distance = Mathf.Abs(dx);
 
-        if (distance > attackRange)
-        {
-            float dirToPlayer = Mathf.Sign(player.position.x - transform.position.x);
-            rb.velocity = new Vector2(dirToPlayer * patrolSpeed * 1.25f, 0);
+        // Flip to face the player, hitbox always extends in positive X
+        int facingDir = (dx > 0) ? 1 : -1;
+        transform.localScale = new Vector3(Mathf.Abs(transform.localScale.x) * facingDir, transform.localScale.y, 1);
 
-            if (sr != null)
-                sr.flipX = (dirToPlayer < 0);
-        }
-        else
+        // If within attack range, stop and attack repeatedly
+        if (distance <= attackRange)
         {
             rb.velocity = Vector2.zero;
+            animator.SetBool("isWalking", false);
+            animator.SetBool("isAttacking", true);
 
-            if (Time.time - lastAttackTime >= attackCooldown)
+            // Only trigger a new attack when not already attacking and cooldown has passed
+            if (!isAttacking && (Time.time - lastAttackTime >= attackCooldown))
             {
                 lastAttackTime = Time.time;
                 isAttacking = true;
 
-                if (animator != null)
-                    animator.SetTrigger("Attack");
-
-                ExtendAttackCollider(true);
-
-                // Player is within attack range, damage will be applied by animation event or after a delay
+                // Animation events should call EnableAttackHitbox/DisableAttackHitbox and AttemptPlayerAttack
                 StartCoroutine(ResetAttackStateAndCollider());
             }
         }
+        else
+        {
+            // Move toward player, but never overlap
+            animator.SetBool("isWalking", true);
+            animator.SetBool("isAttacking", false);
+
+            float moveSpeed = Mathf.Sign(dx) * patrolSpeed * 1.25f;
+            rb.velocity = new Vector2(moveSpeed, 0);
+        }
     }
 
-    // Use this method in an Animation Event at the attack's impact frame, or call here if not animating
-    void AttemptPlayerAttack()
+    // Animation Event - called exactly on the frame you want the hitbox active
+    public void EnableAttackHitbox()
     {
-        if (player && Vector2.Distance(transform.position, player.position) <= attackRange + 0.2f)
+        ExtendAttackCollider(true);
+    }
+
+    // Animation Event - called to end the hitbox extension
+    public void DisableAttackHitbox()
+    {
+        ExtendAttackCollider(false);
+    }
+
+    // Animation Event - call this at the moment of "impact" in the attack animation
+    public void AttemptPlayerAttack()
+    {
+        if (player && Mathf.Abs(player.position.x - transform.position.x) <= attackRange + 0.2f)
         {
             Debug.Log($"{name} attacks player!");
             player.SendMessage("TakeDamage", attackDamage, SendMessageOptions.DontRequireReceiver);
@@ -185,9 +206,9 @@ public class BatEnemyAI : MonoBehaviour
 
         if (extend)
         {
-            float dirSign = sr != null && sr.flipX ? -1f : 1f;
+            // Always extend to the right (positive X); flipping is handled by scale
             boxCollider.size = new Vector2(originalColliderSize.x + attackColliderExtension, originalColliderSize.y);
-            boxCollider.offset = originalColliderOffset + new Vector2((attackColliderExtension / 2f) * dirSign, 0);
+            boxCollider.offset = originalColliderOffset + new Vector2((attackColliderExtension / 2f), 0);
         }
         else
         {
@@ -201,9 +222,10 @@ public class BatEnemyAI : MonoBehaviour
         // Wait the length of the attack animation; adjust as needed
         yield return new WaitForSeconds(0.4f);
         isAttacking = false;
-        ExtendAttackCollider(false);
-        // Optionally call this here if you want to damage player after anim, not at start:
-        // AttemptPlayerAttack();
+        animator.SetBool("isAttacking", false);
+        animator.SetBool("isWalking", true);
+
+        // ExtendAttackCollider(false); // Animation event disables
     }
 
     void OnTriggerEnter2D(Collider2D other)

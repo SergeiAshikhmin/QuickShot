@@ -155,9 +155,9 @@ MonoBehaviour:
   attackRange: 2
   attackCooldown: 1
   attackDamage: 1
-  attackColliderExtension: 1.2
+  attackColliderExtension: 1.5
   hitEffectSprite: {fileID: 743782130, guid: c1c62c101ee1cac418bbfdf542a925da, type: 3}
-  hitEffectDuration: 0.01
+  hitEffectDuration: 0.04
   impactPrefab: {fileID: 6192724089161036641, guid: e17d9a3f04750764c8c0a7a0461e4c3b, type: 3}
   maxHealth: 5
 --- !u!61 &3484285565099618167
@@ -173,7 +173,7 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.009020388, y: -0.26302427}
+  m_Offset: {x: -0.37205657, y: -0.2257899}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -184,5 +184,5 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 1.353706, y: 1.0137976}
+  m_Size: {x: 0.8510404, y: 1.1441183}
   m_EdgeRadius: 0
