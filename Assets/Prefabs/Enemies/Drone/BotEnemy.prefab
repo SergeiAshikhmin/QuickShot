@@ -152,7 +152,10 @@ MonoBehaviour:
   edgeDetectDistance: 3
   raycastHorizontalOffset: 0.7
   turnCooldown: 0.3
+  maxHealth: 3
   impactPrefab: {fileID: 4794043405585894037, guid: 37138c0c33167b04fa1fb90b7f5a794f, type: 3}
+  hitEffectSprite: {fileID: 103324325, guid: c1c62c101ee1cac418bbfdf542a925da, type: 3}
+  hitEffectDuration: 0.04
   bulletPrefab: {fileID: 5600342377426141532, guid: 776639ff616d41046bea7752bc7ce1b9, type: 3}
   bulletSpeed: 2
   fireRate: 2
@@ -169,16 +172,16 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.0015241504, y: -0.03505504}
+  m_Offset: {x: 0.0062978864, y: -0.031144023}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1.5, y: 1.5}
+    oldSize: {x: 3, y: 3}
     newSize: {x: 1.5, y: 1.5}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 1.2226092, y: 0.8568194}
+  m_Size: {x: 2.5210633, y: 1.7719948}
   m_EdgeRadius: 0

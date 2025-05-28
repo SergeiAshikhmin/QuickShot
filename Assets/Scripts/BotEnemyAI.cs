@@ -1,4 +1,6 @@
 using UnityEngine;
+using System.Collections;
+
 
 public class BotEnemyAI : MonoBehaviour
 {
@@ -16,8 +18,14 @@ public class BotEnemyAI : MonoBehaviour
     [Header("Corner Handling")]
     public float turnCooldown = 0.3f;
 
+    [Header("Health")]
+    public int maxHealth = 5;
+    private int currentHealth;
+
     [Header("VFX")]
     public GameObject impactPrefab;  // Drag Impact01 here!
+    public Sprite hitEffectSprite;   // Optional: sprite for hit effect
+    public float hitEffectDuration = 0.08f;
 
     [Header("Enemy Attack")]
     public GameObject bulletPrefab;   // Drag your bullet prefab here!
@@ -41,6 +49,7 @@ public class BotEnemyAI : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         sr = GetComponent<SpriteRenderer>();
         startPoint = transform.position;
+        currentHealth = maxHealth;
 
         if (rb.bodyType == RigidbodyType2D.Dynamic)
             rb.gravityScale = 0f;
@@ -77,7 +86,7 @@ public class BotEnemyAI : MonoBehaviour
             }
         }
 
-        animator.SetBool("Detected", detected);
+        if (animator) animator.SetBool("Detected", detected);
 
         if (!detected)
         {
@@ -150,13 +159,8 @@ public class BotEnemyAI : MonoBehaviour
     {
         if (other.gameObject.layer == LayerMask.NameToLayer("Projectile"))
         {
-            if (impactPrefab)
-            {
-                Vector2 impactPos = other.ClosestPoint(transform.position);
-                Instantiate(impactPrefab, impactPos, Quaternion.identity);
-            }
+            TakeDamage(1, other.ClosestPoint(transform.position));
             Destroy(other.gameObject); // Destroy bullet
-            Destroy(gameObject);       // Destroy enemy
         }
     }
 
@@ -166,13 +170,53 @@ public class BotEnemyAI : MonoBehaviour
         if (collision.gameObject.layer == LayerMask.NameToLayer("Projectile"))
         {
             Vector2 impactPos = collision.contacts.Length > 0 ? collision.contacts[0].point : (Vector2)transform.position;
-            if (impactPrefab)
-            {
-                Instantiate(impactPrefab, impactPos, Quaternion.identity);
-            }
+            TakeDamage(1, impactPos);
             Destroy(collision.gameObject); // Destroy bullet
-            Destroy(gameObject);           // Destroy enemy
         }
+    }
+
+    void TakeDamage(int amount, Vector2 impactPoint)
+    {
+        currentHealth -= amount;
+        Debug.Log($"{name} took damage! Health is now {currentHealth}");
+
+        // Hit effect (sprite flash)
+        if (hitEffectSprite != null)
+        {
+            GameObject hitObj = new GameObject("HitEffect");
+            hitObj.transform.position = impactPoint;
+            var spriteR = hitObj.AddComponent<SpriteRenderer>();
+            spriteR.sprite = hitEffectSprite;
+            spriteR.sortingOrder = 999;
+            Destroy(hitObj, hitEffectDuration);
+        }
+        else if (sr != null)
+        {
+            StartCoroutine(HitFlash());
+        }
+
+        if (currentHealth <= 0)
+        {
+            Die(impactPoint);
+        }
+    }
+
+    IEnumerator HitFlash()
+    {
+        Color original = sr.color;
+        sr.color = Color.red;
+        yield return new WaitForSeconds(0.07f);
+        sr.color = original;
+    }
+
+    void Die(Vector2 impactPoint)
+    {
+        Debug.Log($"{name} died! Spawning impact effect.");
+        if (impactPrefab)
+        {
+            Instantiate(impactPrefab, impactPoint, Quaternion.identity);
+        }
+        Destroy(gameObject);
     }
 
     void OnDrawGizmosSelected()
