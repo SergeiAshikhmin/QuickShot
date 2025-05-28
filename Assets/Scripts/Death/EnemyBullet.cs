@@ -4,6 +4,8 @@ public class EnemyBullet : MonoBehaviour
 {
     public float speed = 2f;                // Bullet speed, set by enemy or in prefab
     public float lifetime = 5f;             // Seconds before auto-destroy (editable in Inspector)
+    public GameObject impactPrefab;         // Assign Impact02.prefab in Inspector
+
     private float timer = 0f;
     private Vector2 direction;
 
@@ -21,7 +23,7 @@ public class EnemyBullet : MonoBehaviour
         timer += Time.deltaTime;
         if (timer >= lifetime)
         {
-            Destroy(gameObject);
+            PlayImpactAndDestroy();
         }
     }
 
@@ -30,7 +32,16 @@ public class EnemyBullet : MonoBehaviour
         // Destroy if colliding with something on Player layer or tagged Player
         if (other.gameObject.layer == LayerMask.NameToLayer("Player") || other.CompareTag("Player"))
         {
-            Destroy(gameObject);
+            PlayImpactAndDestroy();
         }
+    }
+
+    void PlayImpactAndDestroy()
+    {
+        if (impactPrefab)
+        {
+            Instantiate(impactPrefab, transform.position, Quaternion.identity);
+        }
+        Destroy(gameObject);
     }
 }
