@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 3762884866361829493}
   - component: {fileID: 149230712340306629}
   m_Layer: 0
-  m_Name: PistolUnlockPoint
+  m_Name: UnlockPoint
   m_TagString: UnlockPoint
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -114,7 +114,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b84e6313d60ca654a992ca8f7b6562e4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  weaponID: Pistol
+  weaponID: Shotgun
   popupPrefab: {fileID: 229837957849374579, guid: c8a350f919510c849a9851ee5ea00025, type: 3}
 --- !u!1 &3195228626008897227
 GameObject:
