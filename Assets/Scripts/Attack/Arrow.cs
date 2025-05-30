@@ -5,6 +5,9 @@ using UnityEngine;
 
 public class Arrow : MonoBehaviour
 {
+    public LayerMask enemyLayer;
+    public int damage = 1;
+    
     private Rigidbody2D rb;
     private bool hasHit = false;
     private bool isWaitingToDespawn = false;
@@ -34,6 +37,18 @@ public class Arrow : MonoBehaviour
         
         // transform.rotation = Quaternion.identity; // optional: reset rotation
         transform.localScale = Vector3.one;       // this prevents sprite stretching
+        
+        // Damage enemy
+        // Check if collided object is on the Enemy layer
+        if (((1 << collision.gameObject.layer) & enemyLayer) != 0)
+        {
+            EnemyController enemy = collision.collider.GetComponent<EnemyController>();
+            if (enemy)
+            {
+                enemy.TakeDamage(damage); // Customize damage here
+                Destroy(gameObject);
+            }
+        }
         
         Destroy(gameObject, 3f);
     }

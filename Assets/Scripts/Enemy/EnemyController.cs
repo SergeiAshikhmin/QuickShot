@@ -1,4 +1,7 @@
+using System;
+using System.Collections;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class EnemyController : MonoBehaviour
 {
@@ -7,12 +10,16 @@ public class EnemyController : MonoBehaviour
     public LayerMask groundLayer;       // for simple edge detection (optional)
     [Tooltip("Assign several different hit sounds; a random one plays each hit")]
     [SerializeField] private AudioClip[] hitClips;
+
+    [Header("Stats")] 
+    public int health = 3;
+    public float hitPauseDuration = 0.3f;
     
     [Header("Movement")]
     public float moveSpeed = 3f;        // chase speed
     public float aggroRadius = 8f;      // start chasing when player enters
     public float stopDistance = 1.2f;   // stand here to attack
-    public float edgeCheckDistance = 0.3f; // prevents walking off cliffs
+    public float edgeCheckDistance = 0.5f; // prevents walking off cliffs
     
     [Header("Edge Check")]
     [Tooltip("Horizontal offset of the raycast origin in front of the enemy")]
@@ -33,11 +40,14 @@ public class EnemyController : MonoBehaviour
     
     AudioSource audioSource;                  // cache in Awake()
     int lastClipIndex = -1;
+    
+    private Animator animator;
 
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
         audioSource = GetComponent<AudioSource>();
+        animator = GetComponent<Animator>();
     }
 
     private void FixedUpdate()
@@ -89,7 +99,7 @@ public class EnemyController : MonoBehaviour
         Collider2D hit = Physics2D.OverlapCircle(hitPoint.position, hitRadius, playerLayer);
         if (hit != null)
         {
-         
+            animator.SetTrigger("Attack");
             PlayAttackSound();
             
             // Replace with your own health system
@@ -97,6 +107,51 @@ public class EnemyController : MonoBehaviour
             Debug.Log("Hit " + hit.name);
         }
         // TODO: trigger animation & sound here
+    }
+
+    public void TakeDamage(int amount)
+    {
+        if (health <= 0) return; // already dead
+        
+        health -= amount;
+        
+        // Play the hit animation
+        animator.SetTrigger("TakeHit");
+        
+        // Optional: temporarily stop movement
+        StartCoroutine(HitPause(hitPauseDuration));
+
+        if (health <= 0) Die();
+    }
+    
+    private IEnumerator HitPause(float duration)
+    {
+        float originalSpeed = moveSpeed;
+        moveSpeed = 0;
+        rb.velocity = Vector2.zero;
+
+        yield return new WaitForSeconds(duration);
+
+        moveSpeed = originalSpeed;
+    }
+    
+    void Die()
+    {
+        animator.SetTrigger("Die");
+        rb.velocity = Vector2.zero;
+        moveSpeed = 0;
+
+        // Optional: disable enemy logic
+        this.enabled = false;
+
+        // Optional: disable colliders to prevent future hits
+        // foreach (Collider2D col in GetComponents<Collider2D>())
+        // {
+        //     col.enabled = false;
+        // }
+
+        // Optional: destroy object after animation delay
+        Destroy(gameObject, 2f); // Adjust time based on your death animation
     }
 
     void PlayAttackSound()
