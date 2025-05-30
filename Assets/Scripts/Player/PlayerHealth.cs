@@ -12,19 +12,17 @@ public class PlayerHealth : MonoBehaviour
     int lastClipIndex = -1;
     
     [Header("Stats")]
-    public int maxHealth = 3;
-    [Tooltip("How many flashes (red ↔︎ white) per hit")]
-    public int flashCount = 3;
-    [Tooltip("Seconds each color stays on screen")]
-    public float flashInterval = 0.1f;
+    [Header("Invincibility")]
+    [Tooltip("How long the player stays invincible after a hit (seconds)")]
+    public float invincibilityDuration = 1f;
+    [Tooltip("Blink interval while invincible (seconds)")]
+    public float invincibilityBlinkInterval = 0.12f;
     
-    int currentHealth;
+    bool isInvincible = false;
     SpriteRenderer[] renderers; // allow for children with their own sprites
     Color originalColor;
-    bool isInvincible = false;
     void Awake()
     {
-        currentHealth = maxHealth;
         renderers = GetComponentsInChildren<SpriteRenderer>();
         originalColor = renderers[0].color;          // assumes they all share the same tint
         
@@ -40,6 +38,7 @@ public class PlayerHealth : MonoBehaviour
         
         // 1. camera jolt
         CameraShake.Instance?.Shake();
+        GameManager.Instance.DamagePlayer(amount);
         
         // 2. play sound
         // if (hitClips != null && hitClips.Length > 0)
@@ -56,34 +55,21 @@ public class PlayerHealth : MonoBehaviour
         //     lastClipIndex = index;
         // }
         
-        // 3. health / flash code
-        currentHealth -= amount;
-        if (currentHealth <= 0)
-        {
-            // TODO: trigger death sequence here
-            Debug.Log("Player died");
-        }
-
-        StopAllCoroutines();          // cancel any previous flash
-        StartCoroutine(Flash());
+        StopAllCoroutines();          // cancel any previous effect
+        StartCoroutine(InvincibilityFlash());
     }
     
-    IEnumerator Flash()
+    IEnumerator InvincibilityFlash()
     {
-        for (int i = 0; i < flashCount; i++)
+        float elapsed = 0f;
+        while (elapsed < invincibilityDuration)
         {
-            SetTint(Color.red);
-            yield return new WaitForSeconds(flashInterval);
-            SetTint(Color.white);
-            yield return new WaitForSeconds(flashInterval);
+            foreach (var r in renderers) r.enabled = !r.enabled;   // simple blink
+            yield return new WaitForSeconds(invincibilityBlinkInterval);
+            elapsed += invincibilityBlinkInterval;
         }
-        SetTint(originalColor);       // restore
+        foreach (var r in renderers) r.enabled = true;             // make sure sprites are visible
         isInvincible = false;
-    }
-
-    void SetTint(Color c)
-    {
-        foreach (var r in renderers) r.color = c;
     }
     
 }
