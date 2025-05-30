@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PauseMenuSpawner : MonoBehaviour
 {
@@ -6,6 +7,9 @@ public class PauseMenuSpawner : MonoBehaviour
 
     void Start()
     {
+        if (SceneManager.GetActiveScene().name == "MainMenu")
+            return;
+
         if (FindObjectOfType<PauseMenuManager>() == null)
             Instantiate(pauseMenuPrefab);
     }
