@@ -19,7 +19,6 @@ public class BatEnemyAI : MonoBehaviour
     public float jumpDistance = 2.0f;
     public float jumpRayDownLength = 4f;
     public float jumpYOffset = 0.2f;
-    // Removed jumpCooldown and lastJumpTime
 
     [Header("Corner Handling")]
     public float turnCooldown = 0.3f;
@@ -88,26 +87,28 @@ public class BatEnemyAI : MonoBehaviour
         GameObject playerObj = GameObject.FindGameObjectWithTag(playerTag);
         player = playerObj ? playerObj.transform : null;
 
-        if (!isJumping)
+        bool detected = false;
+        if (player != null)
         {
-            bool detected = false;
-            if (player != null)
-            {
-                float distance = Vector2.Distance(transform.position, player.position);
-                if (distance <= detectionDistance)
-                    detected = true;
-            }
-
-            if (!detected)
-                Patrol();
-            else
-                StopAndAttackPlayer();
+            float distance = Vector2.Distance(transform.position, player.position);
+            if (distance <= detectionDistance)
+                detected = true;
         }
-        else
+
+        // If we're jumping, just play jump anim and stop horizontal motion,
+        // but STILL allow attack logic if in range.
+        if (isJumping)
         {
             animator.SetBool("isWalking", false);
-            animator.SetBool("isAttacking", false);
+            if (detected)
+                StopAndAttackPlayer();
+            return;
         }
+
+        if (detected)
+            StopAndAttackPlayer();
+        else
+            Patrol();
     }
 
     void Patrol()
@@ -177,17 +178,18 @@ public class BatEnemyAI : MonoBehaviour
         }
     }
 
+    // --- FIXED: Attack uses true 2D distance ---
     void StopAndAttackPlayer()
     {
         if (player == null) return;
 
         float dx = player.position.x - transform.position.x;
-        float distance = Mathf.Abs(dx);
+        float distance2D = Vector2.Distance(transform.position, player.position);
 
         int facingDir = (dx > 0) ? 1 : -1;
         transform.localScale = new Vector3(Mathf.Abs(transform.localScale.x) * facingDir, transform.localScale.y, 1);
 
-        if (distance <= attackRange)
+        if (distance2D <= attackRange)
         {
             rb.velocity = Vector2.zero;
             animator.SetBool("isWalking", false);
@@ -215,7 +217,7 @@ public class BatEnemyAI : MonoBehaviour
 
     public void AttemptPlayerAttack()
     {
-        if (player && Mathf.Abs(player.position.x - transform.position.x) <= attackRange + 0.2f)
+        if (player && Vector2.Distance(transform.position, player.position) <= attackRange + 0.2f)
         {
             Debug.Log($"{name} attacks player!");
             player.SendMessage("TakeDamage", attackDamage, SendMessageOptions.DontRequireReceiver);
