@@ -135,3 +135,5 @@ MonoBehaviour:
   shootForce: 40
   fireRate: 0.2
   pushbackForce: 8
+  maxAmmo: 8
+  reloadTime: 2

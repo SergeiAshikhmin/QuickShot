@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class Pistol : MonoBehaviour
+public class Pistol : MonoBehaviour, IAmmoWeapon
 {
     [Header("References")]
     public GameObject bulletPrefab;
@@ -12,17 +12,38 @@ public class Pistol : MonoBehaviour
     public float shootCooldown = 0.25f;
     public float pushbackForce = 2f;
 
+    [Header("Ammo")]
+    public int maxAmmo = 7;
+    public float reloadTime = 1.5f;
+    private int _ammo;
+    private bool _isReloading = false;
+    private bool _isOutOfAmmo = false;
+
+    // For your HUD
+    public bool isReloading => _isReloading;
+    public bool isOutOfAmmo => _isOutOfAmmo;
+
+    // IAmmoWeapon Interface
+    public int CurrentAmmo => _ammo;
+    public int MaxAmmo => maxAmmo;
+    public bool ShowAmmo => true;
+
     private Rigidbody2D playerRB;
     private float lastShotTime;
+    private Coroutine reloadRoutine;
 
     private void Awake()
     {
         FindPlayerRB();
+        _ammo = maxAmmo;
     }
 
     void Update()
     {
-        // Always re-find player if lost (respawn case)
+        // Block input if paused (stops firing/reloading on pause)
+        if (Time.timeScale == 0f)
+            return;
+
         if (playerRB == null)
             FindPlayerRB();
 
@@ -31,21 +52,44 @@ public class Pistol : MonoBehaviour
         float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
         transform.rotation = Quaternion.Euler(0, 0, angle);
 
-        // Flip Y to avoid upside down weapon
         Vector3 localScale = Vector3.one;
         localScale.y = (direction.x < 0) ? -1 : 1;
         transform.localScale = localScale;
 
+        _isOutOfAmmo = (_ammo == 0);
+
+        // Prevent shooting when reloading
+        if (_isReloading)
+            return;
+
+        // Automatic reload if out of ammo and not already reloading
+        if (_isOutOfAmmo && !_isReloading)
+        {
+            reloadRoutine = StartCoroutine(Reload());
+            return;
+        }
+
         // Shooting
         if (Input.GetMouseButtonDown(0) && Time.time >= lastShotTime + shootCooldown)
         {
-            Shoot();
-            lastShotTime = Time.time;
+            if (_ammo > 0)
+            {
+                Shoot();
+                lastShotTime = Time.time;
+
+                // After shooting, check if we've just used the last bullet
+                if (_ammo == 0 && !_isReloading)
+                {
+                    reloadRoutine = StartCoroutine(Reload());
+                }
+            }
         }
     }
 
     void Shoot()
     {
+        _ammo--;
+
         GameObject bullet = Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
         Rigidbody2D rb = bullet.GetComponent<Rigidbody2D>();
         rb.AddForce(firePoint.right * shootForce, ForceMode2D.Impulse);
@@ -61,6 +105,14 @@ public class Pistol : MonoBehaviour
             Vector2 pushDirection = -firePoint.right.normalized;
             playerRB.AddForce(pushDirection * pushbackForce, ForceMode2D.Impulse);
         }
+    }
+
+    private System.Collections.IEnumerator Reload()
+    {
+        _isReloading = true;
+        yield return new WaitForSeconds(reloadTime);
+        _ammo = maxAmmo;
+        _isReloading = false;
     }
 
     private void FindPlayerRB()

@@ -134,6 +134,8 @@ MonoBehaviour:
   firePoint: {fileID: 5186437209135751927}
   shootForce: 24
   shootCooldown: 0.65
-  pushbackForce: 20
-  pelletCount: 4
+  pushbackForce: 30
+  pelletCount: 3
   spreadAngle: 8
+  maxAmmo: 9
+  reloadTimePerPellet: 1

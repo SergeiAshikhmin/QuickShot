@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class AssaultRifle : MonoBehaviour
+public class AssaultRifle : MonoBehaviour, IAmmoWeapon
 {
     [Header("References")]
     public GameObject bulletPrefab;
@@ -8,20 +8,42 @@ public class AssaultRifle : MonoBehaviour
     public Transform firePoint;
 
     [Header("Settings")]
-    public float shootForce = 25f;      // Stronger than pistol
-    public float fireRate = 0.1f;       // Time between shots (auto fire)
-    public float pushbackForce = 1.5f;  // Weaker recoil than pistol
+    public float shootForce = 25f;
+    public float fireRate = 0.1f;
+    public float pushbackForce = 1.5f;
+
+    [Header("Ammo")]
+    public int maxAmmo = 30;
+    public float reloadTime = 2f;
+    private int _ammo;
+    private bool _isReloading = false;
+    private bool _isOutOfAmmo = false;
+
+    // For HUD/other scripts
+    public bool isReloading => _isReloading;
+    public bool isOutOfAmmo => _isOutOfAmmo;
+
+    // IAmmoWeapon Interface implementation
+    public int CurrentAmmo => _ammo;
+    public int MaxAmmo => maxAmmo;
+    public bool ShowAmmo => true;
 
     private Rigidbody2D playerRB;
     private float lastShotTime;
+    private Coroutine reloadRoutine;
 
     void Awake()
     {
         FindPlayerRB();
+        _ammo = maxAmmo;
     }
 
     void Update()
     {
+        // Block input if paused (ensures no shooting when paused!)
+        if (Time.timeScale == 0f)
+            return;
+
         // Always re-find player if lost (respawn case)
         if (playerRB == null)
             FindPlayerRB();
@@ -37,17 +59,40 @@ public class AssaultRifle : MonoBehaviour
         localScale.y = (direction.x < 0) ? -1 : 1;
         transform.localScale = localScale;
 
-        // Auto-fire (hold down mouse button)
+        _isOutOfAmmo = (_ammo == 0);
+
+        // Prevent shooting while reloading
+        if (_isReloading)
+            return;
+
+        // Automatic reload if out of ammo and not already reloading
+        if (_isOutOfAmmo && !_isReloading)
+        {
+            reloadRoutine = StartCoroutine(Reload());
+            return;
+        }
+
+        // Auto-fire (hold mouse)
         if (Input.GetMouseButton(0) && Time.time >= lastShotTime + fireRate)
         {
-            Shoot();
-            lastShotTime = Time.time;
+            if (_ammo > 0)
+            {
+                Shoot();
+                lastShotTime = Time.time;
+
+                // Check after shooting if just used last bullet
+                if (_ammo == 0 && !_isReloading)
+                {
+                    reloadRoutine = StartCoroutine(Reload());
+                }
+            }
         }
     }
 
     void Shoot()
     {
-        // Instantiate bullet and set its velocity
+        _ammo--;
+
         GameObject bullet = Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
         Rigidbody2D rb = bullet.GetComponent<Rigidbody2D>();
         if (rb != null)
@@ -58,19 +103,26 @@ public class AssaultRifle : MonoBehaviour
         if (rifleBullet != null)
             rifleBullet.SetDirection(firePoint.right);
 
-        // Muzzle flash
         if (muzzleFlashPrefab)
         {
             GameObject flash = Instantiate(muzzleFlashPrefab, firePoint.position, firePoint.rotation);
             Destroy(flash, 0.1f);
         }
 
-        // Recoil / Pushback
         if (playerRB != null)
         {
             Vector2 pushDirection = -firePoint.right.normalized;
             playerRB.AddForce(pushDirection * pushbackForce, ForceMode2D.Impulse);
         }
+    }
+
+    private System.Collections.IEnumerator Reload()
+    {
+        _isReloading = true;
+        // Play reload animation/sound here if needed
+        yield return new WaitForSeconds(reloadTime);
+        _ammo = maxAmmo;
+        _isReloading = false;
     }
 
     private void FindPlayerRB()

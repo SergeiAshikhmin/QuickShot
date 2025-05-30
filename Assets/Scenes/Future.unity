@@ -1674,6 +1674,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: PauseMenu
       objectReference: {fileID: 0}
+    - target: {fileID: 7657714285635210905, guid: daab1e5736f27924b869093878240a6d, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7868036459283591167, guid: daab1e5736f27924b869093878240a6d, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -19516,7 +19520,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 149230712340306629, guid: e08be91cda9080c498a405dbffa6f487, type: 3}
       propertyPath: weaponID
-      value: AssaultRifle
+      value: Pistol
       objectReference: {fileID: 0}
     - target: {fileID: 740573014579413565, guid: e08be91cda9080c498a405dbffa6f487, type: 3}
       propertyPath: m_Name

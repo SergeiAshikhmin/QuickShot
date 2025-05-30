@@ -8,16 +8,17 @@ public class Attack : MonoBehaviour
     [Header("References")]
     public GameObject arrowPrefab;
     public Transform firePoint;
-    // public GameObject playerPrefab; // No longer needed! Remove or comment this out.
 
-    [Header("Settings")] 
+    [Header("Settings")]
     public float shootForce = 10f;
     public float shootCooldown = 0.5f;
-    public float pushbackForce = 5;
+    public float pushbackForce = 5f;
 
-    [Header("Testing")] public bool useVelocityPush = false;
-    
+    [Header("Testing")]
+    public bool useVelocityPush = false;
+
     private Rigidbody2D playerRB;
+    private float lastShotTime;
 
     private void Awake()
     {
@@ -27,6 +28,10 @@ public class Attack : MonoBehaviour
 
     void Update()
     {
+        // --- PAUSE LOCKOUT ---
+        if (Time.timeScale == 0f)
+            return;
+
         // Always re-find playerRB if lost (respawn case)
         if (playerRB == null)
             FindPlayerRB();
@@ -38,9 +43,10 @@ public class Attack : MonoBehaviour
         transform.rotation = Quaternion.Euler(0, 0, angle);
 
         // Shoot on click with cooldown
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0) && Time.time >= lastShotTime + shootCooldown)
         {
             Shoot();
+            lastShotTime = Time.time;
         }
     }
 
@@ -50,15 +56,16 @@ public class Attack : MonoBehaviour
         GameObject arrow = Instantiate(arrowPrefab, firePoint.position, firePoint.rotation);
         Rigidbody2D rb = arrow.GetComponent<Rigidbody2D>();
         rb.AddForce(firePoint.right * shootForce, ForceMode2D.Impulse);
-    
+
         // Pushback player in the opposite direction
-        Vector2 pushDirection = -firePoint.right.normalized;
         if (playerRB != null)
+        {
+            Vector2 pushDirection = -firePoint.right.normalized;
             playerRB.AddForce(pushDirection * pushbackForce, ForceMode2D.Impulse);
+        }
     }
 
     /// Finds and assigns the player Rigidbody2D on the Player layer.
-    /// This is called in Awake and again in Update if playerRB is lost.
     private void FindPlayerRB()
     {
         int playerLayer = LayerMask.NameToLayer("Player");

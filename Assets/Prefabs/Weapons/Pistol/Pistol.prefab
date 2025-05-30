@@ -135,3 +135,5 @@ MonoBehaviour:
   shootForce: 50
   shootCooldown: 0.25
   pushbackForce: 16
+  maxAmmo: 6
+  reloadTime: 1.5
