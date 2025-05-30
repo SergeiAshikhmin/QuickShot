@@ -12,8 +12,8 @@ GameObject:
   - component: {fileID: 4295490502842995568}
   - component: {fileID: 4295490502842995569}
   - component: {fileID: 7887908108201142470}
-  - component: {fileID: 4682490915176192748}
   - component: {fileID: 3484285565099618167}
+  - component: {fileID: 1482838693400913314}
   m_Layer: 9
   m_Name: BatEnemy
   m_TagString: Untagged
@@ -130,36 +130,6 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!114 &4682490915176192748
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4295490502842995582}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5cd55e57ae6544642ab0a5cbfa2c60db, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  playerTag: Player
-  detectionDistance: 5
-  patrolSpeed: 2
-  patrolDistance: 4
-  groundLayer:
-    serializedVersion: 2
-    m_Bits: 64
-  edgeDetectDistance: 2
-  raycastHorizontalOffset: 0.7
-  turnCooldown: 0.3
-  attackRange: 2
-  attackCooldown: 1
-  attackDamage: 1
-  attackColliderExtension: 1.5
-  hitEffectSprite: {fileID: 2010348863, guid: c1c62c101ee1cac418bbfdf542a925da, type: 3}
-  hitEffectDuration: 0.06
-  impactPrefab: {fileID: 6192724089161036641, guid: e17d9a3f04750764c8c0a7a0461e4c3b, type: 3}
-  maxHealth: 5
 --- !u!61 &3484285565099618167
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -186,3 +156,37 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1.3045776, y: 2.0164008}
   m_EdgeRadius: 0
+--- !u!114 &1482838693400913314
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4295490502842995582}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5cd55e57ae6544642ab0a5cbfa2c60db, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerTag: Player
+  detectionDistance: 5
+  patrolSpeed: 3
+  patrolDistance: 50
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 64
+  edgeDetectDistance: 2
+  raycastHorizontalOffset: 0.7
+  jumpForce: 30
+  jumpDistance: 5.5
+  jumpRayDownLength: 4
+  jumpYOffset: 0
+  turnCooldown: 0.3
+  attackRange: 1
+  attackCooldown: 1.2
+  attackDamage: 1
+  attackColliderExtension: 1.5
+  hitEffectSprite: {fileID: 2010348863, guid: c1c62c101ee1cac418bbfdf542a925da, type: 3}
+  hitEffectDuration: 0.08
+  impactPrefab: {fileID: 6192724089161036641, guid: e17d9a3f04750764c8c0a7a0461e4c3b, type: 3}
+  maxHealth: 5

@@ -14,6 +14,13 @@ public class BatEnemyAI : MonoBehaviour
     public float edgeDetectDistance = 2.0f;
     public float raycastHorizontalOffset = 0.7f;
 
+    [Header("Jumping")]
+    public float jumpForce = 6f;
+    public float jumpDistance = 2.0f;
+    public float jumpRayDownLength = 4f;
+    public float jumpYOffset = 0.2f;
+    // Removed jumpCooldown and lastJumpTime
+
     [Header("Corner Handling")]
     public float turnCooldown = 0.3f;
 
@@ -36,7 +43,7 @@ public class BatEnemyAI : MonoBehaviour
     private int currentHealth;
     private Animator animator;
     private Vector2 startPoint;
-    private int direction = 1; // 1 for right, -1 for left
+    private int direction = 1;
     private Rigidbody2D rb;
     private Transform player;
     private SpriteRenderer sr;
@@ -44,6 +51,8 @@ public class BatEnemyAI : MonoBehaviour
     private BoxCollider2D boxCollider;
     private Vector2 originalColliderSize;
     private Vector2 originalColliderOffset;
+
+    private bool isJumping = false;
 
     void Start()
     {
@@ -56,12 +65,8 @@ public class BatEnemyAI : MonoBehaviour
         currentHealth = maxHealth;
 
         if (rb.bodyType == RigidbodyType2D.Dynamic)
-            rb.gravityScale = 0f;
-        if (rb != null)
-            rb.freezeRotation = true;
-
-        Vector3 pos = transform.position;
-        transform.position = new Vector3(pos.x, pos.y, 0f);
+            rb.gravityScale = 5f;
+        rb.freezeRotation = true;
 
         if (boxCollider != null)
         {
@@ -79,26 +84,29 @@ public class BatEnemyAI : MonoBehaviour
     void Update()
     {
         transform.eulerAngles = Vector3.zero;
+
         GameObject playerObj = GameObject.FindGameObjectWithTag(playerTag);
         player = playerObj ? playerObj.transform : null;
 
-        bool detected = false;
-        if (player != null)
+        if (!isJumping)
         {
-            float distance = Vector2.Distance(transform.position, player.position);
-            if (distance <= detectionDistance)
+            bool detected = false;
+            if (player != null)
             {
-                detected = true;
+                float distance = Vector2.Distance(transform.position, player.position);
+                if (distance <= detectionDistance)
+                    detected = true;
             }
-        }
 
-        if (!detected)
-        {
-            Patrol();
+            if (!detected)
+                Patrol();
+            else
+                StopAndAttackPlayer();
         }
         else
         {
-            StopAndAttackPlayer();
+            animator.SetBool("isWalking", false);
+            animator.SetBool("isAttacking", false);
         }
     }
 
@@ -107,35 +115,65 @@ public class BatEnemyAI : MonoBehaviour
         animator.SetBool("isWalking", true);
         animator.SetBool("isAttacking", false);
 
-        Vector2 origin = (Vector2)transform.position + Vector2.right * direction * raycastHorizontalOffset;
-        RaycastHit2D hit = Physics2D.Raycast(origin, Vector2.down, edgeDetectDistance, groundLayer);
-
-        Debug.DrawRay(origin, Vector2.down * edgeDetectDistance, hit.collider ? Color.green : Color.red);
-
-        if (hit.collider)
-        {
-            rb.velocity = new Vector2(direction * patrolSpeed, 0);
-
-            // Flip object, NOT just sprite
-            transform.localScale = new Vector3(Mathf.Abs(transform.localScale.x) * direction, transform.localScale.y, 1);
-
-            if (Mathf.Abs(transform.position.x - startPoint.x) > patrolDistance)
-            {
-                if (Time.time - lastTurnTime > turnCooldown)
-                {
-                    direction *= -1;
-                    lastTurnTime = Time.time;
-                }
-            }
-        }
-        else
+        // 1. Check patrol distance first: flip if out of bounds
+        if (Mathf.Abs(transform.position.x - startPoint.x) > patrolDistance)
         {
             if (Time.time - lastTurnTime > turnCooldown)
             {
                 direction *= -1;
                 lastTurnTime = Time.time;
+                Debug.Log($"{name}: Out of patrol bounds. Flipping direction to {direction}.");
             }
-            rb.velocity = Vector2.zero;
+        }
+
+        // 2. Ground check ahead (bat's "feet" + direction)
+        Vector2 edgeOrigin = (Vector2)transform.position + Vector2.right * direction * raycastHorizontalOffset;
+        RaycastHit2D edgeHit = Physics2D.Raycast(edgeOrigin, Vector2.down, edgeDetectDistance, groundLayer);
+
+        bool edgeFound = (edgeHit.collider && edgeHit.collider.gameObject != this.gameObject);
+
+        if (!edgeFound)
+            Debug.Log($"{name}: Edge ray found NO ground directly ahead.");
+
+        if (!edgeFound)
+        {
+            // 3. Check for jumpable platform ahead
+            float forwardCheckY = transform.position.y - (boxCollider != null ? boxCollider.size.y / 2f : 0.5f) - jumpYOffset;
+            Vector2 forwardCheckOrigin = new Vector2(
+                transform.position.x + direction * (raycastHorizontalOffset + jumpDistance),
+                forwardCheckY
+            );
+            RaycastHit2D jumpHit = Physics2D.Raycast(forwardCheckOrigin, Vector2.down, jumpRayDownLength, groundLayer);
+
+            bool jumpFound = (jumpHit.collider != null);
+
+            if (jumpFound)
+            {
+                Debug.Log($"{name}: JUMPING! Forward platform found.");
+                Vector2 jumpVector = new Vector2(direction * patrolSpeed * 3f, jumpForce);
+                rb.velocity = Vector2.zero;
+                rb.AddForce(jumpVector, ForceMode2D.Impulse);
+                isJumping = true;
+                animator.SetBool("isWalking", false);
+                return;
+            }
+            else
+            {
+                // Can't jump; flip direction and do NOT move this frame
+                if (Time.time - lastTurnTime > turnCooldown)
+                {
+                    direction *= -1;
+                    lastTurnTime = Time.time;
+                    Debug.Log($"{name}: Could not jump, flipping direction to {direction}.");
+                }
+                rb.velocity = Vector2.zero;
+                return;
+            }
+        }
+        else
+        {
+            rb.velocity = new Vector2(direction * patrolSpeed, rb.velocity.y);
+            transform.localScale = new Vector3(Mathf.Abs(transform.localScale.x) * direction, transform.localScale.y, 1);
         }
     }
 
@@ -146,51 +184,35 @@ public class BatEnemyAI : MonoBehaviour
         float dx = player.position.x - transform.position.x;
         float distance = Mathf.Abs(dx);
 
-        // Flip to face the player, hitbox always extends in positive X
         int facingDir = (dx > 0) ? 1 : -1;
         transform.localScale = new Vector3(Mathf.Abs(transform.localScale.x) * facingDir, transform.localScale.y, 1);
 
-        // If within attack range, stop and attack repeatedly
         if (distance <= attackRange)
         {
             rb.velocity = Vector2.zero;
             animator.SetBool("isWalking", false);
             animator.SetBool("isAttacking", true);
 
-            // Only trigger a new attack when not already attacking and cooldown has passed
             if (!isAttacking && (Time.time - lastAttackTime >= attackCooldown))
             {
                 lastAttackTime = Time.time;
                 isAttacking = true;
-
-                // Animation events should call EnableAttackHitbox/DisableAttackHitbox and AttemptPlayerAttack
                 StartCoroutine(ResetAttackStateAndCollider());
             }
         }
         else
         {
-            // Move toward player, but never overlap
             animator.SetBool("isWalking", true);
             animator.SetBool("isAttacking", false);
 
             float moveSpeed = Mathf.Sign(dx) * patrolSpeed * 1.25f;
-            rb.velocity = new Vector2(moveSpeed, 0);
+            rb.velocity = new Vector2(moveSpeed, rb.velocity.y);
         }
     }
 
-    // Animation Event - called exactly on the frame you want the hitbox active
-    public void EnableAttackHitbox()
-    {
-        ExtendAttackCollider(true);
-    }
+    public void EnableAttackHitbox() => ExtendAttackCollider(true);
+    public void DisableAttackHitbox() => ExtendAttackCollider(false);
 
-    // Animation Event - called to end the hitbox extension
-    public void DisableAttackHitbox()
-    {
-        ExtendAttackCollider(false);
-    }
-
-    // Animation Event - call this at the moment of "impact" in the attack animation
     public void AttemptPlayerAttack()
     {
         if (player && Mathf.Abs(player.position.x - transform.position.x) <= attackRange + 0.2f)
@@ -206,7 +228,6 @@ public class BatEnemyAI : MonoBehaviour
 
         if (extend)
         {
-            // Always extend to the right (positive X); flipping is handled by scale
             boxCollider.size = new Vector2(originalColliderSize.x + attackColliderExtension, originalColliderSize.y);
             boxCollider.offset = originalColliderOffset + new Vector2((attackColliderExtension / 2f), 0);
         }
@@ -219,13 +240,10 @@ public class BatEnemyAI : MonoBehaviour
 
     IEnumerator ResetAttackStateAndCollider()
     {
-        // Wait the length of the attack animation; adjust as needed
         yield return new WaitForSeconds(0.4f);
         isAttacking = false;
         animator.SetBool("isAttacking", false);
         animator.SetBool("isWalking", true);
-
-        // ExtendAttackCollider(false); // Animation event disables
     }
 
     void OnTriggerEnter2D(Collider2D other)
@@ -239,6 +257,12 @@ public class BatEnemyAI : MonoBehaviour
 
     void OnCollisionEnter2D(Collision2D collision)
     {
+        if (collision.gameObject.layer == LayerMask.NameToLayer("Ground"))
+        {
+            isJumping = false;
+            animator.SetBool("isWalking", true);
+        }
+
         if (collision.gameObject.layer == LayerMask.NameToLayer("Projectile"))
         {
             Vector2 impactPos = collision.contacts.Length > 0 ? collision.contacts[0].point : (Vector2)transform.position;
@@ -295,8 +319,13 @@ public class BatEnemyAI : MonoBehaviour
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, detectionDistance);
 
-        Vector2 origin = (Vector2)transform.position + Vector2.right * direction * raycastHorizontalOffset;
+        Vector2 edgeOrigin = (Vector2)transform.position + Vector2.right * direction * raycastHorizontalOffset;
         Gizmos.color = Color.yellow;
-        Gizmos.DrawLine(origin, origin + Vector2.down * edgeDetectDistance);
+        Gizmos.DrawLine(edgeOrigin, edgeOrigin + Vector2.down * edgeDetectDistance);
+
+        Vector2 forwardCheckOrigin = (Vector2)transform.position + Vector2.right * direction * (raycastHorizontalOffset + jumpDistance);
+        forwardCheckOrigin.y -= jumpYOffset;
+        Gizmos.color = Color.cyan;
+        Gizmos.DrawLine(forwardCheckOrigin, forwardCheckOrigin + Vector2.down * jumpRayDownLength);
     }
 }
