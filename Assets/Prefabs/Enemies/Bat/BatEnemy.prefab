@@ -182,8 +182,8 @@ MonoBehaviour:
   jumpRayDownLength: 4
   jumpYOffset: 0
   turnCooldown: 0.3
-  attackRange: 1
-  attackCooldown: 1.2
+  attackRange: 1.35
+  attackCooldown: 0.5
   attackDamage: 1
   attackColliderExtension: 1.5
   hitEffectSprite: {fileID: 2010348863, guid: c1c62c101ee1cac418bbfdf542a925da, type: 3}

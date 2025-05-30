@@ -325,7 +325,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1482838693400913314, guid: f02700a5758177b4299140dc3f1a3650, type: 3}
       propertyPath: attackRange
-      value: 2
+      value: 1.35
       objectReference: {fileID: 0}
     - target: {fileID: 1482838693400913314, guid: f02700a5758177b4299140dc3f1a3650, type: 3}
       propertyPath: attackCooldown
@@ -2038,7 +2038,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1482838693400913314, guid: f02700a5758177b4299140dc3f1a3650, type: 3}
       propertyPath: attackRange
-      value: 2
+      value: 1.35
       objectReference: {fileID: 0}
     - target: {fileID: 1482838693400913314, guid: f02700a5758177b4299140dc3f1a3650, type: 3}
       propertyPath: attackCooldown
