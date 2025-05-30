@@ -1,6 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class EnemyController : MonoBehaviour
@@ -8,6 +5,8 @@ public class EnemyController : MonoBehaviour
     [Header("References")]
     public Transform player;            // drag the Player object here (or find by tag)
     public LayerMask groundLayer;       // for simple edge detection (optional)
+    [Tooltip("Assign several different hit sounds; a random one plays each hit")]
+    [SerializeField] private AudioClip[] hitClips;
     
     [Header("Movement")]
     public float moveSpeed = 3f;        // chase speed
@@ -32,7 +31,14 @@ public class EnemyController : MonoBehaviour
     private float lastAttackTime;
     private bool facingRight = true;
     
-    private void Awake() => rb = GetComponent<Rigidbody2D>();
+    AudioSource audioSource;                  // cache in Awake()
+    int lastClipIndex = -1;
+
+    private void Awake()
+    {
+        rb = GetComponent<Rigidbody2D>();
+        audioSource = GetComponent<AudioSource>();
+    }
 
     private void FixedUpdate()
     {
@@ -77,28 +83,38 @@ public class EnemyController : MonoBehaviour
         }
     }
     
-    // ──────────────────────────────────────
-    // Helpers
-    // ──────────────────────────────────────
-    bool GroundAhead()
-    {
-        // start a little in front of the feet, pointed straight down
-        Vector2 origin = rb.position + new Vector2(facingRight ? ledgeOffsetX : -ledgeOffsetX, 0f);
-        RaycastHit2D hit = Physics2D.Raycast(origin, Vector2.down, ledgeCheckDepth, groundLayer);
-        return hit.collider != null;
-    }
-    
     void Attack()
     {
         // Very simple melee: damage anything in a small circle
         Collider2D hit = Physics2D.OverlapCircle(hitPoint.position, hitRadius, playerLayer);
         if (hit != null)
         {
+         
+            PlayAttackSound();
+            
             // Replace with your own health system
             hit.GetComponent<PlayerHealth>()?.TakeDamage(damage);
             Debug.Log("Hit " + hit.name);
         }
         // TODO: trigger animation & sound here
+    }
+
+    void PlayAttackSound()
+    {
+        // 2. play sound
+        if (hitClips != null && hitClips.Length > 0)
+        {
+            int index = Random.Range(0, hitClips.Length);
+            
+            // avoid immediate repeat if you have >1 clip
+            if (hitClips.Length > 1 && index == lastClipIndex) index = (index + 1) % hitClips.Length;
+            
+            audioSource.pitch = Random.Range(0.95f, 1.05f); // tiny pitch scatter
+            audioSource.PlayOneShot(hitClips[index]);
+            audioSource.pitch = 1f;
+            
+            lastClipIndex = index;
+        }
     }
 
     void Flip()
@@ -107,6 +123,14 @@ public class EnemyController : MonoBehaviour
         Vector3 scale = transform.localScale;
         scale.x *= -1;
         transform.localScale = scale;
+    }
+    
+    bool GroundAhead()
+    {
+        // start a little in front of the feet, pointed straight down
+        Vector2 origin = rb.position + new Vector2(facingRight ? ledgeOffsetX : -ledgeOffsetX, 0f);
+        RaycastHit2D hit = Physics2D.Raycast(origin, Vector2.down, ledgeCheckDepth, groundLayer);
+        return hit.collider != null;
     }
     
 #if UNITY_EDITOR     // draws gizmos in Scene view

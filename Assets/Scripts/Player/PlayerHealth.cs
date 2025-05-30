@@ -42,19 +42,19 @@ public class PlayerHealth : MonoBehaviour
         CameraShake.Instance?.Shake();
         
         // 2. play sound
-        if (hitClips != null && hitClips.Length > 0)
-        {
-            int index = Random.Range(0, hitClips.Length);
-            
-            // avoid immediate repeat if you have >1 clip
-            if (hitClips.Length > 1 && index == lastClipIndex) index = (index + 1) % hitClips.Length;
-            
-            audioSource.pitch = Random.Range(0.95f, 1.05f); // tiny pitch scatter
-            audioSource.PlayOneShot(hitClips[index]);
-            audioSource.pitch = 1f;
-            
-            lastClipIndex = index;
-        }
+        // if (hitClips != null && hitClips.Length > 0)
+        // {
+        //     int index = Random.Range(0, hitClips.Length);
+        //     
+        //     // avoid immediate repeat if you have >1 clip
+        //     if (hitClips.Length > 1 && index == lastClipIndex) index = (index + 1) % hitClips.Length;
+        //     
+        //     audioSource.pitch = Random.Range(0.95f, 1.05f); // tiny pitch scatter
+        //     audioSource.PlayOneShot(hitClips[index]);
+        //     audioSource.pitch = 1f;
+        //     
+        //     lastClipIndex = index;
+        // }
         
         // 3. health / flash code
         currentHealth -= amount;
