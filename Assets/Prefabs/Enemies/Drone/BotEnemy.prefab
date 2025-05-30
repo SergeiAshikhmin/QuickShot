@@ -96,7 +96,7 @@ Rigidbody2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6432480003936989743}
-  m_BodyType: 1
+  m_BodyType: 0
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
@@ -159,6 +159,8 @@ MonoBehaviour:
   bulletPrefab: {fileID: 5600342377426141532, guid: 776639ff616d41046bea7752bc7ce1b9, type: 3}
   bulletSpeed: 2
   fireRate: 2
+  warningSignPrefab: {fileID: 2008738588459357288, guid: 73e214c86ad351746a4802e98a0b89d7, type: 3}
+  alertYOffset: 2
 --- !u!61 &6432480003936989910
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -176,7 +178,7 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 3, y: 3}
+    oldSize: {x: 2.5, y: 1.75}
     newSize: {x: 1.5, y: 1.5}
     adaptiveTilingThreshold: 0.5
     drawMode: 0

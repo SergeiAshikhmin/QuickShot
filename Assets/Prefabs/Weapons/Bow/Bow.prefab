@@ -100,8 +100,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   arrowPrefab: {fileID: 6547274378827822751, guid: 8a591b333d7e0476dbdf1e8827a17870, type: 3}
   firePoint: {fileID: 5508970961623832728}
-  shootForce: 10
-  shootCooldown: 2
+  shootForce: 15
+  shootCooldown: 0.7
   pushbackForce: 20
   useVelocityPush: 0
 --- !u!1 &5508970961623832729

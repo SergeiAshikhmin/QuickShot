@@ -39,6 +39,10 @@ public class BatEnemyAI : MonoBehaviour
     [Header("Health")]
     public int maxHealth = 5;
 
+    [Header("Alert Settings")]
+    public GameObject warningSignPrefab;
+    public float alertYOffset = 1.5f;
+
     private int currentHealth;
     private Animator animator;
     private Vector2 startPoint;
@@ -52,6 +56,9 @@ public class BatEnemyAI : MonoBehaviour
     private Vector2 originalColliderOffset;
 
     private bool isJumping = false;
+    private bool isPlayerDetected = false;
+    private bool hasAlerted = false;
+    private GameObject currentAlertInstance = null;
 
     void Start()
     {
@@ -72,10 +79,8 @@ public class BatEnemyAI : MonoBehaviour
             originalColliderSize = boxCollider.size;
             originalColliderOffset = boxCollider.offset;
         }
-        else
-        {
-            Debug.LogWarning($"{name} is missing a BoxCollider2D!");
-        }
+
+        StartCoroutine(UpdateHurtFlash());
 
         Debug.Log($"{name}: groundLayer mask value is {groundLayer.value}. If this is 0, it is 'Nothing' and will never detect ground!");
     }
@@ -87,28 +92,66 @@ public class BatEnemyAI : MonoBehaviour
         GameObject playerObj = GameObject.FindGameObjectWithTag(playerTag);
         player = playerObj ? playerObj.transform : null;
 
-        bool detected = false;
+        bool isNowDetected = false;
         if (player != null)
         {
             float distance = Vector2.Distance(transform.position, player.position);
             if (distance <= detectionDistance)
-                detected = true;
+                isNowDetected = true;
         }
 
-        // If we're jumping, just play jump anim and stop horizontal motion,
-        // but STILL allow attack logic if in range.
+        if (isNowDetected && !hasAlerted)
+        {
+            hasAlerted = true;
+            ShowWarningAlert();
+        }
+
+        if (!isNowDetected && hasAlerted)
+        {
+            hasAlerted = false;
+        }
+
+        isPlayerDetected = isNowDetected;
+
         if (isJumping)
         {
             animator.SetBool("isWalking", false);
-            if (detected)
+            if (isPlayerDetected)
                 StopAndAttackPlayer();
             return;
         }
 
-        if (detected)
+        if (isPlayerDetected)
             StopAndAttackPlayer();
         else
             Patrol();
+    }
+
+    void ShowWarningAlert()
+    {
+        if (warningSignPrefab != null && currentAlertInstance == null)
+        {
+            currentAlertInstance = Instantiate(warningSignPrefab, transform);
+            currentAlertInstance.transform.localPosition = new Vector3(0f, alertYOffset, 0f);
+
+            float animLength = 1.5f;
+            Animator anim = currentAlertInstance.GetComponent<Animator>();
+            if (anim != null && anim.runtimeAnimatorController != null)
+            {
+                AnimationClip[] clips = anim.runtimeAnimatorController.animationClips;
+                if (clips.Length > 0)
+                    animLength = clips[0].length;
+            }
+
+            Destroy(currentAlertInstance, animLength);
+            StartCoroutine(ClearAlertReferenceAfter(animLength));
+        }
+    }
+
+    IEnumerator ClearAlertReferenceAfter(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        currentAlertInstance = null;
     }
 
     void Patrol()
@@ -116,29 +159,21 @@ public class BatEnemyAI : MonoBehaviour
         animator.SetBool("isWalking", true);
         animator.SetBool("isAttacking", false);
 
-        // 1. Check patrol distance first: flip if out of bounds
         if (Mathf.Abs(transform.position.x - startPoint.x) > patrolDistance)
         {
             if (Time.time - lastTurnTime > turnCooldown)
             {
                 direction *= -1;
                 lastTurnTime = Time.time;
-                Debug.Log($"{name}: Out of patrol bounds. Flipping direction to {direction}.");
             }
         }
 
-        // 2. Ground check ahead (bat's "feet" + direction)
         Vector2 edgeOrigin = (Vector2)transform.position + Vector2.right * direction * raycastHorizontalOffset;
         RaycastHit2D edgeHit = Physics2D.Raycast(edgeOrigin, Vector2.down, edgeDetectDistance, groundLayer);
-
-        bool edgeFound = (edgeHit.collider && edgeHit.collider.gameObject != this.gameObject);
-
-        if (!edgeFound)
-            Debug.Log($"{name}: Edge ray found NO ground directly ahead.");
+        bool edgeFound = edgeHit.collider && edgeHit.collider.gameObject != this.gameObject;
 
         if (!edgeFound)
         {
-            // 3. Check for jumpable platform ahead
             float forwardCheckY = transform.position.y - (boxCollider != null ? boxCollider.size.y / 2f : 0.5f) - jumpYOffset;
             Vector2 forwardCheckOrigin = new Vector2(
                 transform.position.x + direction * (raycastHorizontalOffset + jumpDistance),
@@ -146,11 +181,8 @@ public class BatEnemyAI : MonoBehaviour
             );
             RaycastHit2D jumpHit = Physics2D.Raycast(forwardCheckOrigin, Vector2.down, jumpRayDownLength, groundLayer);
 
-            bool jumpFound = (jumpHit.collider != null);
-
-            if (jumpFound)
+            if (jumpHit.collider != null)
             {
-                Debug.Log($"{name}: JUMPING! Forward platform found.");
                 Vector2 jumpVector = new Vector2(direction * patrolSpeed * 3f, jumpForce);
                 rb.velocity = Vector2.zero;
                 rb.AddForce(jumpVector, ForceMode2D.Impulse);
@@ -160,12 +192,10 @@ public class BatEnemyAI : MonoBehaviour
             }
             else
             {
-                // Can't jump; flip direction and do NOT move this frame
                 if (Time.time - lastTurnTime > turnCooldown)
                 {
                     direction *= -1;
                     lastTurnTime = Time.time;
-                    Debug.Log($"{name}: Could not jump, flipping direction to {direction}.");
                 }
                 rb.velocity = Vector2.zero;
                 return;
@@ -178,14 +208,12 @@ public class BatEnemyAI : MonoBehaviour
         }
     }
 
-    // --- FIXED: Attack uses true 2D distance ---
     void StopAndAttackPlayer()
     {
         if (player == null) return;
 
         float dx = player.position.x - transform.position.x;
         float distance2D = Vector2.Distance(transform.position, player.position);
-
         int facingDir = (dx > 0) ? 1 : -1;
         transform.localScale = new Vector3(Mathf.Abs(transform.localScale.x) * facingDir, transform.localScale.y, 1);
 
@@ -206,9 +234,7 @@ public class BatEnemyAI : MonoBehaviour
         {
             animator.SetBool("isWalking", true);
             animator.SetBool("isAttacking", false);
-
-            float moveSpeed = Mathf.Sign(dx) * patrolSpeed * 1.25f;
-            rb.velocity = new Vector2(moveSpeed, rb.velocity.y);
+            rb.velocity = new Vector2(Mathf.Sign(dx) * patrolSpeed * 1.25f, rb.velocity.y);
         }
     }
 
@@ -219,7 +245,6 @@ public class BatEnemyAI : MonoBehaviour
     {
         if (player && Vector2.Distance(transform.position, player.position) <= attackRange + 0.2f)
         {
-            Debug.Log($"{name} attacks player!");
             player.SendMessage("TakeDamage", attackDamage, SendMessageOptions.DontRequireReceiver);
         }
     }
@@ -284,36 +309,43 @@ public class BatEnemyAI : MonoBehaviour
             spriteR.sortingOrder = 999;
             Destroy(hitObj, hitEffectDuration);
         }
-        else if (sr != null)
-        {
-            StartCoroutine(HitFlash());
-        }
 
         currentHealth--;
-        Debug.Log($"{name} took damage! Health is now {currentHealth}");
-
         if (currentHealth <= 0)
         {
             Die(impactPoint);
         }
     }
 
-    IEnumerator HitFlash()
-    {
-        Color original = sr.color;
-        sr.color = Color.red;
-        yield return new WaitForSeconds(0.07f);
-        sr.color = original;
-    }
-
     void Die(Vector2 impactPoint)
     {
-        Debug.Log($"{name} died! Spawning impact effect.");
         if (impactPrefab)
         {
             Instantiate(impactPrefab, impactPoint, Quaternion.identity);
         }
         Destroy(gameObject);
+    }
+
+    IEnumerator UpdateHurtFlash()
+    {
+        Color baseColor = Color.white;
+
+        while (true)
+        {
+            if (sr != null && currentHealth < maxHealth)
+            {
+                float t = Mathf.PingPong(Time.time * 4f, 1f); // speed of pulse
+                float damageRatio = 1f - ((float)currentHealth / maxHealth);
+                Color flashColor = Color.Lerp(baseColor, Color.red, t * damageRatio);
+                sr.color = flashColor;
+            }
+            else if (sr != null)
+            {
+                sr.color = baseColor;
+            }
+
+            yield return null;
+        }
     }
 
     void OnDrawGizmosSelected()

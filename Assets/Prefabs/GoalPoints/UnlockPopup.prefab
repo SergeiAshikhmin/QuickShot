@@ -75,15 +75,15 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: -2413806693520163455, guid: a86470a33a6bf42c4b3595704624658b, type: 3}
-  m_Color: {r: 0, g: 0.9403944, b: 1, a: 1}
+  m_Sprite: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
   m_Size: {x: 1, y: 0.5}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!58 &3762884866361829493
@@ -115,7 +115,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   weaponID: Shotgun
+  weaponPrefab: {fileID: 5186437210079770301, guid: a59fdd3484d436f4b97e0b29b3645011, type: 3}
   popupPrefab: {fileID: 229837957849374579, guid: c8a350f919510c849a9851ee5ea00025, type: 3}
+  bobAmplitude: 0.5
+  bobFrequency: 1
 --- !u!1 &3195228626008897227
 GameObject:
   m_ObjectHideFlags: 0

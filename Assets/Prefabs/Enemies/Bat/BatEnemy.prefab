@@ -190,3 +190,5 @@ MonoBehaviour:
   hitEffectDuration: 0.08
   impactPrefab: {fileID: 6192724089161036641, guid: e17d9a3f04750764c8c0a7a0461e4c3b, type: 3}
   maxHealth: 5
+  warningSignPrefab: {fileID: 2008738588459357288, guid: 73e214c86ad351746a4802e98a0b89d7, type: 3}
+  alertYOffset: 2

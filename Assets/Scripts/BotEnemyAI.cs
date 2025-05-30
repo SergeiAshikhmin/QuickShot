@@ -1,7 +1,6 @@
 using UnityEngine;
 using System.Collections;
 
-
 public class BotEnemyAI : MonoBehaviour
 {
     [Header("Detection")]
@@ -12,7 +11,7 @@ public class BotEnemyAI : MonoBehaviour
     public float patrolSpeed = 2f;
     public float patrolDistance = 4f;
     public LayerMask groundLayer;
-    public float edgeDetectDistance = 2.0f;    // For flying bots!
+    public float edgeDetectDistance = 2.0f;
     public float raycastHorizontalOffset = 0.7f;
 
     [Header("Corner Handling")]
@@ -23,25 +22,30 @@ public class BotEnemyAI : MonoBehaviour
     private int currentHealth;
 
     [Header("VFX")]
-    public GameObject impactPrefab;  // Drag Impact01 here!
-    public Sprite hitEffectSprite;   // Optional: sprite for hit effect
+    public GameObject impactPrefab;
+    public Sprite hitEffectSprite;
     public float hitEffectDuration = 0.08f;
 
     [Header("Enemy Attack")]
-    public GameObject bulletPrefab;   // Drag your bullet prefab here!
-    public float bulletSpeed = 2f;    // Editable in Inspector
-    public float fireRate = 2f;       // Time (sec) between shots
-
+    public GameObject bulletPrefab;
+    public float bulletSpeed = 2f;
+    public float fireRate = 2f;
     private float lastFireTime = -999f;
+
+    [Header("Alert Settings")]
+    public GameObject warningSignPrefab;
+    public float alertYOffset = 1.5f;
 
     private Animator animator;
     private Vector2 startPoint;
     private int direction = 1;
-
     private Rigidbody2D rb;
     private Transform player;
     private SpriteRenderer sr;
     private float lastTurnTime = -999f;
+
+    private bool hasAlerted = false;
+    private GameObject currentAlertInstance = null;
 
     void Start()
     {
@@ -54,13 +58,12 @@ public class BotEnemyAI : MonoBehaviour
         if (rb.bodyType == RigidbodyType2D.Dynamic)
             rb.gravityScale = 0f;
 
-        Vector3 pos = transform.position;
-        transform.position = new Vector3(pos.x, pos.y, 0f);
-
-        if (rb != null)
-            rb.freezeRotation = true;
+        transform.position = new Vector3(transform.position.x, transform.position.y, 0f);
+        rb.freezeRotation = true;
 
         Debug.Log($"{name}: groundLayer mask value is {groundLayer.value}. If this is 0, it is 'Nothing' and will never detect ground!");
+
+        StartCoroutine(UpdateHurtFlash());
     }
 
     void Update()
@@ -75,15 +78,18 @@ public class BotEnemyAI : MonoBehaviour
         {
             float distance = Vector2.Distance(transform.position, player.position);
             if (distance <= detectionDistance)
-            {
                 detected = true;
-                // Fire only if enough time has passed since last shot
-                if (Time.time - lastFireTime > fireRate)
-                {
-                    FireBullet();
-                    lastFireTime = Time.time;
-                }
-            }
+        }
+
+        if (detected && !hasAlerted)
+        {
+            hasAlerted = true;
+            ShowWarningAlert();
+        }
+
+        if (!detected && hasAlerted)
+        {
+            hasAlerted = false;
         }
 
         if (animator) animator.SetBool("Detected", detected);
@@ -95,14 +101,46 @@ public class BotEnemyAI : MonoBehaviour
         else
         {
             rb.velocity = Vector2.zero;
+
+            if (Time.time - lastFireTime > fireRate)
+            {
+                FireBullet();
+                lastFireTime = Time.time;
+            }
         }
+    }
+
+    void ShowWarningAlert()
+    {
+        if (warningSignPrefab != null && currentAlertInstance == null)
+        {
+            currentAlertInstance = Instantiate(warningSignPrefab, transform);
+            currentAlertInstance.transform.localPosition = new Vector3(0f, alertYOffset, 0f);
+
+            float animLength = 1.5f;
+            Animator anim = currentAlertInstance.GetComponent<Animator>();
+            if (anim != null && anim.runtimeAnimatorController != null)
+            {
+                AnimationClip[] clips = anim.runtimeAnimatorController.animationClips;
+                if (clips.Length > 0)
+                    animLength = clips[0].length;
+            }
+
+            Destroy(currentAlertInstance, animLength);
+            StartCoroutine(ClearAlertReferenceAfter(animLength));
+        }
+    }
+
+    IEnumerator ClearAlertReferenceAfter(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        currentAlertInstance = null;
     }
 
     void Patrol()
     {
         Vector2 origin = (Vector2)transform.position + Vector2.right * direction * raycastHorizontalOffset;
         RaycastHit2D hit = Physics2D.Raycast(origin, Vector2.down, edgeDetectDistance, groundLayer);
-
         Debug.DrawRay(origin, Vector2.down * edgeDetectDistance, hit.collider ? Color.green : Color.red);
 
         if (hit.collider)
@@ -138,6 +176,7 @@ public class BotEnemyAI : MonoBehaviour
         {
             Vector2 dir = (player.position - transform.position).normalized;
             GameObject bullet = Instantiate(bulletPrefab, transform.position, Quaternion.identity);
+
             EnemyBullet eb = bullet.GetComponent<EnemyBullet>();
             if (eb != null)
             {
@@ -146,7 +185,6 @@ public class BotEnemyAI : MonoBehaviour
             }
             else
             {
-                // Fallback if not using EnemyBullet script
                 Rigidbody2D rb2d = bullet.GetComponent<Rigidbody2D>();
                 if (rb2d != null)
                     rb2d.velocity = dir * bulletSpeed;
@@ -154,24 +192,22 @@ public class BotEnemyAI : MonoBehaviour
         }
     }
 
-    // Handle bullet triggers (works for "Is Trigger" bullets)
     void OnTriggerEnter2D(Collider2D other)
     {
         if (other.gameObject.layer == LayerMask.NameToLayer("Projectile"))
         {
             TakeDamage(1, other.ClosestPoint(transform.position));
-            Destroy(other.gameObject); // Destroy bullet
+            Destroy(other.gameObject);
         }
     }
 
-    // Handle bullet collisions (works for non-trigger bullets, or for flexibility)
     void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.layer == LayerMask.NameToLayer("Projectile"))
         {
             Vector2 impactPos = collision.contacts.Length > 0 ? collision.contacts[0].point : (Vector2)transform.position;
             TakeDamage(1, impactPos);
-            Destroy(collision.gameObject); // Destroy bullet
+            Destroy(collision.gameObject);
         }
     }
 
@@ -180,7 +216,6 @@ public class BotEnemyAI : MonoBehaviour
         currentHealth -= amount;
         Debug.Log($"{name} took damage! Health is now {currentHealth}");
 
-        // Hit effect (sprite flash)
         if (hitEffectSprite != null)
         {
             GameObject hitObj = new GameObject("HitEffect");
@@ -217,6 +252,28 @@ public class BotEnemyAI : MonoBehaviour
             Instantiate(impactPrefab, impactPoint, Quaternion.identity);
         }
         Destroy(gameObject);
+    }
+
+    IEnumerator UpdateHurtFlash()
+    {
+        Color baseColor = Color.white;
+
+        while (true)
+        {
+            if (sr != null && currentHealth < maxHealth)
+            {
+                float t = Mathf.PingPong(Time.time * 4f, 1f);
+                float damageRatio = 1f - ((float)currentHealth / maxHealth);
+                Color flashColor = Color.Lerp(baseColor, Color.red, t * damageRatio);
+                sr.color = flashColor;
+            }
+            else if (sr != null)
+            {
+                sr.color = baseColor;
+            }
+
+            yield return null;
+        }
     }
 
     void OnDrawGizmosSelected()

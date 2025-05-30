@@ -1,28 +1,40 @@
 using UnityEngine;
-using TMPro;
 using UnityEngine.UI;
+using TMPro;
 
 public class UnlockPopup : MonoBehaviour
 {
-    public TextMeshProUGUI messageText;
-    public Button closeButton;
+    [Header("UI References")]
+    public TextMeshProUGUI titleText;  // Drag TitleText (TMP) here
+    public Button closeButton;         // Drag CloseButton here
+    public Image weaponImageUI;        // Drag WeaponImage (Image) here (NOT the Button image)
 
-    private System.Action onClose;
+    private System.Action onCloseCallback;
 
-    // Call this from UnlockPoint to initialize the popup
-    public void Setup(string weaponID, System.Action onCloseCallback)
+    public void Setup(string weaponID, System.Action onClose, Sprite weaponSprite)
     {
-        messageText.text = $"You unlocked the {weaponID}!";
-        onClose = onCloseCallback;
-        closeButton.onClick.RemoveAllListeners(); // Ensure no duplicate listeners
-        closeButton.onClick.AddListener(ClosePopup);
-        gameObject.SetActive(true); // Show popup
+        onCloseCallback = onClose;
+
+        if (titleText != null)
+            titleText.text = $"You have unlocked the {weaponID}!";
+
+        if (weaponImageUI != null)
+        {
+            weaponImageUI.sprite = weaponSprite;
+            weaponImageUI.preserveAspect = true;
+        }
+
+        if (closeButton != null)
+        {
+            // Clear previous listeners and hook up close
+            closeButton.onClick.RemoveAllListeners();
+            closeButton.onClick.AddListener(Close);
+        }
     }
 
-    void ClosePopup()
+    private void Close()
     {
-        onClose?.Invoke(); // Callback to UnlockPoint for re-enabling game
-        Destroy(gameObject); // Destroy popup UI
+        onCloseCallback?.Invoke();
+        Destroy(gameObject);
     }
 }
-
