@@ -65,6 +65,7 @@ public class EnemyController : MonoBehaviour
         if (!GroundAhead())
         {
             rb.velocity = new Vector2(0, rb.velocity.y);
+            animator.SetBool("IsWalking", false);
             return;
         }
 
@@ -78,11 +79,14 @@ public class EnemyController : MonoBehaviour
             // Flip sprite when necessary
             if ((dir.x > 0 && !facingRight) || (dir.x < 0 && facingRight))
                 Flip();
+            
+            animator.SetBool("IsWalking", false);
         }
         else
         {
             // idle / braking
             rb.velocity = new Vector2(0, rb.velocity.y);
+            animator.SetBool("IsWalking", false);
         }
 
         // 2. Attack if close enough and cooldown elapsed
@@ -91,6 +95,9 @@ public class EnemyController : MonoBehaviour
             Attack();
             lastAttackTime = Time.time;
         }
+        
+        bool isMoving = Mathf.Abs(rb.velocity.x) > 0.1f;
+        animator.SetBool("IsWalking", isMoving);
     }
     
     void Attack()
@@ -137,6 +144,7 @@ public class EnemyController : MonoBehaviour
     
     void Die()
     {
+        animator.SetBool("IsWalking", false);
         animator.SetTrigger("Die");
         rb.velocity = Vector2.zero;
         moveSpeed = 0;
