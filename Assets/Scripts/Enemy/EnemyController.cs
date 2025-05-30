@@ -95,7 +95,7 @@ public class EnemyController : MonoBehaviour
         if (hit != null)
         {
             // Replace with your own health system
-            // hit.GetComponent<PlayerHealth>()?.TakeDamage(damage);
+            hit.GetComponent<PlayerHealth>()?.TakeDamage(damage);
             Debug.Log("Hit " + hit.name);
         }
         // TODO: trigger animation & sound here
