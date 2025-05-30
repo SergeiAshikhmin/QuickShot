@@ -4,6 +4,13 @@ using UnityEngine;
 
 public class PlayerHealth : MonoBehaviour
 {
+    [Header("Audio")]
+    [Tooltip("Assign several different hit sounds; a random one plays each hit")]
+    [SerializeField] private AudioClip[] hitClips;
+    
+    AudioSource audioSource;
+    int lastClipIndex = -1;
+    
     [Header("Stats")]
     public int maxHealth = 3;
     [Tooltip("How many flashes (red ↔︎ white) per hit")]
@@ -20,6 +27,8 @@ public class PlayerHealth : MonoBehaviour
         currentHealth = maxHealth;
         renderers = GetComponentsInChildren<SpriteRenderer>();
         originalColor = renderers[0].color;          // assumes they all share the same tint
+        
+        audioSource = GetComponent<AudioSource>();
     }
     
     /// <summary>Called from EnemyController when the player gets hurt.</summary>
@@ -29,8 +38,25 @@ public class PlayerHealth : MonoBehaviour
         if (isInvincible) return;
         isInvincible = true;
         
+        // 1. camera jolt
         CameraShake.Instance?.Shake();
         
+        // 2. play sound
+        if (hitClips != null && hitClips.Length > 0)
+        {
+            int index = Random.Range(0, hitClips.Length);
+            
+            // avoid immediate repeat if you have >1 clip
+            if (hitClips.Length > 1 && index == lastClipIndex) index = (index + 1) % hitClips.Length;
+            
+            audioSource.pitch = Random.Range(0.95f, 1.05f); // tiny pitch scatter
+            audioSource.PlayOneShot(hitClips[index]);
+            audioSource.pitch = 1f;
+            
+            lastClipIndex = index;
+        }
+        
+        // 3. health / flash code
         currentHealth -= amount;
         if (currentHealth <= 0)
         {
