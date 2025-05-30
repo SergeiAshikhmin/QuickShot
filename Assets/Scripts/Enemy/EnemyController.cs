@@ -153,10 +153,12 @@ public class EnemyController : MonoBehaviour
         this.enabled = false;
 
         // Optional: disable colliders to prevent future hits
-        // foreach (Collider2D col in GetComponents<Collider2D>())
-        // {
-        //     col.enabled = false;
-        // }
+        foreach (Collider2D col in GetComponents<Collider2D>())
+        {
+            col.enabled = false;
+        }
+        
+        rb.bodyType = RigidbodyType2D.Static;
 
         // Optional: destroy object after animation delay
         Destroy(gameObject, 2f); // Adjust time based on your death animation
