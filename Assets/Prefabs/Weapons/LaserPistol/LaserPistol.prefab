@@ -133,8 +133,8 @@ MonoBehaviour:
   muzzleFlashPrefab: {fileID: 149611724043862359, guid: 998604d39cd682945a3c6f2f5e6dc795, type: 3}
   firePoint: {fileID: 5186437209135751927}
   maxCharge: 100
-  chargePerShot: 10
-  rechargeRate: 3
+  chargePerShot: 12
+  rechargeRate: 4
   overheatCooldown: 5
   shootForce: 50
   shootCooldown: 0.1

@@ -106,6 +106,10 @@ public class LaserPistol : MonoBehaviour
 
         _isOverheated = false;
 
+        // Reset color to normal after overheat
+        if (_sprite)
+            _sprite.color = Color.white;
+
         // Ensure enough charge for one shot after cooldown
         _currentCharge = Mathf.Max(_currentCharge, chargePerShot);
     }
