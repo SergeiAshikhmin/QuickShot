@@ -1267,6 +1267,10 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 87
       objectReference: {fileID: 0}
+    - target: {fileID: 5619359120529263985, guid: daab1e5736f27924b869093878240a6d, type: 3}
+      propertyPath: m_text
+      value: Play
+      objectReference: {fileID: 0}
     - target: {fileID: 5742816913067437179, guid: daab1e5736f27924b869093878240a6d, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 110

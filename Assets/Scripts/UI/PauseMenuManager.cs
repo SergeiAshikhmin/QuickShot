@@ -19,20 +19,24 @@ public class PauseMenuManager : MonoBehaviour
     public Button yesQuitButton;
     public Button noQuitButton;
 
-    // Add these for your back buttons!
     [Header("Back Buttons")]
     public Button backLevelSelectButton;
     public Button backWeaponsButton;
     public Button backOptionsButton;
 
     [Header("Ammo Counter UI")]
-    public TMP_Text ammoCounter;      // Assign in Inspector
-    public Image reloadSpinner;       // Assign in Inspector (the spinner image)
-    public TMP_Text reloadText;       // Assign in Inspector (the "RELOADING" TMP_Text)
+    public TMP_Text ammoCounter;
+    public Image reloadSpinner;
+    public TMP_Text reloadText;
 
     [Header("Reload Spinner Animation")]
-    public Sprite[] reloadFrames;     // Sliced frames of spinner sheet
-    public float spinnerFPS = 12f;    // Animation speed
+    public Sprite[] reloadFrames;
+    public float spinnerFPS = 12f;
+
+    [Header("Charge UI")]
+    public Slider chargeSlider;
+    public TMP_Text chargeText;
+    public TMP_Text chargeOverheatText;  // 🔥 New field
 
     private bool isPaused = false;
     private float spinnerTimer = 0f;
@@ -46,12 +50,12 @@ public class PauseMenuManager : MonoBehaviour
         quitConfirmPanel.SetActive(false);
         pausePanel.SetActive(false);
 
-        if (ammoCounter != null)
-            ammoCounter.gameObject.SetActive(false);
-        if (reloadSpinner != null)
-            reloadSpinner.gameObject.SetActive(false);
-        if (reloadText != null)
-            reloadText.gameObject.SetActive(false);
+        if (ammoCounter != null) ammoCounter.gameObject.SetActive(false);
+        if (reloadSpinner != null) reloadSpinner.gameObject.SetActive(false);
+        if (reloadText != null) reloadText.gameObject.SetActive(false);
+        if (chargeSlider != null) chargeSlider.gameObject.SetActive(false);
+        if (chargeText != null) chargeText.gameObject.SetActive(false);
+        if (chargeOverheatText != null) chargeOverheatText.gameObject.SetActive(false);
 
         resumeButton.onClick.AddListener(OnResume);
         levelSelectButton.onClick.AddListener(OpenLevelSelect);
@@ -61,7 +65,6 @@ public class PauseMenuManager : MonoBehaviour
         yesQuitButton.onClick.AddListener(OnQuitConfirmed);
         noQuitButton.onClick.AddListener(CloseQuitConfirm);
 
-        // Assign Back button listeners
         if (backLevelSelectButton) backLevelSelectButton.onClick.AddListener(CloseLevelSelectPanel);
         if (backWeaponsButton)     backWeaponsButton.onClick.AddListener(CloseWeaponsPanel);
         if (backOptionsButton)     backOptionsButton.onClick.AddListener(CloseOptionsPanel);
@@ -78,6 +81,7 @@ public class PauseMenuManager : MonoBehaviour
         }
 
         UpdateAmmoCounter();
+        UpdateChargeUI();
         AnimateReloadSpinner();
     }
 
@@ -134,15 +138,11 @@ public class PauseMenuManager : MonoBehaviour
     void OpenQuitConfirm()
     {
         quitConfirmPanel.SetActive(true);
-        // Pause panel stays interactable since Quit Confirm usually overlays it,
-        // but you can call SetPauseButtonsInteractable(false); if you prefer.
     }
 
     void CloseQuitConfirm()
     {
         quitConfirmPanel.SetActive(false);
-        // If you want to re-enable pause buttons here, uncomment below:
-        // if (pausePanel.activeSelf) SetPauseButtonsInteractable(true);
     }
 
     void OnQuitConfirmed()
@@ -160,7 +160,6 @@ public class PauseMenuManager : MonoBehaviour
         if (pausePanel.activeSelf) SetPauseButtonsInteractable(true);
     }
 
-    // --- Back Button Methods for Subpanels ---
     void CloseLevelSelectPanel()
     {
         levelSelectPanel.SetActive(false);
@@ -185,7 +184,6 @@ public class PauseMenuManager : MonoBehaviour
         if (pausePanel.activeSelf) SetPauseButtonsInteractable(true);
     }
 
-    // --------- BUTTON INTERACTABLE CONTROL ----------
     void SetPauseButtonsInteractable(bool interactable)
     {
         resumeButton.interactable = interactable;
@@ -195,7 +193,6 @@ public class PauseMenuManager : MonoBehaviour
         quitButton.interactable = interactable;
     }
 
-    // ---------- AMMO COUNTER / RELOAD SPINNER BELOW -----------
     void UpdateAmmoCounter()
     {
         if (!ammoCounter || !reloadSpinner || !reloadText) return;
@@ -216,7 +213,6 @@ public class PauseMenuManager : MonoBehaviour
 
                         if (isReloading)
                         {
-                            // Show spinner + "RELOADING"
                             ammoCounter.gameObject.SetActive(false);
                             if (reloadSpinner) reloadSpinner.gameObject.SetActive(true);
                             if (reloadText) reloadText.gameObject.SetActive(true);
@@ -242,6 +238,56 @@ public class PauseMenuManager : MonoBehaviour
             ammoCounter.gameObject.SetActive(false);
             if (reloadSpinner) reloadSpinner.gameObject.SetActive(false);
             if (reloadText) reloadText.gameObject.SetActive(false);
+        }
+    }
+
+    void UpdateChargeUI()
+    {
+        if (!chargeSlider || !chargeText || !chargeOverheatText) return;
+
+        GameObject[] allObjects = FindObjectsOfType<GameObject>();
+        bool foundLaserWeapon = false;
+
+        foreach (GameObject obj in allObjects)
+        {
+            if (obj.activeInHierarchy && obj.layer == LayerMask.NameToLayer("Weapon"))
+            {
+                foreach (var comp in obj.GetComponents<MonoBehaviour>())
+                {
+                    if (comp is LaserPistol laser)
+                    {
+                        if (laser.IsOverheated)
+                        {
+                            float remainingCooldown = Mathf.Max(0f, laser.OverheatCooldownRemaining);
+                            chargeSlider.gameObject.SetActive(false);
+                            chargeText.gameObject.SetActive(false);
+                            chargeOverheatText.gameObject.SetActive(true);
+                            chargeOverheatText.text = $"OVERHEATED ({remainingCooldown:F1}s)";
+                        }
+                        else
+                        {
+                            float percent = Mathf.Clamp01(laser.CurrentCharge / laser.maxCharge);
+                            chargeSlider.value = percent;
+                            chargeText.text = $"{(int)(percent * 100)}%";
+
+                            chargeSlider.gameObject.SetActive(true);
+                            chargeText.gameObject.SetActive(true);
+                            chargeOverheatText.gameObject.SetActive(false);
+                        }
+
+                        foundLaserWeapon = true;
+                        break;
+                    }
+                }
+            }
+            if (foundLaserWeapon) break;
+        }
+
+        if (!foundLaserWeapon)
+        {
+            chargeSlider.gameObject.SetActive(false);
+            chargeText.gameObject.SetActive(false);
+            chargeOverheatText.gameObject.SetActive(false);
         }
     }
 
