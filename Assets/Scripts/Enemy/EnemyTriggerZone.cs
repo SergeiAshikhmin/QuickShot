@@ -29,7 +29,7 @@ public class EnemyTriggerZone : MonoBehaviour
 
     IEnumerator SpawnAfterDelay()
     {
-        yield return new WaitForSeconds(3f);
+        yield return new WaitForSeconds(2f);
 
         if (leftEnemyPrefab && leftSpawnPoint)
         {

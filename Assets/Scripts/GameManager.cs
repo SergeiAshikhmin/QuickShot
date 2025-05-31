@@ -37,8 +37,6 @@ public class GameManager : MonoBehaviour
     public void ResetRun()
     {
         CurrentHealth = maxHealth;
-        Lives = 3;
-        Coins = 0;
     }
 
     public void DamagePlayer(int dmg = 1)
