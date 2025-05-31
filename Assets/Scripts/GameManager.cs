@@ -8,6 +8,9 @@ public class GameManager : MonoBehaviour
     public static GameManager Instance { get; private set; }
     void Awake()
     {
+        // Set up the quality settings
+        QualitySettings.vSyncCount = 1;
+        
         if (Instance != null && Instance != this)
         {
             Destroy(gameObject);

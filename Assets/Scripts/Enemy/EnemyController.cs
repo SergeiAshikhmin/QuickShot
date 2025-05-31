@@ -43,6 +43,8 @@ public class EnemyController : MonoBehaviour
     
     private Animator animator;
 
+    public event Action OnEnemyDied;
+
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -159,6 +161,8 @@ public class EnemyController : MonoBehaviour
         }
         
         rb.bodyType = RigidbodyType2D.Static;
+        
+        OnEnemyDied?.Invoke();
 
         // Optional: destroy object after animation delay
         Destroy(gameObject, 2f); // Adjust time based on your death animation
