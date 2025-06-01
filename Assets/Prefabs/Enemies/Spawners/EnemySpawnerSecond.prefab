@@ -45,7 +45,7 @@ GameObject:
   - component: {fileID: 4313558722499222698}
   - component: {fileID: 4313558722499222699}
   m_Layer: 9
-  m_Name: EnemySpawnerLeft
+  m_Name: EnemySpawnerSecond
   m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -60,7 +60,7 @@ Transform:
   m_GameObject: {fileID: 4313558722499222703}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 60.4, y: 31.2, z: -0.1763643}
-  m_LocalScale: {x: -1, y: 1, z: 1}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 344987788731522425}
@@ -81,8 +81,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemyTypes:
-  - prefab: {fileID: 4295490502842995582, guid: f02700a5758177b4299140dc3f1a3650, type: 3}
-    spawnThreshold: 2
+  - prefab: {fileID: 4295490502842995582, guid: 7467ed4ba823ec1409dba652f0e5de96, type: 3}
+    spawnThreshold: 1
     spawnRateSeconds: 5
     spawnPoint: {fileID: 344987788731522425}
     spawnedEnemies: []
@@ -223,7 +223,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6482205341169454810}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -6, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
