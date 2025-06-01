@@ -3441,8 +3441,8 @@ GameObject:
   m_Component:
   - component: {fileID: 837344809}
   - component: {fileID: 837344808}
-  - component: {fileID: 837344807}
   - component: {fileID: 837344806}
+  - component: {fileID: 837344810}
   m_Layer: 0
   m_Name: Cam_Zone2
   m_TagString: Untagged
@@ -3464,22 +3464,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cameraFromLeft: {fileID: 869921106}
   cameraFromRight: {fileID: 503214668}
---- !u!58 &837344807
-CircleCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 837344805}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: -0.005083084, y: -0.016279638}
-  serializedVersion: 2
-  m_Radius: 0.4923784
 --- !u!212 &837344808
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -3547,6 +3531,32 @@ Transform:
   m_Father: {fileID: 139669873}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!61 &837344810
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 837344805}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 1, y: 1}
+    newSize: {x: 1, y: 1}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 1, y: 40}
+  m_EdgeRadius: 0
 --- !u!1 &858958605
 GameObject:
   m_ObjectHideFlags: 0
@@ -4051,8 +4061,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1057935371}
   - component: {fileID: 1057935374}
-  - component: {fileID: 1057935373}
   - component: {fileID: 1057935372}
+  - component: {fileID: 1057935375}
   m_Layer: 0
   m_Name: Cam_Zone3
   m_TagString: Untagged
@@ -4068,7 +4078,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1057935370}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 79.8, y: -0.020000026, z: 10.144587}
+  m_LocalPosition: {x: 77.54, y: 0.21, z: 10.144587}
   m_LocalScale: {x: 2, y: 2, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -4089,22 +4099,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cameraFromLeft: {fileID: 1669257081}
   cameraFromRight: {fileID: 869921106}
---- !u!58 &1057935373
-CircleCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1057935370}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: -0.011502892, y: 0}
-  serializedVersion: 2
-  m_Radius: 0.49964422
 --- !u!212 &1057935374
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -4157,6 +4151,32 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!61 &1057935375
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1057935370}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 1, y: 1}
+    newSize: {x: 1, y: 1}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 1, y: 40}
+  m_EdgeRadius: 0
 --- !u!1 &1109325717
 GameObject:
   m_ObjectHideFlags: 0
