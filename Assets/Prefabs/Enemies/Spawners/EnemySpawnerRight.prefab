@@ -91,7 +91,7 @@ MonoBehaviour:
     spawnRateSeconds: 5
     spawnPoint: {fileID: 3210907360873330543}
     spawnedEnemies: []
-  floatDownSpeed: 5
+  floatDownSpeed: 0.5
   groundLayer:
     serializedVersion: 2
     m_Bits: 64
@@ -193,7 +193,7 @@ Rigidbody2D:
   m_Mass: 1
   m_LinearDrag: 0
   m_AngularDrag: 0.05
-  m_GravityScale: 10
+  m_GravityScale: 8
   m_Material: {fileID: 6200000, guid: 960b47a33590a456198cb8155c79aaff, type: 2}
   m_Interpolate: 0
   m_SleepingMode: 1
@@ -223,7 +223,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6482205341169454810}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.69, y: -5.18, z: 0}
+  m_LocalPosition: {x: 0, y: -6, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
