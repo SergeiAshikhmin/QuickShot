@@ -116,13 +116,11 @@ public class BatEnemyAI : MonoBehaviour
         if (isJumping)
         {
             animator.SetBool("isWalking", false);
-            if (isPlayerDetected)
-                StopAndAttackPlayer();
             return;
         }
 
         if (isPlayerDetected)
-            StopAndAttackPlayer();
+            ChasePlayer();
         else
             Patrol();
     }
@@ -208,7 +206,7 @@ public class BatEnemyAI : MonoBehaviour
         }
     }
 
-    void StopAndAttackPlayer()
+    void ChasePlayer()
     {
         if (player == null) return;
 
@@ -234,7 +232,9 @@ public class BatEnemyAI : MonoBehaviour
         {
             animator.SetBool("isWalking", true);
             animator.SetBool("isAttacking", false);
-            rb.velocity = new Vector2(Mathf.Sign(dx) * patrolSpeed * 1.25f, rb.velocity.y);
+
+            float chaseSpeed = patrolSpeed * 2.5f;
+            rb.velocity = new Vector2(Mathf.Sign(dx) * chaseSpeed, rb.velocity.y);
         }
     }
 

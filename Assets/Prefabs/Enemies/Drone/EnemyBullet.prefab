@@ -138,8 +138,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c056e116e2c40d947935d589ae8f8165, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 10
-  lifetime: 5
+  speed: 20
+  lifetime: 12
   impactPrefab: {fileID: 6192724089161036641, guid: e17d9a3f04750764c8c0a7a0461e4c3b, type: 3}
 --- !u!96 &-8598513560286458158
 TrailRenderer:

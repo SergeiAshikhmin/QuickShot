@@ -76,7 +76,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 10
   m_Sprite: {fileID: -971877761, guid: 27bf5ab33398ace4296595ec066a5094, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -177,12 +177,12 @@ MonoBehaviour:
     m_Bits: 64
   edgeDetectDistance: 2
   raycastHorizontalOffset: 0.7
-  jumpForce: 15
+  jumpForce: 20
   jumpDistance: 5.5
   jumpRayDownLength: 4
   jumpYOffset: 0
   turnCooldown: 0.3
-  attackRange: 1.35
+  attackRange: 1.1
   attackCooldown: 0.5
   attackDamage: 1
   attackColliderExtension: 1.5

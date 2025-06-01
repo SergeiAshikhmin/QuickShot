@@ -4741,8 +4741,9 @@ GameObject:
   m_Component:
   - component: {fileID: 7405275256535792577}
   - component: {fileID: 7461126912379372593}
+  - component: {fileID: 5451440463484683718}
   m_Layer: 0
-  m_Name: AudioSource
+  m_Name: MusicSource
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4772,10 +4773,10 @@ AudioSource:
   m_GameObject: {fileID: 6284181351796743877}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: -3001489952179963983, guid: 77cb8ee09fec81b4f8aef4a4eb0de7a4, type: 2}
+  OutputAudioMixerGroup: {fileID: -5527604250581212895, guid: 77cb8ee09fec81b4f8aef4a4eb0de7a4, type: 2}
   m_audioClip: {fileID: 0}
   m_PlayOnAwake: 1
-  m_Volume: 0.5
+  m_Volume: 0.3
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -4859,6 +4860,26 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &5451440463484683718
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6284181351796743877}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c1c4d3d7c18942748a4dbb6222da5de8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sceneTracks:
+  - sceneName: MainMenu
+    tracks:
+    - {fileID: 8300000, guid: ca19d01f56d3102468b5bbd7d4dfdd27, type: 3}
+  - sceneName: Future
+    tracks:
+    - {fileID: 8300000, guid: f39548b04aa423e4dbdca9257d1b8145, type: 3}
+  shuffle: 0
 --- !u!1 &6563327226663798631
 GameObject:
   m_ObjectHideFlags: 0
