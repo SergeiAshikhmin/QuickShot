@@ -36,11 +36,17 @@ public class AdvancedPlayerMovement : MonoBehaviour
 
     private bool jumpRequested;
 
+    [Header("Animator")]
+    private Animator animator;
+
 
     // Start is called before the first frame update
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+
+        // grab animator component
+        animator = GetComponent<Animator>();
     }
 
     // Update is called once per frame
@@ -54,6 +60,18 @@ public class AdvancedPlayerMovement : MonoBehaviour
 
         // Get horizontal input (-1 for left, 1 for right)
         moveInput = Input.GetAxis("Horizontal");
+
+        // flip sprite based on direction
+        Vector3 s = transform.localScale;
+        if (moveInput < 0)       
+            s.x = -Mathf.Abs(s.x);
+        else if (moveInput > 0)  
+            s.x =  Mathf.Abs(s.x);
+        transform.localScale = s;
+
+        // Animator: set isWalking based on horizontal input
+        bool isWalking = Mathf.Abs(moveInput) > 0.01f;
+        animator.SetBool("IsWalking", isWalking);
 
         if (Input.GetButtonDown("Jump") && coyoteTimeCounter > 0)
             jumpRequested = true;

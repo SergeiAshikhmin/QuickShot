@@ -27,6 +27,10 @@ public class AutoEquipWeaponOnSpawn : MonoBehaviour
                 newWeapon.name = weaponID;
                 newWeapon.layer = weaponLayer; // Set to Weapon layer
 
+                // SHIFT the weapon slightly to the right (adjust X until it looks good)
+                newWeapon.transform.localPosition = new Vector3(0.3f, -0.2f, 0f);
+
+
                 // OPTIONAL: Also set layer for all child objects (if needed)
                 foreach (Transform grandchild in newWeapon.transform)
                     grandchild.gameObject.layer = weaponLayer;
