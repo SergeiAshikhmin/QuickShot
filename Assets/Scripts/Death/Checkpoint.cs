@@ -9,6 +9,10 @@ public class Checkpoint : MonoBehaviour
     [Header("Player Respawn")]
     public GameObject playerPrefab;
 
+    [Header("Audio")]
+    public AudioClip respawnSound;                // ✅ Assign in Inspector
+    public AudioSource audioSource;               // ✅ Optional, assign a 2D source (or it uses PlayClipAtPoint)
+
     private Animator anim;
     private SpriteRenderer sr;
 
@@ -49,6 +53,15 @@ public class Checkpoint : MonoBehaviour
     public void SpawnPlayer()
     {
         RestoreSceneState();
+
+        // ✅ Play respawn sound
+        if (respawnSound != null)
+        {
+            if (audioSource != null)
+                audioSource.PlayOneShot(respawnSound);
+            else
+                AudioSource.PlayClipAtPoint(respawnSound, transform.position);
+        }
 
         if (playerPrefab != null)
         {

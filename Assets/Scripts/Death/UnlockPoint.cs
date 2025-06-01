@@ -12,6 +12,10 @@ public class UnlockPoint : MonoBehaviour
     public float bobAmplitude = 0.25f;
     public float bobFrequency = 1f;
 
+    [Header("Audio")]
+    public AudioClip unlockSound;         // ✅ Assign in Inspector
+    public AudioSource audioSource;       // ✅ Optional (assign in Inspector)
+
     private bool triggered = false;
     private Vector3 startPosition;
     private Sprite cachedWeaponSprite = null;
@@ -53,10 +57,18 @@ public class UnlockPoint : MonoBehaviour
 
         triggered = true;
 
+        // ✅ Play unlock sound
+        if (unlockSound != null)
+        {
+            if (audioSource != null)
+                audioSource.PlayOneShot(unlockSound);
+            else
+                AudioSource.PlayClipAtPoint(unlockSound, transform.position);
+        }
+
         PlayerPrefs.SetInt("WeaponUnlocked_" + weaponID, 1);
         PlayerPrefs.Save();
 
-        Destroy(gameObject);
         Time.timeScale = 0f;
 
         var movement = other.GetComponent<AdvancedPlayerMovement>();
@@ -84,6 +96,11 @@ public class UnlockPoint : MonoBehaviour
                 );
             }
         }
+        else
+        {
+            // If no popup, fall back to normal
+            OnPopupClosed(other.gameObject, pauseMenu);
+        }
     }
 
     void OnPopupClosed(GameObject playerObj, PauseMenuManager pauseMenu)
@@ -99,5 +116,8 @@ public class UnlockPoint : MonoBehaviour
 
         if (pauseMenu != null)
             pauseMenu.enabled = true;
+
+        if (this != null)
+            Destroy(gameObject);
     }
 }

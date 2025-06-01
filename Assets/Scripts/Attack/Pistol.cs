@@ -51,13 +51,17 @@ public class Pistol : MonoBehaviour, IAmmoWeapon
         if (playerRB == null)
             FindPlayerRB();
 
+        // Get mouse position
         Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         Vector2 direction = mousePos - transform.position;
         float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
-        transform.rotation = Quaternion.Euler(0, 0, angle);
 
-        Vector3 localScale = Vector3.one;
-        localScale.y = (direction.x < 0) ? -1 : 1;
+        // CHANGED: Rotate towards mouse without flipping
+        transform.rotation = Quaternion.Euler(0f, 0f, angle);
+
+        // CHANGED: Flip gun vertically if facing left
+        Vector3 localScale = transform.localScale;
+        localScale.y = (angle > 90 || angle < -90) ? -1 : 1;
         transform.localScale = localScale;
 
         _isOutOfAmmo = (_ammo == 0);
