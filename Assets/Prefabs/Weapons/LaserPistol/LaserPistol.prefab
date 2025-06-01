@@ -134,7 +134,7 @@ MonoBehaviour:
   firePoint: {fileID: 5186437209135751927}
   maxCharge: 100
   chargePerShot: 12
-  rechargeRate: 4
+  rechargeRate: 8
   overheatCooldown: 5
   shootForce: 50
   shootCooldown: 0.1

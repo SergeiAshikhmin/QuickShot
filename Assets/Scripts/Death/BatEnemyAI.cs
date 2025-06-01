@@ -280,6 +280,11 @@ public class BatEnemyAI : MonoBehaviour
             HandleHit(other.ClosestPoint(transform.position));
             Destroy(other.gameObject);
         }
+
+        if (other.gameObject.layer == LayerMask.NameToLayer("KillEnemy"))
+        {
+            Die(transform.position);
+        }
     }
 
     void OnCollisionEnter2D(Collision2D collision)
@@ -295,6 +300,11 @@ public class BatEnemyAI : MonoBehaviour
             Vector2 impactPos = collision.contacts.Length > 0 ? collision.contacts[0].point : (Vector2)transform.position;
             HandleHit(impactPos);
             Destroy(collision.gameObject);
+        }
+
+        if (collision.gameObject.layer == LayerMask.NameToLayer("KillEnemy"))
+        {
+            Die(transform.position);
         }
     }
 
@@ -334,7 +344,7 @@ public class BatEnemyAI : MonoBehaviour
         {
             if (sr != null && currentHealth < maxHealth)
             {
-                float t = Mathf.PingPong(Time.time * 4f, 1f); // speed of pulse
+                float t = Mathf.PingPong(Time.time * 4f, 1f);
                 float damageRatio = 1f - ((float)currentHealth / maxHealth);
                 Color flashColor = Color.Lerp(baseColor, Color.red, t * damageRatio);
                 sr.color = flashColor;

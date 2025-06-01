@@ -4,65 +4,109 @@ using UnityEngine;
 
 public class EnemySpawner : MonoBehaviour
 {
-    [Header("Spawner Settings")]
-    public GameObject enemyPrefab;
-    public int targetEnemyCount = 3;
+    [System.Serializable]
+    public class EnemyType
+    {
+        public GameObject prefab;
+        public int spawnThreshold = 3;
+        public float spawnRateSeconds = 2f;
+        public Transform spawnPoint; // Assign manually in Inspector
+        [HideInInspector] public List<GameObject> spawnedEnemies = new();
+    }
+
+    [Header("Enemy Types")]
+    public List<EnemyType> enemyTypes = new();
+
+    [Header("Animation")]
+    public float floatDownSpeed = 1.5f;
+    public LayerMask groundLayer;
+    public float groundCheckDistance = 0.2f;
+
+    [Header("Spawner Health")]
     public int hitPoints = 3;
-
-    [Header("Spawn Options")]
-    public float spawnRadius = 1f;
-    public float spawnCooldown = 2f;
-
-    [Header("Enemy Tracking")]
-    public string enemyTag = "Enemy";  // Set this in Inspector!
 
     [Header("Visuals")]
     public Sprite normalSprite;
-    public GameObject destroyedPrefab;     // Drag your Impact03 prefab here
-    public GameObject hitEffectPrefab;     // Drag your HitEffect prefab here
+    public GameObject destroyedPrefab;
+    public GameObject hitEffectPrefab;
 
     private SpriteRenderer sr;
     private bool isDestroyed = false;
-    private bool canSpawn = true;
     private int projectileLayer;
+    private bool hasLanded = false;
+    private Vector3 landedPosition;
+    private Color baseColor = Color.white;
+    private int maxHealth;
 
     void Awake()
     {
         sr = GetComponent<SpriteRenderer>();
         if (normalSprite && sr) sr.sprite = normalSprite;
         projectileLayer = LayerMask.NameToLayer("Projectile");
+        maxHealth = hitPoints;
+    }
+
+    void Start()
+    {
+        StartCoroutine(FloatDownUntilGrounded());
+        StartCoroutine(UpdateHurtFlash());
     }
 
     void Update()
     {
-        if (isDestroyed) return;
+        if (isDestroyed || !hasLanded) return;
+        transform.position = landedPosition;
+    }
 
-        // Count all objects with the selected tag
-        int currentEnemyCount = GameObject.FindGameObjectsWithTag(enemyTag).Length;
-
-        if (canSpawn && currentEnemyCount < targetEnemyCount)
+    IEnumerator FloatDownUntilGrounded()
+    {
+        while (!CheckIfGrounded())
         {
-            StartCoroutine(SpawnEnemyAfterDelay(spawnCooldown));
+            transform.position += Vector3.down * floatDownSpeed * Time.deltaTime;
+            yield return null;
+        }
+
+        hasLanded = true;
+        landedPosition = transform.position;
+
+        BeginSpawningFromAssignedPoints();
+    }
+
+    bool CheckIfGrounded()
+    {
+        RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector2.down, groundCheckDistance, groundLayer);
+        Debug.DrawRay(transform.position, Vector2.down * groundCheckDistance, hit.collider ? Color.green : Color.red, 1.0f);
+        return hit.collider != null;
+    }
+
+    void BeginSpawningFromAssignedPoints()
+    {
+        foreach (var type in enemyTypes)
+        {
+            if (type.spawnPoint == null)
+            {
+                Debug.LogWarning($"[{name}] Enemy type {type.prefab.name} is missing a spawn point!");
+                continue;
+            }
+
+            StartCoroutine(SpawnLoop(type));
         }
     }
 
-    IEnumerator SpawnEnemyAfterDelay(float delay)
+    IEnumerator SpawnLoop(EnemyType type)
     {
-        canSpawn = false;
-        yield return new WaitForSeconds(delay);
-        SpawnEnemy();
-        canSpawn = true;
-    }
+        while (!isDestroyed)
+        {
+            type.spawnedEnemies.RemoveAll(e => e == null);
 
-    void SpawnEnemy()
-    {
-        if (!enemyPrefab || isDestroyed) return;
-        Vector2 spawnPos = (Vector2)transform.position + Random.insideUnitCircle * spawnRadius;
-        GameObject enemy = Instantiate(enemyPrefab, spawnPos, Quaternion.identity);
+            if (type.spawnedEnemies.Count < type.spawnThreshold)
+            {
+                GameObject enemy = Instantiate(type.prefab, type.spawnPoint.position, Quaternion.identity);
+                type.spawnedEnemies.Add(enemy);
+            }
 
-        // Set the correct tag if needed
-        if (!string.IsNullOrEmpty(enemyTag))
-            enemy.tag = enemyTag;
+            yield return new WaitForSeconds(type.spawnRateSeconds);
+        }
     }
 
     void OnCollisionEnter2D(Collision2D collision)
@@ -71,16 +115,14 @@ public class EnemySpawner : MonoBehaviour
         if (collision.gameObject.layer == projectileLayer)
         {
             Destroy(collision.gameObject);
-
             hitPoints--;
 
             if (hitPoints > 0)
             {
-                // Spawn a hit effect at the point of contact
                 if (hitEffectPrefab)
                     Instantiate(hitEffectPrefab, collision.contacts[0].point, Quaternion.identity);
             }
-            else if (hitPoints == 0)
+            else
             {
                 StartCoroutine(ExplodeAndDestroy());
             }
@@ -91,15 +133,43 @@ public class EnemySpawner : MonoBehaviour
     {
         isDestroyed = true;
 
-        // Hide the spawner visually before destroy (optional)
         if (sr) sr.enabled = false;
 
-        // Instantiate the destroyed prefab at this position/rotation
         if (destroyedPrefab)
             Instantiate(destroyedPrefab, transform.position, Quaternion.identity);
 
-        yield return new WaitForSeconds(0.5f); // Let the prefab play effect if needed
-
+        yield return new WaitForSeconds(0.5f);
         Destroy(gameObject);
+    }
+
+    IEnumerator UpdateHurtFlash()
+    {
+        while (true)
+        {
+            if (sr != null && hitPoints < maxHealth && hitPoints > 0 && !isDestroyed)
+            {
+                float zone = (float)(maxHealth - hitPoints) / maxHealth;
+                float pulseSpeed = Mathf.Lerp(1.5f, 10f, zone);
+                float t = Mathf.PingPong(Time.time * pulseSpeed, 1f);
+                Color flashColor = Color.Lerp(baseColor, Color.red, t);
+                sr.color = flashColor;
+            }
+            else if (sr != null)
+            {
+                sr.color = baseColor;
+            }
+
+            yield return null;
+        }
+    }
+
+    void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.cyan;
+        foreach (var type in enemyTypes)
+        {
+            if (type.spawnPoint != null)
+                Gizmos.DrawWireSphere(type.spawnPoint.position, 0.3f);
+        }
     }
 }
