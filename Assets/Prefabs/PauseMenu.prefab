@@ -4585,7 +4585,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &6026437193985831251
 RectTransform:
   m_ObjectHideFlags: 0
@@ -4876,8 +4876,20 @@ MonoBehaviour:
   - sceneName: MainMenu
     tracks:
     - {fileID: 8300000, guid: ca19d01f56d3102468b5bbd7d4dfdd27, type: 3}
+    - {fileID: 8300000, guid: e19b72e613a4ebf42a5ffeeece54c628, type: 3}
+    - {fileID: 8300000, guid: f9e85e34147c011479dff8b58dac19b6, type: 3}
+    - {fileID: 8300000, guid: f39548b04aa423e4dbdca9257d1b8145, type: 3}
   - sceneName: Future
     tracks:
+    - {fileID: 8300000, guid: f39548b04aa423e4dbdca9257d1b8145, type: 3}
+    - {fileID: 8300000, guid: ca19d01f56d3102468b5bbd7d4dfdd27, type: 3}
+    - {fileID: 8300000, guid: f9e85e34147c011479dff8b58dac19b6, type: 3}
+    - {fileID: 8300000, guid: e19b72e613a4ebf42a5ffeeece54c628, type: 3}
+  - sceneName: tutorial-level
+    tracks:
+    - {fileID: 8300000, guid: f9e85e34147c011479dff8b58dac19b6, type: 3}
+    - {fileID: 8300000, guid: e19b72e613a4ebf42a5ffeeece54c628, type: 3}
+    - {fileID: 8300000, guid: ca19d01f56d3102468b5bbd7d4dfdd27, type: 3}
     - {fileID: 8300000, guid: f39548b04aa423e4dbdca9257d1b8145, type: 3}
   shuffle: 0
 --- !u!1 &6563327226663798631
@@ -5369,7 +5381,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &3017128334041197555
 RectTransform:
   m_ObjectHideFlags: 0
@@ -6021,7 +6033,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &8823493224547242184
 RectTransform:
   m_ObjectHideFlags: 0
@@ -9927,7 +9939,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &9162663537575206685
 RectTransform:
   m_ObjectHideFlags: 0
