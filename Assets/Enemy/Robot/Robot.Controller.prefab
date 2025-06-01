@@ -8,7 +8,6 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-<<<<<<<< HEAD:Assets/Enemy/Robot/Robot.Controller.prefab
   - component: {fileID: 4211785038439335968}
   - component: {fileID: 4211785038439335971}
   - component: {fileID: 4211785038439335970}
@@ -17,15 +16,6 @@ GameObject:
   - component: {fileID: 4211785038439335969}
   m_Layer: 9
   m_Name: Robot.Controller
-========
-  - component: {fileID: 1673298075446044878}
-  - component: {fileID: 5806930010484793360}
-  - component: {fileID: 3213279974450710616}
-  - component: {fileID: 7169426765485602908}
-  - component: {fileID: -1623386255796093671}
-  m_Layer: 8
-  m_Name: ArrowLevel1
->>>>>>>> origin/Level1:Assets/Prefabs/Level 1/ArrowLevel1.prefab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -178,7 +168,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e06bdd6a5048d7848bc675a22d99d05e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-<<<<<<<< HEAD:Assets/Enemy/Robot/Robot.Controller.prefab
   moveSpeed: 2
   jumpForce: 7
   checkDistance: 0.6
@@ -190,8 +179,3 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   deathEffectPrefab: {fileID: 4794043405585894037, guid: 37138c0c33167b04fa1fb90b7f5a794f, type: 3}
-========
-  enemyLayer:
-    serializedVersion: 2
-    m_Bits: 1024
->>>>>>>> origin/Level1:Assets/Prefabs/Level 1/ArrowLevel1.prefab
