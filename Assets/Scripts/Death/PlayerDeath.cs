@@ -5,6 +5,11 @@ public class PlayerDeath : MonoBehaviour
     [Header("Effects")]
     public GameObject deathEffectPrefab;
 
+    [Header("Death Pulse Settings")]
+    public float killRadius = 3f;
+    public float pulseDuration = 0.1f;
+    public GameObject pulsePrefab; // Assign a prefab with CircleCollider2D (Trigger) on KillEnemy layer
+
     private bool isDead = false;
 
     void OnCollisionEnter2D(Collision2D collision)
@@ -31,7 +36,8 @@ public class PlayerDeath : MonoBehaviour
         if (deathEffectPrefab != null)
             Instantiate(deathEffectPrefab, transform.position, Quaternion.identity);
 
-        // Tell the checkpoint to spawn a new player
+        EmitKillPulse(); // 💥 Launch the kill pulse
+
         if (Checkpoint.activeCheckpoint != null)
         {
             Checkpoint.activeCheckpoint.SpawnPlayer();
@@ -42,5 +48,29 @@ public class PlayerDeath : MonoBehaviour
         }
 
         Destroy(gameObject);
+    }
+
+    void EmitKillPulse()
+    {
+        if (pulsePrefab == null)
+        {
+            Debug.LogWarning("Pulse prefab not assigned!");
+            return;
+        }
+
+        GameObject pulse = Instantiate(pulsePrefab, transform.position, Quaternion.identity);
+        CircleCollider2D circle = pulse.GetComponent<CircleCollider2D>();
+        if (circle != null)
+        {
+            circle.radius = killRadius;
+        }
+
+        Destroy(pulse, pulseDuration);
+    }
+
+    void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.magenta;
+        Gizmos.DrawWireSphere(transform.position, killRadius);
     }
 }
