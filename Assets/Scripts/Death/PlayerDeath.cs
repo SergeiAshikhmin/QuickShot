@@ -36,7 +36,7 @@ public class PlayerDeath : MonoBehaviour
         if (deathEffectPrefab != null)
             Instantiate(deathEffectPrefab, transform.position, Quaternion.identity);
 
-        EmitKillPulse(); // 💥 Launch the kill pulse
+        EmitKillPulse(); 
 
         if (Checkpoint.activeCheckpoint != null)
         {

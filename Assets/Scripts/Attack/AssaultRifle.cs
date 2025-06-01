@@ -28,6 +28,11 @@ public class AssaultRifle : MonoBehaviour, IAmmoWeapon
     public int MaxAmmo => maxAmmo;
     public bool ShowAmmo => true;
 
+    [Header("Audio")]
+    public AudioClip fireSound;
+    public AudioClip reloadSound;
+    public AudioSource audioSource; // Assign in Inspector or via child object
+
     private Rigidbody2D playerRB;
     private float lastShotTime;
     private Coroutine reloadRoutine;
@@ -98,7 +103,6 @@ public class AssaultRifle : MonoBehaviour, IAmmoWeapon
         if (rb != null)
             rb.AddForce(firePoint.right * shootForce, ForceMode2D.Impulse);
 
-        // Optional: Set direction if using a custom script instead of Rigidbody2D
         var rifleBullet = bullet.GetComponent<RifleBullet>();
         if (rifleBullet != null)
             rifleBullet.SetDirection(firePoint.right);
@@ -108,6 +112,9 @@ public class AssaultRifle : MonoBehaviour, IAmmoWeapon
             GameObject flash = Instantiate(muzzleFlashPrefab, firePoint.position, firePoint.rotation);
             Destroy(flash, 0.1f);
         }
+
+        if (audioSource != null && fireSound != null)
+            audioSource.PlayOneShot(fireSound);
 
         if (playerRB != null)
         {
@@ -119,8 +126,12 @@ public class AssaultRifle : MonoBehaviour, IAmmoWeapon
     private System.Collections.IEnumerator Reload()
     {
         _isReloading = true;
-        // Play reload animation/sound here if needed
+
+        if (audioSource != null && reloadSound != null)
+            audioSource.PlayOneShot(reloadSound);
+
         yield return new WaitForSeconds(reloadTime);
+
         _ammo = maxAmmo;
         _isReloading = false;
     }

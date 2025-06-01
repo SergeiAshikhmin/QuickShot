@@ -36,7 +36,7 @@ public class PauseMenuManager : MonoBehaviour
     [Header("Charge UI")]
     public Slider chargeSlider;
     public TMP_Text chargeText;
-    public TMP_Text chargeOverheatText;  // 🔥 New field
+    public TMP_Text chargeOverheatText;
 
     private bool isPaused = false;
     private float spinnerTimer = 0f;
@@ -66,8 +66,8 @@ public class PauseMenuManager : MonoBehaviour
         noQuitButton.onClick.AddListener(CloseQuitConfirm);
 
         if (backLevelSelectButton) backLevelSelectButton.onClick.AddListener(CloseLevelSelectPanel);
-        if (backWeaponsButton)     backWeaponsButton.onClick.AddListener(CloseWeaponsPanel);
-        if (backOptionsButton)     backOptionsButton.onClick.AddListener(CloseOptionsPanel);
+        if (backWeaponsButton) backWeaponsButton.onClick.AddListener(CloseWeaponsPanel);
+        if (backOptionsButton) backOptionsButton.onClick.AddListener(CloseOptionsPanel);
     }
 
     void Update()
@@ -208,24 +208,42 @@ public class PauseMenuManager : MonoBehaviour
                 {
                     if (comp is IAmmoWeapon ammoWeapon && ammoWeapon.ShowAmmo)
                     {
-                        var isReloadingProp = comp.GetType().GetProperty("isReloading");
-                        bool isReloading = isReloadingProp != null && (bool)isReloadingProp.GetValue(comp);
+                        string className = comp.GetType().Name;
+                        bool isShotgun = className == "Shotgun";
 
-                        if (isReloading)
+                        var isReloadingProp = comp.GetType().GetProperty("isReloading");
+                        var currentAmmoProp = comp.GetType().GetProperty("CurrentAmmo");
+                        var maxAmmoProp = comp.GetType().GetProperty("MaxAmmo");
+
+                        bool isReloading = isReloadingProp != null && (bool)isReloadingProp.GetValue(comp);
+                        int currentAmmo = currentAmmoProp != null ? (int)currentAmmoProp.GetValue(comp) : 0;
+                        int maxAmmo = maxAmmoProp != null ? (int)maxAmmoProp.GetValue(comp) : 0;
+
+                        if (isShotgun)
                         {
-                            ammoCounter.gameObject.SetActive(false);
-                            if (reloadSpinner) reloadSpinner.gameObject.SetActive(true);
-                            if (reloadText) reloadText.gameObject.SetActive(true);
-                            foundAmmoWeapon = true;
+                            ammoCounter.text = currentAmmo.ToString();
+                            ammoCounter.gameObject.SetActive(true);
+                            reloadText.gameObject.SetActive(false);
+                            reloadSpinner.gameObject.SetActive(isReloading && currentAmmo < maxAmmo);
                         }
                         else
                         {
-                            ammoCounter.text = $"{ammoWeapon.CurrentAmmo}";
-                            ammoCounter.gameObject.SetActive(true);
-                            if (reloadSpinner) reloadSpinner.gameObject.SetActive(false);
-                            if (reloadText) reloadText.gameObject.SetActive(false);
-                            foundAmmoWeapon = true;
+                            if (isReloading)
+                            {
+                                ammoCounter.gameObject.SetActive(false);
+                                reloadSpinner.gameObject.SetActive(true);
+                                reloadText.gameObject.SetActive(true);
+                            }
+                            else
+                            {
+                                ammoCounter.text = currentAmmo.ToString();
+                                ammoCounter.gameObject.SetActive(true);
+                                reloadSpinner.gameObject.SetActive(false);
+                                reloadText.gameObject.SetActive(false);
+                            }
                         }
+
+                        foundAmmoWeapon = true;
                         break;
                     }
                 }
@@ -236,8 +254,8 @@ public class PauseMenuManager : MonoBehaviour
         if (!foundAmmoWeapon)
         {
             ammoCounter.gameObject.SetActive(false);
-            if (reloadSpinner) reloadSpinner.gameObject.SetActive(false);
-            if (reloadText) reloadText.gameObject.SetActive(false);
+            reloadSpinner.gameObject.SetActive(false);
+            reloadText.gameObject.SetActive(false);
         }
     }
 

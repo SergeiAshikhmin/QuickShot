@@ -11,6 +11,7 @@ public class DevUnlock : MonoBehaviour
     PlayerPrefs.SetInt("LevelUnlocked_Tutorial", 1);
     PlayerPrefs.SetInt("LevelUnlocked_Future", 1);
     PlayerPrefs.SetInt("WeaponUnlocked_Bow", 1);
+    PlayerPrefs.SetInt("WeaponUnlocked_Pistol", 1);
     PlayerPrefs.Save();
 }
 
