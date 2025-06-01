@@ -31,7 +31,7 @@ Transform:
   m_GameObject: {fileID: 2813133937235363005}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 29.48, y: -14.08, z: 0}
-  m_LocalScale: {x: 4, y: 4, z: 4}
+  m_LocalScale: {x: 6, y: 6, z: 6}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 0}
@@ -78,7 +78,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: -1426269566, guid: 1a50f3c5583bb4bc28e9b1212b369315, type: 3}
+  m_Sprite: {fileID: 1773411252, guid: 1662d111d660a4d6287ee42d0303ee29, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -253,7 +253,7 @@ Animator:
   m_GameObject: {fileID: 2813133937235363005}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 73d0a4b8542364d90b3d173a4f27f3eb, type: 2}
+  m_Controller: {fileID: 9100000, guid: 863e0c11be43948948ddbc183229f5d2, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -281,7 +281,7 @@ PolygonCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0}
-    oldSize: {x: 0.45, y: 0.51}
+    oldSize: {x: 0.26, y: 0.37}
     newSize: {x: 1, y: 1}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
@@ -289,18 +289,11 @@ PolygonCollider2D:
   m_AutoTiling: 0
   m_Points:
     m_Paths:
-    - - {x: 0.105, y: 0.16}
-      - {x: 0.195, y: 0.26999998}
-      - {x: 0.225, y: 0.35999998}
-      - {x: 0.225, y: 0.45}
-      - {x: 0.205, y: 0.45}
-      - {x: 0.114999995, y: 0.35}
-      - {x: 0.095, y: 0.51}
-      - {x: -0.055, y: 0.51}
-      - {x: -0.125, y: 0.44}
-      - {x: -0.205, y: 0.48}
-      - {x: -0.225, y: 0.45}
-      - {x: -0.225, y: 0.21}
-      - {x: -0.16499999, y: 0.14999999}
-      - {x: -0.195, y: 0}
-      - {x: 0.105, y: 0}
+    - - {x: -0.07, y: 0.37}
+      - {x: -0.12, y: 0.35}
+      - {x: -0.13, y: 0.29999998}
+      - {x: -0.13, y: 0.04}
+      - {x: -0.12, y: 0}
+      - {x: 0.13, y: 0}
+      - {x: 0.13, y: 0.32999998}
+      - {x: 0.08, y: 0.37}
