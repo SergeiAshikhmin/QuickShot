@@ -23,6 +23,10 @@ public class EventTriggerZone : MonoBehaviour
     public GameObject finalPrefab;
     public Transform finalSpawnPoint;
 
+    [Header("Event Object Toggles")]
+    public List<GameObject> objectsToDisableWhileActive = new();
+    public List<GameObject> objectsToActivateWhileActive = new();
+
     private bool triggered = false;
 
     void OnTriggerEnter2D(Collider2D other)
@@ -33,6 +37,12 @@ public class EventTriggerZone : MonoBehaviour
 
             if (invisibleWall != null)
                 invisibleWall.SetActive(true);
+
+            foreach (var go in objectsToDisableWhileActive)
+                if (go) go.SetActive(false);
+
+            foreach (var go in objectsToActivateWhileActive)
+                if (go) go.SetActive(true);
 
             StartCoroutine(HandleCombatSequence());
         }
@@ -59,5 +69,11 @@ public class EventTriggerZone : MonoBehaviour
 
         if (finalPrefab != null && finalSpawnPoint != null)
             Instantiate(finalPrefab, finalSpawnPoint.position, Quaternion.identity);
+
+        foreach (var go in objectsToDisableWhileActive)
+            if (go) go.SetActive(true);
+
+        foreach (var go in objectsToActivateWhileActive)
+            if (go) go.SetActive(false);
     }
 }

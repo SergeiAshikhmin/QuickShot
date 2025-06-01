@@ -148,10 +148,9 @@ public class EnemySpawner : MonoBehaviour
         {
             if (sr != null && hitPoints < maxHealth && hitPoints > 0 && !isDestroyed)
             {
-                float zone = (float)(maxHealth - hitPoints) / maxHealth;
-                float pulseSpeed = Mathf.Lerp(1.5f, 10f, zone);
-                float t = Mathf.PingPong(Time.time * pulseSpeed, 1f);
-                Color flashColor = Color.Lerp(baseColor, Color.red, t);
+                float damageRatio = 1f - ((float)hitPoints / maxHealth); // How damaged it is
+                float t = Mathf.PingPong(Time.time * 4f, 1f); // Pulse speed is fixed and subtle
+                Color flashColor = Color.Lerp(baseColor, Color.red, t * damageRatio); // Subtle red flash scaling with damage
                 sr.color = flashColor;
             }
             else if (sr != null)

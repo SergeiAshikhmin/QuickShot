@@ -82,21 +82,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enemyTypes:
   - prefab: {fileID: 4295490502842995582, guid: 7467ed4ba823ec1409dba652f0e5de96, type: 3}
-    spawnThreshold: 3
-    spawnRateSeconds: 0.25
+    spawnThreshold: 2
+    spawnRateSeconds: 5
     spawnPoint: {fileID: 344987788731522425}
     spawnedEnemies: []
   - prefab: {fileID: 6432480003936989743, guid: e4e197d138c22624a86946cf390323fb, type: 3}
     spawnThreshold: 1
-    spawnRateSeconds: 0.5
+    spawnRateSeconds: 5
     spawnPoint: {fileID: 3210907360873330543}
     spawnedEnemies: []
-  floatDownSpeed: 0.001
+  floatDownSpeed: 5
   groundLayer:
     serializedVersion: 2
     m_Bits: 64
   groundCheckDistance: 2.05
-  hitPoints: 12
+  hitPoints: 9
   normalSprite: {fileID: 21300000, guid: fb807328582f64e4f94ac16bba4ff9c2, type: 3}
   destroyedPrefab: {fileID: 6192724089161036641, guid: e17d9a3f04750764c8c0a7a0461e4c3b, type: 3}
   hitEffectPrefab: {fileID: 3585113927565912773, guid: 2287d351e7a87e546b217ece7bb15d1b, type: 3}
