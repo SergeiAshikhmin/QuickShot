@@ -28,6 +28,11 @@ public class Pistol : MonoBehaviour, IAmmoWeapon
     public int MaxAmmo => maxAmmo;
     public bool ShowAmmo => true;
 
+    [Header("Audio")]
+    public AudioClip fireSound;
+    public AudioClip reloadSound;
+    public AudioSource audioSource; // Assign in Inspector
+
     private Rigidbody2D playerRB;
     private float lastShotTime;
     private Coroutine reloadRoutine;
@@ -40,7 +45,6 @@ public class Pistol : MonoBehaviour, IAmmoWeapon
 
     void Update()
     {
-        // Block input if paused (stops firing/reloading on pause)
         if (Time.timeScale == 0f)
             return;
 
@@ -58,18 +62,15 @@ public class Pistol : MonoBehaviour, IAmmoWeapon
 
         _isOutOfAmmo = (_ammo == 0);
 
-        // Prevent shooting when reloading
         if (_isReloading)
             return;
 
-        // Automatic reload if out of ammo and not already reloading
         if (_isOutOfAmmo && !_isReloading)
         {
             reloadRoutine = StartCoroutine(Reload());
             return;
         }
 
-        // Shooting
         if (Input.GetMouseButtonDown(0) && Time.time >= lastShotTime + shootCooldown)
         {
             if (_ammo > 0)
@@ -77,7 +78,6 @@ public class Pistol : MonoBehaviour, IAmmoWeapon
                 Shoot();
                 lastShotTime = Time.time;
 
-                // After shooting, check if we've just used the last bullet
                 if (_ammo == 0 && !_isReloading)
                 {
                     reloadRoutine = StartCoroutine(Reload());
@@ -92,13 +92,17 @@ public class Pistol : MonoBehaviour, IAmmoWeapon
 
         GameObject bullet = Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
         Rigidbody2D rb = bullet.GetComponent<Rigidbody2D>();
-        rb.AddForce(firePoint.right * shootForce, ForceMode2D.Impulse);
+        if (rb != null)
+            rb.AddForce(firePoint.right * shootForce, ForceMode2D.Impulse);
 
         if (muzzleFlashPrefab)
         {
             GameObject flash = Instantiate(muzzleFlashPrefab, firePoint.position, firePoint.rotation);
             Destroy(flash, 0.1f);
         }
+
+        if (audioSource != null && fireSound != null)
+            audioSource.PlayOneShot(fireSound);
 
         if (playerRB != null)
         {
@@ -110,7 +114,12 @@ public class Pistol : MonoBehaviour, IAmmoWeapon
     private System.Collections.IEnumerator Reload()
     {
         _isReloading = true;
+
+        if (audioSource != null && reloadSound != null)
+            audioSource.PlayOneShot(reloadSound);
+
         yield return new WaitForSeconds(reloadTime);
+
         _ammo = maxAmmo;
         _isReloading = false;
     }

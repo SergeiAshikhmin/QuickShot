@@ -9,9 +9,10 @@ public class VolumeControl : MonoBehaviour
     public Slider musicSlider;
     public Slider sfxSlider;
 
+    private const float minVolume = 0.0001f;
+
     void Start()
     {
-        // Load saved values or use defaults
         float masterVol = PlayerPrefs.GetFloat("MasterVolume", 0.75f);
         float musicVol = PlayerPrefs.GetFloat("MusicVolume", 0.75f);
         float sfxVol = PlayerPrefs.GetFloat("SFXVolume", 0.75f);
@@ -23,23 +24,27 @@ public class VolumeControl : MonoBehaviour
         SetMasterVolume(masterVol);
         SetMusicVolume(musicVol);
         SetSFXVolume(sfxVol);
+
+        masterSlider.onValueChanged.AddListener(SetMasterVolume);
+        musicSlider.onValueChanged.AddListener(SetMusicVolume);
+        sfxSlider.onValueChanged.AddListener(SetSFXVolume);
     }
 
     public void SetMasterVolume(float value)
     {
-        mixer.SetFloat("MyExposedParam", Mathf.Log10(value) * 20);
+        mixer.SetFloat("MyExposedParam", Mathf.Log10(Mathf.Clamp(value, minVolume, 1f)) * 20f);
         PlayerPrefs.SetFloat("MasterVolume", value);
     }
 
     public void SetMusicVolume(float value)
     {
-        mixer.SetFloat("MyExposedParam 1", Mathf.Log10(value) * 20);
+        mixer.SetFloat("MyExposedParam 1", Mathf.Log10(Mathf.Clamp(value, minVolume, 1f)) * 20f);
         PlayerPrefs.SetFloat("MusicVolume", value);
     }
 
     public void SetSFXVolume(float value)
     {
-        mixer.SetFloat("MyExposedParam 2", Mathf.Log10(value) * 20);
+        mixer.SetFloat("MyExposedParam 2", Mathf.Log10(Mathf.Clamp(value, minVolume, 1f)) * 20f);
         PlayerPrefs.SetFloat("SFXVolume", value);
     }
 }

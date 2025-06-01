@@ -22,7 +22,7 @@ namespace Cainos.LucidEditor.Experimental
         {
             size = position;
             size.height = EditorGUIUtility.singleLineHeight;
-            PopupWindow.Show(position, this);
+            UnityEditor.PopupWindow.Show(position, this);
         }
 
         public override void OnGUI(Rect rect)

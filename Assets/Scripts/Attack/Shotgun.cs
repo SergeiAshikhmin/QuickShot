@@ -8,27 +8,31 @@ public class Shotgun : MonoBehaviour, IAmmoWeapon
     public Transform firePoint;
 
     [Header("Settings")]
-    public float shootForce = 16f;         // Slightly lower force than pistol
-    public float shootCooldown = 0.6f;     // Slower fire rate
-    public float pushbackForce = 5f;       // Stronger pushback for shotgun
-    public int pelletCount = 4;            // Number of pellets per shot
-    public float spreadAngle = 15f;        // Total spread angle in degrees
+    public float shootForce = 16f;
+    public float shootCooldown = 0.6f;
+    public float pushbackForce = 5f;
+    public int pelletCount = 4;
+    public float spreadAngle = 15f;
 
     [Header("Ammo")]
-    public int maxAmmo = 6;                // Total shells in the magazine
-    public float reloadTimePerPellet = 0.7f; // Time to load one pellet
+    public int maxAmmo = 6;
+    public float reloadTimePerPellet = 0.7f;
     private int _ammo;
     private bool _isReloading = false;
     private bool _isOutOfAmmo = false;
 
-    // For HUD/other scripts
+    // HUD Interface
     public bool isReloading => _isReloading;
     public bool isOutOfAmmo => _isOutOfAmmo;
-
-    // IAmmoWeapon interface
     public int CurrentAmmo => _ammo;
     public int MaxAmmo => maxAmmo;
     public bool ShowAmmo => true;
+
+    [Header("Audio")]
+    public AudioClip fireSound;
+    public AudioClip reloadShellSound;
+    public AudioClip reloadReadySound;
+    public AudioSource audioSource; // Assign in Inspector
 
     private Rigidbody2D playerRB;
     private float lastShotTime;
@@ -42,12 +46,9 @@ public class Shotgun : MonoBehaviour, IAmmoWeapon
 
     void Update()
     {
-        // Block input if paused (stops firing or reloading on pause)
-        if (Time.timeScale == 0f)
-            return;
+        if (Time.timeScale == 0f) return;
 
-        if (playerRB == null)
-            FindPlayerRB();
+        if (playerRB == null) FindPlayerRB();
 
         Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         Vector2 direction = mousePos - transform.position;
@@ -60,11 +61,9 @@ public class Shotgun : MonoBehaviour, IAmmoWeapon
 
         _isOutOfAmmo = (_ammo == 0);
 
-        // Don't allow shooting while reloading
         if (_isReloading)
         {
-            // Allow interrupting reload with fire button (classic pump shotgun style)
-            if (Input.GetMouseButtonDown(0) && _ammo > 0 && Time.time >= lastShotTime + shootCooldown)
+            if (Input.GetMouseButtonDown(0) && _ammo >= pelletCount && Time.time >= lastShotTime + shootCooldown)
             {
                 StopCoroutine(reloadRoutine);
                 _isReloading = false;
@@ -74,26 +73,16 @@ public class Shotgun : MonoBehaviour, IAmmoWeapon
             return;
         }
 
-        // Automatic reload if empty or not full and reload requested (could be triggered with 'R')
-        if ((_isOutOfAmmo || (Input.GetKeyDown(KeyCode.R) && _ammo < maxAmmo)) && !_isReloading)
-        {
-            reloadRoutine = StartCoroutine(ReloadOneByOne());
-            return;
-        }
-
-        // Fire if enough ammo for a shot
-        if (Input.GetMouseButtonDown(0) && Time.time >= lastShotTime + shootCooldown && _ammo > 0)
+        if (Input.GetMouseButtonDown(0) && Time.time >= lastShotTime + shootCooldown && _ammo >= pelletCount)
         {
             Shoot();
             lastShotTime = Time.time;
-            if (_ammo == 0 && !_isReloading)
-                reloadRoutine = StartCoroutine(ReloadOneByOne());
         }
     }
 
     void Shoot()
     {
-        int pelletsToFire = Mathf.Min(pelletCount, _ammo); // Don't fire more than you have
+        int pelletsToFire = Mathf.Min(pelletCount, _ammo);
         float startAngle = -spreadAngle / 2f;
         float angleStep = (pelletCount > 1) ? (spreadAngle / (pelletCount - 1)) : 0f;
 
@@ -115,24 +104,48 @@ public class Shotgun : MonoBehaviour, IAmmoWeapon
             Destroy(flash, 0.1f);
         }
 
+        if (audioSource != null && fireSound != null)
+            audioSource.PlayOneShot(fireSound);
+
         if (playerRB != null)
         {
             Vector2 pushDirection = -firePoint.right.normalized;
             playerRB.AddForce(pushDirection * pushbackForce, ForceMode2D.Impulse);
+        }
+
+        // Always reload immediately after shooting
+        if (!_isReloading && _ammo < maxAmmo)
+        {
+            reloadRoutine = StartCoroutine(ReloadOneByOne());
         }
     }
 
     private System.Collections.IEnumerator ReloadOneByOne()
     {
         _isReloading = true;
+        int lastReadyThreshold = Mathf.FloorToInt(_ammo / (float)pelletCount); // Track last multiple
+
         while (_ammo < maxAmmo)
         {
             yield return new WaitForSeconds(reloadTimePerPellet);
             _ammo++;
-            // Early exit if player tries to shoot mid-reload
-            if (Input.GetMouseButtonDown(0))
+
+            if (audioSource != null && reloadShellSound != null)
+                audioSource.PlayOneShot(reloadShellSound);
+
+            int currentReadyThreshold = Mathf.FloorToInt(_ammo / (float)pelletCount);
+            if (currentReadyThreshold > lastReadyThreshold)
+            {
+                if (audioSource != null && reloadReadySound != null)
+                    audioSource.PlayOneShot(reloadReadySound);
+                lastReadyThreshold = currentReadyThreshold;
+            }
+
+            // Allow player to shoot once ready
+            if (Input.GetMouseButtonDown(0) && _ammo >= pelletCount)
                 break;
         }
+
         _isReloading = false;
     }
 

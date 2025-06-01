@@ -177,6 +177,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   deathEffectPrefab: {fileID: 6192724089161036641, guid: e17d9a3f04750764c8c0a7a0461e4c3b, type: 3}
+  killRadius: 1.5
+  pulseDuration: 0.1
+  pulsePrefab: {fileID: 5071945518999602378, guid: 65451470465e797448d4a71b87de2068, type: 3}
+  audioSource: {fileID: 0}
+  deathSound: {fileID: 8300000, guid: cd3156b08f2bcb04cb9e4afcde7fbd70, type: 3}
 --- !u!114 &3539923579644465020
 MonoBehaviour:
   m_ObjectHideFlags: 0

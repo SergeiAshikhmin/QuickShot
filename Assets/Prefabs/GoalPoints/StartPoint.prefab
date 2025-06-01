@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 8819524181803056861}
   - component: {fileID: 8263063695693955187}
   - component: {fileID: 72459595677473589}
+  - component: {fileID: 6795771780916830509}
   m_Layer: 0
   m_Name: StartPoint
   m_TagString: Untagged
@@ -97,6 +98,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b742e3d6b76b7324eb3c0b9335a01245, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  inactiveSprite: {fileID: 0}
-  activeSprite: {fileID: 0}
   playerPrefab: {fileID: 2673545980724216996, guid: a773b19ea596f4d09bb4b9e1b00e9d17, type: 3}
+--- !u!95 &6795771780916830509
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8475772216160920909}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: f9410d8f6a86c684ea69b6619e0ddb6b, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0

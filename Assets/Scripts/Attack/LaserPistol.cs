@@ -11,7 +11,7 @@ public class LaserPistol : MonoBehaviour
     [Header("Charge Settings")]
     public float maxCharge = 100f;
     public float chargePerShot = 20f;
-    public float rechargeRate = 2f; // % per second
+    public float rechargeRate = 2f;
     public float overheatCooldown = 10f;
 
     [Header("Shoot Settings")]
@@ -19,13 +19,18 @@ public class LaserPistol : MonoBehaviour
     public float shootCooldown = 0.25f;
     public float pushbackForce = 2f;
 
+    [Header("Audio")]
+    public AudioSource audioSource;
+    public AudioClip fireSound;
+    public AudioClip overheatSound;
+    public AudioClip cooldownTickSound;
+
     private float _currentCharge;
     private bool _isOverheated = false;
     private float _lastShotTime;
     private float _overheatStartTime;
 
     private Rigidbody2D _playerRB;
-    private Coroutine _overheatRoutine;
     private SpriteRenderer _sprite;
 
     void Awake()
@@ -65,7 +70,6 @@ public class LaserPistol : MonoBehaviour
         }
         else
         {
-            // Not enough charge = overheat!
             StartCoroutine(CheckOverheat());
         }
     }
@@ -82,6 +86,9 @@ public class LaserPistol : MonoBehaviour
             Destroy(flash, 0.1f);
         }
 
+        if (audioSource != null && fireSound != null)
+            audioSource.PlayOneShot(fireSound);
+
         if (_playerRB != null)
         {
             Vector2 pushDirection = -firePoint.right.normalized;
@@ -96,21 +103,26 @@ public class LaserPistol : MonoBehaviour
         _isOverheated = true;
         _overheatStartTime = Time.time;
 
+        if (audioSource != null && overheatSound != null)
+            audioSource.PlayOneShot(overheatSound);
+
         float timer = 0f;
         while (timer < overheatCooldown)
         {
             BlinkRed(timer);
+
+            if (audioSource != null && cooldownTickSound != null)
+                audioSource.PlayOneShot(cooldownTickSound);
+
             timer += 0.2f;
             yield return new WaitForSeconds(0.2f);
         }
 
         _isOverheated = false;
 
-        // Reset color to normal after overheat
         if (_sprite)
             _sprite.color = Color.white;
 
-        // Ensure enough charge for one shot after cooldown
         _currentCharge = Mathf.Max(_currentCharge, chargePerShot);
     }
 
@@ -154,7 +166,7 @@ public class LaserPistol : MonoBehaviour
         }
     }
 
-    // Public properties for UI access
+    // Public properties for UI
     public float CurrentCharge => _currentCharge;
     public bool IsOverheated => _isOverheated;
     public float OverheatCooldownRemaining => Mathf.Max(0f, overheatCooldown - (Time.time - _overheatStartTime));

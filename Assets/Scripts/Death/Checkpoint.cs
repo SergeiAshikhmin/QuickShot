@@ -1,17 +1,15 @@
 using UnityEngine;
 using System.Collections.Generic;
 
+[RequireComponent(typeof(Animator))]
 public class Checkpoint : MonoBehaviour
 {
     public static Checkpoint activeCheckpoint = null;
 
-    [Header("Visuals")]
-    public Sprite inactiveSprite;
-    public Sprite activeSprite;
-
     [Header("Player Respawn")]
     public GameObject playerPrefab;
 
+    private Animator anim;
     private SpriteRenderer sr;
 
     // Internal saved scene snapshot
@@ -19,6 +17,7 @@ public class Checkpoint : MonoBehaviour
 
     void Awake()
     {
+        anim = GetComponent<Animator>();
         sr = GetComponent<SpriteRenderer>();
         SetActive(false);
     }
@@ -43,8 +42,8 @@ public class Checkpoint : MonoBehaviour
 
     private void SetActive(bool isActive)
     {
-        if (sr != null)
-            sr.sprite = isActive ? activeSprite : inactiveSprite;
+        if (anim != null)
+            anim.SetBool("IsActive", isActive);
     }
 
     public void SpawnPlayer()
@@ -91,13 +90,11 @@ public class Checkpoint : MonoBehaviour
 
     private void RestoreSceneState()
     {
-        // Destroy existing saveable objects
         foreach (var obj in FindObjectsOfType<SceneSaveable>())
         {
             Destroy(obj.gameObject);
         }
 
-        // Respawn from saved state
         foreach (var saved in savedSceneState)
         {
             Instantiate(saved.prefab, saved.position, saved.rotation);
@@ -106,7 +103,6 @@ public class Checkpoint : MonoBehaviour
         Debug.Log($"[Checkpoint] Restored {savedSceneState.Count} scene objects.");
     }
 
-    // Serializable structure for saved object data
     private class SavedObjectData
     {
         public GameObject prefab;
