@@ -36,6 +36,13 @@ public class BotEnemyAI : MonoBehaviour
     public GameObject warningSignPrefab;
     public float alertYOffset = 1.5f;
 
+    [Header("Audio")]
+    public AudioClip hitSound;
+    public AudioClip fireSound;
+    public AudioClip deathSound;
+    public AudioClip detectionSound;
+    public AudioSource audioSource; // Optional, can be assigned in Inspector
+
     private Animator animator;
     private Vector2 startPoint;
     private int direction = 1;
@@ -85,6 +92,9 @@ public class BotEnemyAI : MonoBehaviour
         {
             hasAlerted = true;
             ShowWarningAlert();
+
+            // ✅ Play detection sound
+            PlaySound(detectionSound);
         }
 
         if (!detected && hasAlerted)
@@ -146,7 +156,6 @@ public class BotEnemyAI : MonoBehaviour
         if (hit.collider)
         {
             rb.velocity = new Vector2(direction * patrolSpeed, 0);
-
             if (sr != null)
                 sr.flipX = (direction < 0);
 
@@ -189,6 +198,9 @@ public class BotEnemyAI : MonoBehaviour
                 if (rb2d != null)
                     rb2d.velocity = dir * bulletSpeed;
             }
+
+            // ✅ Play fire sound
+            PlaySound(fireSound);
         }
     }
 
@@ -215,6 +227,9 @@ public class BotEnemyAI : MonoBehaviour
     {
         currentHealth -= amount;
         Debug.Log($"{name} took damage! Health is now {currentHealth}");
+
+        // ✅ Play hit sound
+        PlaySound(hitSound);
 
         if (hitEffectSprite != null)
         {
@@ -247,10 +262,15 @@ public class BotEnemyAI : MonoBehaviour
     void Die(Vector2 impactPoint)
     {
         Debug.Log($"{name} died! Spawning impact effect.");
+
+        // ✅ Play death sound
+        PlaySound(deathSound);
+
         if (impactPrefab)
         {
             Instantiate(impactPrefab, impactPoint, Quaternion.identity);
         }
+
         Destroy(gameObject);
     }
 
@@ -274,6 +294,16 @@ public class BotEnemyAI : MonoBehaviour
 
             yield return null;
         }
+    }
+
+    void PlaySound(AudioClip clip)
+    {
+        if (clip == null) return;
+
+        if (audioSource != null)
+            audioSource.PlayOneShot(clip);
+        else
+            AudioSource.PlayClipAtPoint(clip, transform.position);
     }
 
     void OnDrawGizmosSelected()

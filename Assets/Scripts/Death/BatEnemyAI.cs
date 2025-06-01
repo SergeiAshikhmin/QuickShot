@@ -43,6 +43,13 @@ public class BatEnemyAI : MonoBehaviour
     public GameObject warningSignPrefab;
     public float alertYOffset = 1.5f;
 
+    [Header("Audio")]
+    public AudioClip detectedSound;
+    public AudioClip hitSound;
+    public AudioClip attackSound;
+    public AudioClip deathSound;
+    public AudioSource audioSource;
+
     private int currentHealth;
     private Animator animator;
     private Vector2 startPoint;
@@ -104,6 +111,7 @@ public class BatEnemyAI : MonoBehaviour
         {
             hasAlerted = true;
             ShowWarningAlert();
+            PlaySound(detectedSound);
         }
 
         if (!isNowDetected && hasAlerted)
@@ -225,6 +233,7 @@ public class BatEnemyAI : MonoBehaviour
             {
                 lastAttackTime = Time.time;
                 isAttacking = true;
+                PlaySound(attackSound);
                 StartCoroutine(ResetAttackStateAndCollider());
             }
         }
@@ -310,6 +319,8 @@ public class BatEnemyAI : MonoBehaviour
 
     void HandleHit(Vector2 impactPoint)
     {
+        PlaySound(hitSound);
+
         if (hitEffectSprite != null)
         {
             GameObject hitObj = new GameObject("HitEffect");
@@ -329,6 +340,8 @@ public class BatEnemyAI : MonoBehaviour
 
     void Die(Vector2 impactPoint)
     {
+        PlaySound(deathSound);
+
         if (impactPrefab)
         {
             Instantiate(impactPrefab, impactPoint, Quaternion.identity);
@@ -356,6 +369,16 @@ public class BatEnemyAI : MonoBehaviour
 
             yield return null;
         }
+    }
+
+    void PlaySound(AudioClip clip)
+    {
+        if (clip == null) return;
+
+        if (audioSource != null)
+            audioSource.PlayOneShot(clip);
+        else
+            AudioSource.PlayClipAtPoint(clip, transform.position);
     }
 
     void OnDrawGizmosSelected()

@@ -10,7 +10,7 @@ public class EnemySpawner : MonoBehaviour
         public GameObject prefab;
         public int spawnThreshold = 3;
         public float spawnRateSeconds = 2f;
-        public Transform spawnPoint; // Assign manually in Inspector
+        public Transform spawnPoint;
         [HideInInspector] public List<GameObject> spawnedEnemies = new();
     }
 
@@ -29,6 +29,12 @@ public class EnemySpawner : MonoBehaviour
     public Sprite normalSprite;
     public GameObject destroyedPrefab;
     public GameObject hitEffectPrefab;
+
+    [Header("Audio")]
+    public AudioClip hitSound;
+    public AudioClip deathSound;
+    public AudioClip spawnSound;
+    public AudioSource audioSource; // Optional
 
     private SpriteRenderer sr;
     private bool isDestroyed = false;
@@ -103,6 +109,8 @@ public class EnemySpawner : MonoBehaviour
             {
                 GameObject enemy = Instantiate(type.prefab, type.spawnPoint.position, Quaternion.identity);
                 type.spawnedEnemies.Add(enemy);
+
+                PlaySound(spawnSound);
             }
 
             yield return new WaitForSeconds(type.spawnRateSeconds);
@@ -117,6 +125,8 @@ public class EnemySpawner : MonoBehaviour
             Destroy(collision.gameObject);
             hitPoints--;
 
+            PlaySound(hitSound);
+
             if (hitPoints > 0)
             {
                 if (hitEffectPrefab)
@@ -124,6 +134,7 @@ public class EnemySpawner : MonoBehaviour
             }
             else
             {
+                PlaySound(deathSound);
                 StartCoroutine(ExplodeAndDestroy());
             }
         }
@@ -148,9 +159,9 @@ public class EnemySpawner : MonoBehaviour
         {
             if (sr != null && hitPoints < maxHealth && hitPoints > 0 && !isDestroyed)
             {
-                float damageRatio = 1f - ((float)hitPoints / maxHealth); // How damaged it is
-                float t = Mathf.PingPong(Time.time * 4f, 1f); // Pulse speed is fixed and subtle
-                Color flashColor = Color.Lerp(baseColor, Color.red, t * damageRatio); // Subtle red flash scaling with damage
+                float damageRatio = 1f - ((float)hitPoints / maxHealth);
+                float t = Mathf.PingPong(Time.time * 4f, 1f);
+                Color flashColor = Color.Lerp(baseColor, Color.red, t * damageRatio);
                 sr.color = flashColor;
             }
             else if (sr != null)
@@ -160,6 +171,16 @@ public class EnemySpawner : MonoBehaviour
 
             yield return null;
         }
+    }
+
+    void PlaySound(AudioClip clip)
+    {
+        if (clip == null) return;
+
+        if (audioSource != null)
+            audioSource.PlayOneShot(clip);
+        else
+            AudioSource.PlayClipAtPoint(clip, transform.position);
     }
 
     void OnDrawGizmosSelected()
