@@ -22,6 +22,9 @@ TagManager:
   - Death
   - Weapon
   - KillEnemy
+  - Background
+  - Enemy
+  - 
   - 
   - 
   - 
@@ -46,12 +49,9 @@ TagManager:
   - name: Background
     uniqueID: 4199654069
     locked: 0
-  - name: Default
-    uniqueID: 0
-    locked: 0
   - name: Player
     uniqueID: 250717101
     locked: 0
-  - name: New Layer 2
-    uniqueID: 2454130729
+  - name: Default
+    uniqueID: 0
     locked: 0

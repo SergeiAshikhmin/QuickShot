@@ -5,6 +5,9 @@ using UnityEngine;
 
 public class Arrow : MonoBehaviour
 {
+    public LayerMask enemyLayer;
+    public int damage = 1;
+    
     private Rigidbody2D rb;
     private bool hasHit = false;
     private bool isWaitingToDespawn = false;
@@ -26,18 +29,29 @@ public class Arrow : MonoBehaviour
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
-{
-    hasHit = true;
-    rb.velocity = Vector2.zero;
-    rb.simulated = false;
-    // Remove Collider2D only
-    Collider2D col = GetComponent<Collider2D>();
-    if (col) Destroy(col);
-
-    transform.localScale = Vector3.one;
-    Destroy(gameObject, 3f);
-}
-
+    {
+        hasHit = true;
+        rb.velocity = Vector2.zero;
+        // rb.isKinematic = true;
+        rb.simulated = false;
+        
+        // transform.rotation = Quaternion.identity; // optional: reset rotation
+        transform.localScale = Vector3.one;       // this prevents sprite stretching
+        
+        // Damage enemy
+        // Check if collided object is on the Enemy layer
+        if (((1 << collision.gameObject.layer) & enemyLayer) != 0)
+        {
+            EnemyController enemy = collision.collider.GetComponent<EnemyController>();
+            if (enemy)
+            {
+                enemy.TakeDamage(damage); // Customize damage here
+                Destroy(gameObject);
+            }
+        }
+        
+        Destroy(gameObject, 3f);
+    }
 
     void OnBecameInvisible()
     {
