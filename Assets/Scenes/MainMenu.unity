@@ -122,6 +122,17 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!114 &92020279 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2936339713573789359, guid: daab1e5736f27924b869093878240a6d, type: 3}
+  m_PrefabInstance: {fileID: 2102711455}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &108905450
 GameObject:
   m_ObjectHideFlags: 0
@@ -261,6 +272,17 @@ MonoBehaviour:
   - layer: {fileID: 2102570922}
     movementMultiplier: 0.06
     initialPosition: {x: 0, y: 0}
+--- !u!114 &170396667 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1892284138169009487, guid: daab1e5736f27924b869093878240a6d, type: 3}
+  m_PrefabInstance: {fileID: 2102711455}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &199207897 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 6624385865351584829, guid: daab1e5736f27924b869093878240a6d, type: 3}
@@ -429,6 +451,11 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 480822386}
   m_CullTransparentMesh: 1
+--- !u!1 &483245523 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6551914723352999568, guid: daab1e5736f27924b869093878240a6d, type: 3}
+  m_PrefabInstance: {fileID: 2102711455}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &520410371 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 5859759265259710050, guid: daab1e5736f27924b869093878240a6d, type: 3}
@@ -999,15 +1026,18 @@ MonoBehaviour:
   weaponsPanel: {fileID: 1478787444}
   optionsPanel: {fileID: 2075105307}
   quitConfirmPanel: {fileID: 1925415539}
+  skinPanel: {fileID: 483245523}
   levelSelectButton: {fileID: 1532843726}
   weaponsButton: {fileID: 520410371}
   optionsButton: {fileID: 199207897}
+  skinButton: {fileID: 92020279}
   quitButton: {fileID: 1893825916}
   yesQuitButton: {fileID: 263809075}
   noQuitButton: {fileID: 639631379}
   backLevelSelectButton: {fileID: 2127097143}
   backWeaponsButton: {fileID: 1702081261}
   backOptionsButton: {fileID: 240663348}
+  backSkinButton: {fileID: 170396667}
   ammoCounter: {fileID: 1201194714}
   reloadSpinner: {fileID: 816317734}
   reloadText: {fileID: 906220469}
@@ -1285,7 +1315,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3053104031249499666, guid: daab1e5736f27924b869093878240a6d, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 184.99995
+      value: 112
       objectReference: {fileID: 0}
     - target: {fileID: 4048530697739848586, guid: daab1e5736f27924b869093878240a6d, type: 3}
       propertyPath: m_IsActive
@@ -1297,7 +1327,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4235571950805075999, guid: daab1e5736f27924b869093878240a6d, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5081172865273880126, guid: daab1e5736f27924b869093878240a6d, type: 3}
       propertyPath: m_AnchorMax.y
@@ -1430,6 +1460,10 @@ PrefabInstance:
     - target: {fileID: 8787644987181606850, guid: daab1e5736f27924b869093878240a6d, type: 3}
       propertyPath: m_IsActive
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 9092584752722559643, guid: daab1e5736f27924b869093878240a6d, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -819.0001
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 7330771944193649223, guid: daab1e5736f27924b869093878240a6d, type: 3}

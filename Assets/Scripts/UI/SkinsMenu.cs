@@ -55,6 +55,7 @@ public class SkinsMenu : MonoBehaviour
     /// <summary>
     /// Builds the expected override-controller name ("Player_Override_<skinID>"),
     /// finds it in the list, and assigns it to the player's Animator.
+    /// Also saves the applied skin to PlayerPrefs.
     /// </summary>
     private void ApplySkinToPlayer(string skinID, GameObject player)
     {
@@ -80,6 +81,11 @@ public class SkinsMenu : MonoBehaviour
 
         anim.runtimeAnimatorController = overrideController;
         lastEquippedSkin = skinID;
+
+        // Save again here to ensure it's saved no matter what
+        PlayerPrefs.SetString("SelectedSkin", skinID);
+        PlayerPrefs.Save();
+
         Debug.Log($"[SkinsMenu] Applied skin: {skinID}");
     }
 }

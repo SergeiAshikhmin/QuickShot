@@ -37,6 +37,7 @@ public class AdvancedPlayerMovement : MonoBehaviour
 
     [Header("Animator")]
     private Animator animator;
+    private string lastSkinApplied = "";
 
     [Header("Weapon")]
     public Transform weaponTransform;
@@ -85,17 +86,33 @@ public class AdvancedPlayerMovement : MonoBehaviour
         // ✅ Weapon flip compensation + mouse aim
         if (weaponTransform != null)
         {
-            // 1. Aim at mouse
             Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             Vector2 aimDir = mousePos - weaponTransform.position;
             float angle = Mathf.Atan2(aimDir.y, aimDir.x) * Mathf.Rad2Deg;
             weaponTransform.rotation = Quaternion.Euler(0f, 0f, angle);
 
-            // 2. Flip weapon back if player is flipped
             Vector3 ws = weaponTransform.localScale;
             ws.x = (transform.localScale.x < 0) ? -1f : 1f;
-            ws.y = 1f; // ensure upright
+            ws.y = 1f;
             weaponTransform.localScale = ws;
+        }
+
+        // ✅ Constantly check and apply selected skin
+        string currentSkin = PlayerPrefs.GetString("SelectedSkin", "Pink");
+        if (currentSkin != lastSkinApplied)
+        {
+            string overrideName = $"Player_Override_{currentSkin}";
+            var allOverrides = Resources.FindObjectsOfTypeAll<AnimatorOverrideController>();
+            foreach (var ovr in allOverrides)
+            {
+                if (ovr.name == overrideName)
+                {
+                    animator.runtimeAnimatorController = ovr;
+                    lastSkinApplied = currentSkin;
+                    Debug.Log($"[AdvancedPlayerMovement] Applied skin: {currentSkin}");
+                    break;
+                }
+            }
         }
     }
 
