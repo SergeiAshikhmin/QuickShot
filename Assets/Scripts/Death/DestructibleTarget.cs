@@ -65,27 +65,33 @@ public class DestructibleTarget : MonoBehaviour
     {
         if (impactPrefab)
             Instantiate(impactPrefab, impactPoint, Quaternion.identity);
-        
+
         Destroy(gameObject); // triggers event completion in SecondEvent
     }
 
     IEnumerator UpdateHurtFlash()
+{
+    while (true)
     {
-        while (true)
+        if (sr != null)
         {
-            if (sr != null && currentHealth < maxHealth)
+            if (currentHealth < maxHealth)
             {
                 float t = Mathf.PingPong(Time.time * 4f, 1f);
                 float damageRatio = 1f - ((float)currentHealth / maxHealth);
                 Color flashColor = Color.Lerp(baseColor, Color.red, t * damageRatio);
                 sr.color = flashColor;
             }
-            else if (sr != null)
+            else
             {
-                sr.color = baseColor;
+                // Pulse between baseColor and glow green
+                float t = Mathf.PingPong(Time.time * 2f, 1f);
+                sr.color = Color.Lerp(baseColor, new Color(0.6f, 1f, 0.6f), t); // light green
             }
-
-            yield return null;
         }
+
+        yield return null;
     }
+}
+
 }

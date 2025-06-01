@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 7440855673090429927}
   - component: {fileID: 7440855673090429926}
   - component: {fileID: 7440855673090429925}
+  - component: {fileID: 4478283416192850626}
   m_Layer: 0
   m_Name: EndPoint
   m_TagString: Untagged
@@ -74,6 +75,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   levelCompleteUI: {fileID: 5331125467903015241}
+  growDuration: 0.5
+  finalScale: {x: 1, y: 1, z: 1}
 --- !u!212 &7440855673090429925
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -126,6 +129,27 @@ SpriteRenderer:
   m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!95 &4478283416192850626
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7440855673090429924}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 0}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1001 &3057625274598380428
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -135,7 +159,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 7175689558952307397, guid: 51d59d78e6b7b3646bb1bfa6301325b2, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7175689559289114159, guid: 51d59d78e6b7b3646bb1bfa6301325b2, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
@@ -244,6 +268,11 @@ PrefabInstance:
     - target: {fileID: 7175689559992074505, guid: 51d59d78e6b7b3646bb1bfa6301325b2, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7175689560141577340, guid: 51d59d78e6b7b3646bb1bfa6301325b2, type: 3}
+      propertyPath: m_text
+      value: Nicely done! You defeated the FTP! Now, you can go back and use their
+        own weapons on them! Or, checkout another level!
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 51d59d78e6b7b3646bb1bfa6301325b2, type: 3}
