@@ -16,6 +16,7 @@ GameObject:
   - component: {fileID: 4794592601686296532}
   - component: {fileID: 3539923579644465020}
   - component: {fileID: 8091712539259090138}
+  - component: {fileID: 412493013209296370}
   m_Layer: 7
   m_Name: Player
   m_TagString: Player
@@ -129,7 +130,7 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 0.65384614, y: 1.0769231}
+    oldSize: {x: 0.68, y: 1.12}
     newSize: {x: 1, y: 1}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
@@ -181,8 +182,6 @@ MonoBehaviour:
   killRadius: 1.5
   pulseDuration: 0.1
   pulsePrefab: {fileID: 5071945518999602378, guid: 65451470465e797448d4a71b87de2068, type: 3}
-  audioSource: {fileID: 0}
-  deathSound: {fileID: 8300000, guid: cd3156b08f2bcb04cb9e4afcde7fbd70, type: 3}
 --- !u!114 &3539923579644465020
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -223,6 +222,22 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &412493013209296370
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2673545980724216996}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2b49acc744152004fbdcaf34a9452c4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  availableSkins:
+  - {fileID: 22100000, guid: c382611923dfd5e4bb0e55d3d2440c4d, type: 2}
+  - {fileID: 22100000, guid: 44c8e8d703b6e60479db2eb0ebb07e37, type: 2}
+  - {fileID: 22100000, guid: 7a6806edfd09e484c9827aac5678e311, type: 2}
 --- !u!1 &2673545981542898948
 GameObject:
   m_ObjectHideFlags: 0

@@ -10,11 +10,13 @@ public class PauseMenuManager : MonoBehaviour
     public GameObject weaponsPanel;
     public GameObject optionsPanel;
     public GameObject quitConfirmPanel;
+    public GameObject skinPanel;           
 
     public Button resumeButton;
     public Button levelSelectButton;
     public Button weaponsButton;
     public Button optionsButton;
+    public Button skinButton;
     public Button quitButton;
     public Button yesQuitButton;
     public Button noQuitButton;
@@ -23,6 +25,7 @@ public class PauseMenuManager : MonoBehaviour
     public Button backLevelSelectButton;
     public Button backWeaponsButton;
     public Button backOptionsButton;
+    public Button backSkinButton;   
 
     [Header("Ammo Counter UI")]
     public TMP_Text ammoCounter;
@@ -48,6 +51,7 @@ public class PauseMenuManager : MonoBehaviour
         weaponsPanel.SetActive(false);
         optionsPanel.SetActive(false);
         quitConfirmPanel.SetActive(false);
+        skinPanel.SetActive(false);  
         pausePanel.SetActive(false);
 
         if (ammoCounter != null) ammoCounter.gameObject.SetActive(false);
@@ -61,6 +65,7 @@ public class PauseMenuManager : MonoBehaviour
         levelSelectButton.onClick.AddListener(OpenLevelSelect);
         weaponsButton.onClick.AddListener(OpenWeapons);
         optionsButton.onClick.AddListener(OpenOptions);
+        skinButton.onClick.AddListener(OpenSkinPanel);
         quitButton.onClick.AddListener(OpenQuitConfirm);
         yesQuitButton.onClick.AddListener(OnQuitConfirmed);
         noQuitButton.onClick.AddListener(CloseQuitConfirm);
@@ -68,6 +73,7 @@ public class PauseMenuManager : MonoBehaviour
         if (backLevelSelectButton) backLevelSelectButton.onClick.AddListener(CloseLevelSelectPanel);
         if (backWeaponsButton) backWeaponsButton.onClick.AddListener(CloseWeaponsPanel);
         if (backOptionsButton) backOptionsButton.onClick.AddListener(CloseOptionsPanel);
+        if (backSkinButton != null)        backSkinButton.onClick.AddListener(CloseSkinPanel);
     }
 
     void Update()
@@ -135,6 +141,13 @@ public class PauseMenuManager : MonoBehaviour
         SetPauseButtonsInteractable(false);
     }
 
+    void OpenSkinPanel()      
+    {
+        CloseAllSubmenus();
+        skinPanel.SetActive(true);
+        SetPauseButtonsInteractable(false);
+    }
+
     void OpenQuitConfirm()
     {
         quitConfirmPanel.SetActive(true);
@@ -156,6 +169,7 @@ public class PauseMenuManager : MonoBehaviour
         levelSelectPanel.SetActive(false);
         weaponsPanel.SetActive(false);
         optionsPanel.SetActive(false);
+        skinPanel.SetActive(false);
         quitConfirmPanel.SetActive(false);
         if (pausePanel.activeSelf) SetPauseButtonsInteractable(true);
     }
@@ -178,6 +192,12 @@ public class PauseMenuManager : MonoBehaviour
         if (pausePanel.activeSelf) SetPauseButtonsInteractable(true);
     }
 
+    void CloseSkinPanel()     
+    {
+        skinPanel.SetActive(false);
+        if (pausePanel.activeSelf) SetPauseButtonsInteractable(true);
+    }
+
     void CloseQuitConfirmPanel()
     {
         quitConfirmPanel.SetActive(false);
@@ -190,6 +210,7 @@ public class PauseMenuManager : MonoBehaviour
         levelSelectButton.interactable = interactable;
         weaponsButton.interactable = interactable;
         optionsButton.interactable = interactable;
+        skinButton.interactable = interactable;
         quitButton.interactable = interactable;
     }
 
