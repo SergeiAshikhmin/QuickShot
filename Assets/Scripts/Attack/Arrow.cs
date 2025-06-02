@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Enemy;
 using UnityEngine;
 
 public class Arrow : MonoBehaviour
@@ -10,7 +11,7 @@ public class Arrow : MonoBehaviour
     
     private Rigidbody2D rb;
     private bool hasHit = false;
-    private bool isWaitingToDespawn = false;
+    public float stickTime = 3f; 
 
     private void Awake()
     {
@@ -20,6 +21,8 @@ public class Arrow : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (hasHit) return;
+        
         // Only rotate if the arrow is moving
         if (rb.velocity.sqrMagnitude > 0.01f)
         {
@@ -30,39 +33,27 @@ public class Arrow : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
+        if (hasHit) return;               // ignore ricochets
         hasHit = true;
-        rb.velocity = Vector2.zero;
-        // rb.isKinematic = true;
-        rb.simulated = false;
-        
-        // transform.rotation = Quaternion.identity; // optional: reset rotation
-        transform.localScale = Vector3.one;       // this prevents sprite stretching
-        
-        // Damage enemy
-        // Check if collided object is on the Enemy layer
-        if (((1 << collision.gameObject.layer) & enemyLayer) != 0)
+
+        if (collision.collider.TryGetComponent(out IDamageable target))
         {
-            EnemyController enemy = collision.collider.GetComponent<EnemyController>();
-            if (enemy)
-            {
-                enemy.TakeDamage(damage); // Customize damage here
-                Destroy(gameObject);
-            }
+            target.TakeDamage(damage);
+            Destroy(gameObject);
+            return;
         }
-        
-        Destroy(gameObject, 3f);
+
+        // 2. Otherwise stick in whatever we hit (ground, wall, etc.)
+        rb.velocity  = Vector2.zero;
+        rb.simulated = false;
+        transform.localScale = Vector3.one;   // avoid weird stretch if it hit on a diagonal
+
+        Destroy(gameObject, stickTime);       // fall back despawn
     }
 
     void OnBecameInvisible()
     {
-        if (isWaitingToDespawn) return;
-        
-        isWaitingToDespawn = true;
-        Invoke(nameof(SelfDestruct), 3f);
-    }
-
-    void SelfDestruct()
-    {
-        Destroy(gameObject);
+        if (hasHit) return;               // already scheduled
+        Destroy(gameObject, stickTime);   // despawn after delay off-screen
     }
 }
