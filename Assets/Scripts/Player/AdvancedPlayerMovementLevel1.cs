@@ -109,10 +109,4 @@ public class AdvancedPlayerMovementLevel1 : MonoBehaviour
             rb.velocity += Vector2.up * (Physics2D.gravity.y * (fallMultiplier - 1) * lowJumpMultiplier * Time.deltaTime);
         }
     }
-    
-    void OnGUI()
-    {
-        GUI.Label(new Rect(10, 10, 300, 20), $"Velocity: {rb.velocity}");
-        GUI.Label(new Rect(10, 30, 300, 20), $"Speed: {rb.velocity.magnitude:F2}");
-    }
 }

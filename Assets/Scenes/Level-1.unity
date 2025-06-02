@@ -986,9 +986,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHealth: 3
-  <CurrentHealth>k__BackingField: 0
-  <Lives>k__BackingField: 3
-  <Coins>k__BackingField: 0
 --- !u!4 &1035755995
 Transform:
   m_ObjectHideFlags: 0

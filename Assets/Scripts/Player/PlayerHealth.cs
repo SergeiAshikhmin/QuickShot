@@ -38,7 +38,7 @@ public class PlayerHealth : MonoBehaviour
         
         // 1. camera jolt
         // CameraShake.Instance?.Shake();
-        // GameManager.Instance.DamagePlayer(amount);
+        GameManager.Instance.DamagePlayer(amount);
         
         // 2. play sound
         // if (hitClips != null && hitClips.Length > 0)
