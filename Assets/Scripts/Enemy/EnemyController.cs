@@ -1,9 +1,10 @@
 using System;
 using System.Collections;
+using Enemy;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-public class EnemyController : MonoBehaviour
+public class EnemyController : MonoBehaviour, IDamageable
 {
     [Header("References")]
     public Transform player;            // drag the Player object here (or find by tag)
