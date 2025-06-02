@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class WeaponsMenu : MonoBehaviour
 {
@@ -17,30 +18,73 @@ public class WeaponsMenu : MonoBehaviour
     public string weaponLayerName = "Weapon";  // Your layer for weapon objects
 
     private string lastEquippedWeapon = "";
+    private const string EquippedKey = "EquippedWeapon";
+    private const string TempKey = "PreviousEquippedWeapon";
+
+    void Awake()
+    {
+        HandleSceneSpecificWeaponOverride(); // Moved to Awake to execute before any Start()
+    }
 
     void OnEnable()
     {
         UpdateWeaponButtons();
-        // Only equip if a weapon is chosen and not present
         EquipIfNeeded();
     }
 
     void Update()
     {
-        // Only equip if a weapon is chosen and not present
         EquipIfNeeded();
+    }
+
+    // Handles scene-specific logic (e.g. weapon override in Level-1)
+    void HandleSceneSpecificWeaponOverride()
+    {
+        string currentScene = SceneManager.GetActiveScene().name;
+        string equipped = PlayerPrefs.GetString(EquippedKey, "Bow");
+
+        if (currentScene == "Level-1")
+        {
+            // Save current weapon if not already bow
+            if (equipped != "Bow")
+            {
+                PlayerPrefs.SetString(TempKey, equipped);
+                PlayerPrefs.SetString(EquippedKey, "Bow");
+                PlayerPrefs.Save();
+            }
+        }
+        else
+        {
+            // Restore previous weapon if stored
+            if (equipped == "Bow" && PlayerPrefs.HasKey(TempKey))
+            {
+                string previous = PlayerPrefs.GetString(TempKey);
+                PlayerPrefs.SetString(EquippedKey, previous);
+                PlayerPrefs.DeleteKey(TempKey);
+                PlayerPrefs.Save();
+            }
+        }
     }
 
     void UpdateWeaponButtons()
     {
+        string currentScene = SceneManager.GetActiveScene().name;
+        bool isLevel1 = currentScene == "Level-1";
+
         foreach (var wb in weaponButtons)
         {
-            bool unlocked = wb.weaponID == "Bow" || PlayerPrefs.GetInt("WeaponUnlocked_" + wb.weaponID, 0) == 1;
-            wb.button.gameObject.SetActive(unlocked);
+            if (isLevel1)
+            {
+                wb.button.gameObject.SetActive(wb.weaponID == "Bow");
+            }
+            else
+            {
+                bool unlocked = wb.weaponID == "Bow" || PlayerPrefs.GetInt("WeaponUnlocked_" + wb.weaponID, 0) == 1;
+                wb.button.gameObject.SetActive(unlocked);
+            }
         }
     }
 
-    // Equip if a weapon is selected in PlayerPrefs, and not present in scene
     void EquipIfNeeded()
     {
         GameObject player = GameObject.FindGameObjectWithTag(playerTag);
@@ -59,33 +103,24 @@ public class WeaponsMenu : MonoBehaviour
             }
         }
 
-        // If weapon already present, do nothing
         if (weaponPresent)
             return;
 
-        // Get the weapon from PlayerPrefs
-        string equippedWeapon = PlayerPrefs.GetString("EquippedWeapon", "");
-
-        // Only equip if there's a valid weapon ID stored
-        if (!string.IsNullOrEmpty(equippedWeapon))
-        {
-            EquipWeapon(equippedWeapon);
-        }
+        string equippedWeapon = PlayerPrefs.GetString(EquippedKey, "Bow");
+        EquipWeapon(equippedWeapon);
     }
 
-    // Called by UI buttons, or by script to equip default/PlayerPrefs weapon
     public void EquipWeapon(string weaponID)
     {
         if (string.IsNullOrEmpty(weaponID)) return;
 
-        PlayerPrefs.SetString("EquippedWeapon", weaponID);
+        PlayerPrefs.SetString(EquippedKey, weaponID);
         PlayerPrefs.Save();
         ReplaceWeaponInScene(weaponID);
         lastEquippedWeapon = weaponID;
         Debug.Log("Equipped weapon: " + weaponID);
     }
 
-    // Finds the player and replaces the current weapon child with the new one
     void ReplaceWeaponInScene(string weaponID)
     {
         GameObject player = GameObject.FindGameObjectWithTag(playerTag);
@@ -100,20 +135,17 @@ public class WeaponsMenu : MonoBehaviour
         Vector3 spawnPos = player.transform.position;
         Quaternion spawnRot = player.transform.rotation;
 
-        // Search all direct children for the current weapon (on Weapon layer)
         foreach (Transform child in player.transform)
         {
             if (child.gameObject.layer == weaponLayer)
             {
                 foundWeapon = child;
-                // Remember position/rotation for respawn
                 spawnPos = child.position;
                 spawnRot = child.rotation;
                 Destroy(child.gameObject);
             }
         }
 
-        // Find the correct weapon prefab
         GameObject prefab = weaponPrefabs.Find(p => p.name == weaponID);
         if (prefab != null)
         {
@@ -127,7 +159,6 @@ public class WeaponsMenu : MonoBehaviour
         }
     }
 
-    // Sets the layer for the GameObject and all children
     void SetLayerRecursively(GameObject obj, int layer)
     {
         obj.layer = layer;
@@ -135,7 +166,6 @@ public class WeaponsMenu : MonoBehaviour
             SetLayerRecursively(t.gameObject, layer);
     }
 
-    // Checks if the correct weapon is present as a child of the player
     bool WeaponInScene(string weaponID)
     {
         GameObject player = GameObject.FindGameObjectWithTag(playerTag);
