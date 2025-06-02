@@ -76,10 +76,10 @@ Quickshot is a time traveling adventure! Follow Quickshot as they travel the tim
 
       [Weapons](https://ranitaya-studios.itch.io/ranitayas-guns-pack-16-pixelart-guns)  
 
-      [Bow](https://nieobie.itch.io/ranged-weapon-pack)  
+      (Bow)[https://nieobie.itch.io/ranged-weapon-pack]  
 
-      [Player Character](https://free-game-assets.itch.io/free-tiny-pixel-hero-sprites-with-bow-attacks)  
+      (Player Character)[https://free-game-assets.itch.io/free-tiny-pixel-hero-sprites-with-bow-attacks]  
 
-      [Old Props](https://cainos.itch.io/pixel-art-platformer-village-props)  
-      
+      (Old Props)[https://cainos.itch.io/pixel-art-platformer-village-props]  
+
 
