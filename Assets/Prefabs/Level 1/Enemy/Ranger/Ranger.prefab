@@ -238,6 +238,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6521b08c7a2934290a85955dcd9ece42, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  attackClip: {fileID: 8300000, guid: 84e4a507ccabe472895eb2a7477b3d53, type: 3}
   player: {fileID: 0}
   enemyArrowPrefab: {fileID: 6547274378827822751, guid: 0ba95872340b24201b10716054a22592, type: 3}
   firePoint: {fileID: 4718210436673597306}

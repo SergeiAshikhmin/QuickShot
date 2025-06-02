@@ -7,6 +7,9 @@ using Random = UnityEngine.Random;
 
 public class Ranger : MonoBehaviour, IDamageable
 {
+    [Header("Audio")]
+    [SerializeField] private AudioClip attackClip;
+    
     /* ───────── Inspector ───────── */
     [Header("References")]
     public Transform  player;                 // drag in or find by tag
@@ -41,6 +44,8 @@ public class Ranger : MonoBehaviour, IDamageable
     float          lastShotTime;
     int            lastClip = -1;        
     
+    public bool isAttacking = false;
+    
     public  event Action OnEnemyDied;
 
     /* ───────── Unity ───────── */
@@ -53,7 +58,7 @@ public class Ranger : MonoBehaviour, IDamageable
         if (!player) player = GameObject.FindGameObjectWithTag("Player")?.transform;
     }
     
-    void FixedUpdate()
+    void Update()
     {
         if (!player) return;
 
@@ -80,11 +85,9 @@ public class Ranger : MonoBehaviour, IDamageable
         anim.SetBool("IsWalking", Mathf.Abs(rb.velocity.x) > 0.1f);
 
         /* 2. Shoot if in range */
-        if (dist <= stopDistance && Time.time >= lastShotTime + shootCooldown)
+        if (dist <= stopDistance && !isAttacking)
         {
-            anim.SetTrigger("Attack");        // play bow animation
-            Shoot();                          // arrow spawns instantly (or via AnimEvent; your choice)
-            lastShotTime = Time.time;
+            StartCoroutine(AttackRoutine());
         }
     }
     
@@ -102,9 +105,15 @@ public class Ranger : MonoBehaviour, IDamageable
             arrowRb.gravityScale = gravityScale;
             arrowRb.velocity     = dir * arrowSpeed + Vector2.up * upwardBoost;
         }
+        
+        if (attackClip != null)
+        {
+            audioSrc.pitch = Random.Range(0.95f, 1.05f);
+            audioSrc.PlayOneShot(attackClip);
+            audioSrc.pitch = 1f;
+        }
 
-        // optional: set arrow damage
-        // arrow.GetComponent<EnemyArrow>()?.SetDamage(damage);
+        isAttacking = false;
     }
 
     public void TakeDamage(int amt)
@@ -176,6 +185,25 @@ public class Ranger : MonoBehaviour, IDamageable
     {
         Vector2 origin = rb.position + new Vector2(facingRight ? edgeOffsetX : -edgeOffsetX, 0);
         return Physics2D.Raycast(origin, Vector2.down, ledgeCheckDepth, groundLayer);
+    }
+    
+    IEnumerator AttackRoutine()
+    {
+        isAttacking = true;
+
+        // 1. Trigger the attack animation
+        anim.SetTrigger("Attack");
+
+        // 2. Wait for your wind-up (adjust 0.3f to match your animation timing)
+        yield return new WaitForSeconds(0.3f);
+
+        // 3. Actually fire the arrow
+        Shoot();
+
+        // 4. Now wait out the full cooldown before allowing another attack
+        yield return new WaitForSeconds(shootCooldown);
+
+        isAttacking = false;
     }
 
 #if UNITY_EDITOR
