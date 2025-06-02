@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 2813133937235362995}
   - component: {fileID: 2813133937235362994}
   - component: {fileID: 2813133937235362997}
-  m_Layer: 10
+  m_Layer: 12
   m_Name: Knight
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -134,8 +134,8 @@ MonoBehaviour:
   - {fileID: 8300000, guid: b1bdb2163c68e4b97925f7e206235e72, type: 3}
   health: 3
   hitPauseDuration: 0.3
-  moveSpeed: 3
-  aggroRadius: 8
+  moveSpeed: 4
+  aggroRadius: 10
   stopDistance: 2
   edgeCheckDistance: 1
   ledgeOffsetX: 0.82

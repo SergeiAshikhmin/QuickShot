@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Enemy;
 using UnityEngine;
 
 public class Arrow : MonoBehaviour
@@ -27,15 +28,26 @@ public class Arrow : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
 {
+    if (hasHit) return;
     hasHit = true;
+
+    // Check if the object we hit implements IDamageable
+    if (collision.collider.TryGetComponent(out IDamageable damageable))
+    {
+        damageable.TakeDamage(1); // or pass your own damage variable
+    }
+
+    // Stop movement and stick the arrow
     rb.velocity = Vector2.zero;
     rb.simulated = false;
-    // Remove Collider2D only
+
+    // Optional: remove collider to avoid future collisions
     Collider2D col = GetComponent<Collider2D>();
     if (col) Destroy(col);
 
     transform.localScale = Vector3.one;
-    Destroy(gameObject, 3f);
+
+    Destroy(gameObject, 3f); // Arrow despawns after sticking
 }
 
 
