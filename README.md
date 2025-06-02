@@ -28,4 +28,17 @@ Quickshot is a time traveling adventure! Follow Quickshot as they travel the tim
 
 4. If you see a security warning, click Done, then got to System Settings -> Privacy & Security -> Scroll down to Security section -> click button "Open Anyway" right of the game name -> Enter your password -> Then the game should open automatically. If not, repeat step 3
 
-5. Enjoy!
+5. Enjoy!  
+  
+## Sources:  
+  
+  ### Music  
+    
+    - [Mad Dash - Gabe Miller](https://www.youtube.com/watch?v=kurJaAt_k7A) 
+    - [Like Perfume on a Pig - Le Matos](https://www.youtube.com/watch?v=ojXO-tNQTFw)
+    - [Hydrogen - M.O.O.N.](https://www.youtube.com/watch?v=SNE2oCZH_4k)
+    - [No Way - Christine N. Joy](https://www.youtube.com/watch?v=dEVbY478Qig)  
+      
+  ### Sound effects  
+    
+      - [MixKit](https://mixkit.co/) - Various
