@@ -6,6 +6,22 @@ Sergei Uss, Ethan Guerin, Kate Steele
   
 Quickshot is a time traveling adventure! Follow Quickshot as they travel the timelines! Find new weapons to traverse through the landscape and fight your way home!
 
+# Tips
+
+## 1. Recommended Level Order
+- There is no strict sequence—you can jump into any level at any time—but most players find this progression helpful:
+  1. **Tutorial**  
+     - Introduces core controls and mechanics.
+  2. **Medieval**  
+     - Expands on the story and gameplay learned in the Tutorial.
+  3. **Future**  
+     - The most challenging level, building on everything you’ve practiced so far.
+
+## 2. Future Level Camera & Hidden Platform
+- The camera in the Future level behaves differently: it does not follow player.
+- Because the game does not adapt to all screen resolutions or aspect ratios, one important platform can sometimes appear off-screen.
+- To progress past the first section, you must jump onto that small platform.
+
 
 ## Windows Install:
 1. Download the ZIP file
