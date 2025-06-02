@@ -5,7 +5,7 @@ using UnityEngine;
 public class Ranger : MonoBehaviour
 {
     [Header("References")]
-    public GameObject arrowPrefab;   // use the same arrow sprite as the player or a red-tinted clone
+    public GameObject enemyArrowPrefab;
     public Transform firePoint;      // empty child placed at the bow’s tip
     Transform player;                // cached on Awake
     
@@ -20,7 +20,6 @@ public class Ranger : MonoBehaviour
     void Awake()
     {
         player = GameObject.FindGameObjectWithTag("Player")?.transform;
-        Debug.Assert(player, "No player found!");
     }
     
     void Update()
@@ -56,12 +55,19 @@ public class Ranger : MonoBehaviour
 
     void Shoot(Vector2 dir)
     {
-        Debug.Log("Shooting at player");
-        var arrow = Instantiate(arrowPrefab, firePoint.position, firePoint.rotation);
-        arrow.GetComponent<Arrow>().owner = ArrowOwner.Enemy;
-        Rigidbody2D rb   = arrow.GetComponent<Rigidbody2D>();
-        rb.velocity      = dir.normalized * arrowSpeed;
-        // OPTIONAL: flip sprite depending on dir.x so enemy’s body faces the target
-        GetComponent<SpriteRenderer>().flipX = dir.x < 0;
+        GameObject arrow = Instantiate(enemyArrowPrefab, firePoint.position, firePoint.rotation);
+
+        Rigidbody2D rb = arrow.GetComponent<Rigidbody2D>();
+        rb.gravityScale = 1f;                       // <-- turn gravity back on
+
+        // add a constant upward boost so it arcs
+        Vector2 launch = dir.normalized * arrowSpeed + Vector2.up * 3f;
+        rb.velocity = launch;
+        
+        #if UNITY_EDITOR
+        Debug.DrawRay(firePoint.position, dir.normalized * 0.5f, Color.red, 0.5f);
+        #endif
     }
+    
+    
 }
