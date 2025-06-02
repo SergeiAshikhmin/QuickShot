@@ -30,34 +30,56 @@ Quickshot is a time traveling adventure! Follow Quickshot as they travel the tim
 
 5. Enjoy!  
   
-## Sources:  
+## Sources  
   
   ### Music  
     
-    [Mad Dash - Gabe Miller](https://www.youtube.com/watch?v=kurJaAt_k7A) 
-    [Like Perfume on a Pig - Le Matos](https://www.youtube.com/watch?v=ojXO-tNQTFw)
-    [Hydrogen - M.O.O.N.](https://www.youtube.com/watch?v=SNE2oCZH_4k)
+    [Mad Dash - Gabe Miller](https://www.youtube.com/watch?v=kurJaAt_k7A)  
+
+    [Like Perfume on a Pig - Le Matos](https://www.youtube.com/watch?v=ojXO-tNQTFw)  
+
+    [Hydrogen - M.O.O.N.](https://www.youtube.com/watch?v=SNE2oCZH_4k)  
+
     [No Way - Christine N. Joy](https://www.youtube.com/watch?v=dEVbY478Qig)  
+
       
   ### Assets 
     
-      [MixKit](https://mixkit.co/) - Various
-      [Truck Models](https://craftpix.net/freebies/free-truck-constructor-pixel-art/?num=1&count=44&sq=vehicles&pos=6)
-      [Combat Noises](https://heltonyan.itch.io/pixelcombat?download#google_vignette)
-      [Fire Animation](https://captainskolot.itch.io/9-fire-animation-pixelart-pixel-art-sprite-fire-spells-pack-rpg)
-      [Portal Animation](https://pixelnauta.itch.io/pixel-dimensional-portal-32x32)
-      [Snake's Authentic Gun Sounds](https://f8studios.itch.io/snakes-authentic-gun-sounds)
-      [Snake's SECOND Authentic Gun Sounds](https://f8studios.itch.io/snakes-second-authentic-gun-sounds-pack)
+      [MixKit](https://mixkit.co/) - Various  
+
+      [Truck Models](https://craftpix.net/freebies/free-truck-constructor-pixel-art/?num=1&count=44&sq=vehicles&pos=6)  
+
+      [Combat Noises](https://heltonyan.itch.io/pixelcombat?download#google_vignette)  
+
+      [Fire Animation](https://captainskolot.itch.io/9-fire-animation-pixelart-pixel-art-sprite-fire-spells-pack-rpg)  
+
+      [Portal Animation](https://pixelnauta.itch.io/pixel-dimensional-portal-32x32)  
+
+      [Snake's Authentic Gun Sounds](https://f8studios.itch.io/snakes-authentic-gun-sounds)  
+
+      [Snake's SECOND Authentic Gun Sounds](https://f8studios.itch.io/snakes-second-authentic-gun-sounds-pack)  
+
       [Space Background](https://ansimuz.itch.io/space-background)
-      [Warning Sign](https://pixyfantasystudios.itch.io/warning-sign?download)
-      [Loading Animation](https://wento.itch.io/loading-wheel-pixel-art-pack?download)
-      [City Enemies](https://craftpix.net/freebies/free-city-enemies-pixel-art-sprite-sheets/)
-      [Drone Enemy](https://craftpix.net/freebies/free-drones-pack-pixel-art/)
-      [City Background](https://free-game-assets.itch.io/free-city-backgrounds-pixel-art?download)
-      [Industrial Tiles](https://craftpix.net/freebies/free-industrial-zone-tileset-pixel-art/?srsltid=AfmBOorGsYHTKBvUpaoN-T8I6LhCXpNJNXNr2MvsPZAAZY5RYty8G0zh)
-      [Fire Effect](https://bdragon1727.itch.io/fire-pixel-bullet-16x16)
-      [Weapons](https://ranitaya-studios.itch.io/ranitayas-guns-pack-16-pixelart-guns)
-      [Bow](https://nieobie.itch.io/ranged-weapon-pack)
-      [Player Character](https://free-game-assets.itch.io/free-tiny-pixel-hero-sprites-with-bow-attacks)
-      [Old Props](https://cainos.itch.io/pixel-art-platformer-village-props)
+      [Warning Sign](https://pixyfantasystudios.itch.io/warning-sign?download)  
+
+      [Loading Animation](https://wento.itch.io/loading-wheel-pixel-art-pack?download)  
+
+      [City Enemies](https://craftpix.net/freebies/free-city-enemies-pixel-art-sprite-sheets/)  
+
+      [Drone Enemy](https://craftpix.net/freebies/free-drones-pack-pixel-art/)  
+
+      [City Background](https://free-game-assets.itch.io/free-city-backgrounds-pixel-art?download)  
+
+      [Industrial Tiles](https://craftpix.net/freebies/free-industrial-zone-tileset-pixel-art/?srsltid=AfmBOorGsYHTKBvUpaoN-T8I6LhCXpNJNXNr2MvsPZAAZY5RYty8G0zh)  
+
+      [Fire Effect](https://bdragon1727.itch.io/fire-pixel-bullet-16x16)  
+
+      [Weapons](https://ranitaya-studios.itch.io/ranitayas-guns-pack-16-pixelart-guns)  
+
+      [Bow](https://nieobie.itch.io/ranged-weapon-pack)  
+
+      [Player Character](https://free-game-assets.itch.io/free-tiny-pixel-hero-sprites-with-bow-attacks)  
+
+      [Old Props](https://cainos.itch.io/pixel-art-platformer-village-props)  
+      
 
