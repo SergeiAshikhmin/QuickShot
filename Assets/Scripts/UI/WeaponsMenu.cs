@@ -18,6 +18,13 @@ public class WeaponsMenu : MonoBehaviour
     public string weaponLayerName = "Weapon";  // Your layer for weapon objects
 
     private string lastEquippedWeapon = "";
+    private const string EquippedKey = "EquippedWeapon";
+    private const string TempKey = "PreviousEquippedWeapon";
+
+    void Awake()
+    {
+        HandleSceneSpecificWeaponOverride(); // Moved to Awake to execute before any Start()
+    }
 
     void OnEnable()
     {
@@ -30,21 +37,48 @@ public class WeaponsMenu : MonoBehaviour
         EquipIfNeeded();
     }
 
+    // Handles scene-specific logic (e.g. weapon override in Level-1)
+    void HandleSceneSpecificWeaponOverride()
+    {
+        string currentScene = SceneManager.GetActiveScene().name;
+        string equipped = PlayerPrefs.GetString(EquippedKey, "Bow");
+
+        if (currentScene == "Level-1")
+        {
+            // Save current weapon if not already bow
+            if (equipped != "Bow")
+            {
+                PlayerPrefs.SetString(TempKey, equipped);
+                PlayerPrefs.SetString(EquippedKey, "Bow");
+                PlayerPrefs.Save();
+            }
+        }
+        else
+        {
+            // Restore previous weapon if stored
+            if (equipped == "Bow" && PlayerPrefs.HasKey(TempKey))
+            {
+                string previous = PlayerPrefs.GetString(TempKey);
+                PlayerPrefs.SetString(EquippedKey, previous);
+                PlayerPrefs.DeleteKey(TempKey);
+                PlayerPrefs.Save();
+            }
+        }
+    }
+
     void UpdateWeaponButtons()
     {
         string currentScene = SceneManager.GetActiveScene().name;
-        bool isLevel1 = currentScene == "Level1";
+        bool isLevel1 = currentScene == "Level-1";
 
         foreach (var wb in weaponButtons)
         {
             if (isLevel1)
             {
-                // Only show Bow button in Level1
                 wb.button.gameObject.SetActive(wb.weaponID == "Bow");
             }
             else
             {
-                // Show unlocked weapons
                 bool unlocked = wb.weaponID == "Bow" || PlayerPrefs.GetInt("WeaponUnlocked_" + wb.weaponID, 0) == 1;
                 wb.button.gameObject.SetActive(unlocked);
             }
@@ -72,44 +106,15 @@ public class WeaponsMenu : MonoBehaviour
         if (weaponPresent)
             return;
 
-        string currentScene = SceneManager.GetActiveScene().name;
-
-        if (currentScene == "Level1")
-        {
-            // Always equip Bow in Level1 regardless of PlayerPrefs
-            EquipWeapon("Bow", force: true);
-        }
-        else
-        {
-            string equippedWeapon = PlayerPrefs.GetString("EquippedWeapon", "Bow");
-            EquipWeapon(equippedWeapon);
-        }
+        string equippedWeapon = PlayerPrefs.GetString(EquippedKey, "Bow");
+        EquipWeapon(equippedWeapon);
     }
 
     public void EquipWeapon(string weaponID)
     {
-        EquipWeapon(weaponID, force: false);
-    }
-
-    // Internal overload that supports forced override
-    private void EquipWeapon(string weaponID, bool force)
-    {
-        string currentScene = SceneManager.GetActiveScene().name;
-
-        if (currentScene == "Level1" && !force)
-        {
-            Debug.Log("Weapon change blocked: Only Bow allowed in Level1.");
-            return;
-        }
-
-        if (currentScene == "Level1")
-        {
-            weaponID = "Bow"; // Force override even if passed something else
-        }
-
         if (string.IsNullOrEmpty(weaponID)) return;
 
-        PlayerPrefs.SetString("EquippedWeapon", weaponID);
+        PlayerPrefs.SetString(EquippedKey, weaponID);
         PlayerPrefs.Save();
         ReplaceWeaponInScene(weaponID);
         lastEquippedWeapon = weaponID;
