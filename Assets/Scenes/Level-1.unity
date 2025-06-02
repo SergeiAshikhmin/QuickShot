@@ -135,7 +135,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2813133937235362993, guid: 6f7fd0b4d6e164d239db818f73f08df5, type: 3}
       propertyPath: m_RootOrder
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 2813133937235362993, guid: 6f7fd0b4d6e164d239db818f73f08df5, type: 3}
       propertyPath: m_LocalPosition.x
@@ -308,7 +308,7 @@ PrefabInstance:
       objectReference: {fileID: 8300000, guid: b1bdb2163c68e4b97925f7e206235e72, type: 3}
     - target: {fileID: 2813133937235362993, guid: 6f7fd0b4d6e164d239db818f73f08df5, type: 3}
       propertyPath: m_RootOrder
-      value: 7
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 2813133937235362993, guid: 6f7fd0b4d6e164d239db818f73f08df5, type: 3}
       propertyPath: m_LocalPosition.x
@@ -370,7 +370,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 4718210437239779760, guid: db6fe8c0088d743beb5c10575200b442, type: 3}
       propertyPath: m_RootOrder
-      value: 3
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 4718210437239779760, guid: db6fe8c0088d743beb5c10575200b442, type: 3}
       propertyPath: m_LocalPosition.x
@@ -427,7 +427,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2813133937235362993, guid: 6f7fd0b4d6e164d239db818f73f08df5, type: 3}
       propertyPath: m_RootOrder
-      value: 5
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 2813133937235362993, guid: 6f7fd0b4d6e164d239db818f73f08df5, type: 3}
       propertyPath: m_LocalPosition.x
@@ -508,7 +508,7 @@ Transform:
   - {fileID: 895747165}
   - {fileID: 1043030972}
   m_Father: {fileID: 0}
-  m_RootOrder: 11
+  m_RootOrder: 13
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &465521204
 GameObject:
@@ -543,7 +543,7 @@ Transform:
   - {fileID: 701624872}
   - {fileID: 1564241453}
   m_Father: {fileID: 0}
-  m_RootOrder: 16
+  m_RootOrder: 17
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &465521206
 MonoBehaviour:
@@ -562,6 +562,70 @@ MonoBehaviour:
   rightEnemyPrefab: {fileID: 2813133937235363005, guid: 6f7fd0b4d6e164d239db818f73f08df5, type: 3}
   leftSpawnPoint: {fileID: 701624872}
   rightSpawnPoint: {fileID: 1564241453}
+--- !u!1001 &474414634
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 5331125468819550192, guid: b8758683c2fdad84c8c73cb7ef6ba768, type: 3}
+      propertyPath: m_text
+      value: "You step through the glowing red portal. A flash of light surrounds
+        you, and suddenly the world blurs into streaks of color. When it clears,
+        you\u2019re back in your own time, the broken bits of your ship repaired
+        and whirring. You made it\u2014level complete!"
+      objectReference: {fileID: 0}
+    - target: {fileID: 7440855673090429912, guid: b8758683c2fdad84c8c73cb7ef6ba768, type: 3}
+      propertyPath: m_RootOrder
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7440855673090429912, guid: b8758683c2fdad84c8c73cb7ef6ba768, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 169.61
+      objectReference: {fileID: 0}
+    - target: {fileID: 7440855673090429912, guid: b8758683c2fdad84c8c73cb7ef6ba768, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 9.285454
+      objectReference: {fileID: 0}
+    - target: {fileID: 7440855673090429912, guid: b8758683c2fdad84c8c73cb7ef6ba768, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -0.12162763
+      objectReference: {fileID: 0}
+    - target: {fileID: 7440855673090429912, guid: b8758683c2fdad84c8c73cb7ef6ba768, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7440855673090429912, guid: b8758683c2fdad84c8c73cb7ef6ba768, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7440855673090429912, guid: b8758683c2fdad84c8c73cb7ef6ba768, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7440855673090429912, guid: b8758683c2fdad84c8c73cb7ef6ba768, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7440855673090429912, guid: b8758683c2fdad84c8c73cb7ef6ba768, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7440855673090429912, guid: b8758683c2fdad84c8c73cb7ef6ba768, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7440855673090429912, guid: b8758683c2fdad84c8c73cb7ef6ba768, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7440855673090429924, guid: b8758683c2fdad84c8c73cb7ef6ba768, type: 3}
+      propertyPath: m_Name
+      value: EndPoint
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: b8758683c2fdad84c8c73cb7ef6ba768, type: 3}
 --- !u!1 &513733495 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 2673545980724216996, guid: a773b19ea596f4d09bb4b9e1b00e9d17, type: 3}
@@ -746,7 +810,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2813133937235362993, guid: 6f7fd0b4d6e164d239db818f73f08df5, type: 3}
       propertyPath: m_RootOrder
-      value: 6
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 2813133937235362993, guid: 6f7fd0b4d6e164d239db818f73f08df5, type: 3}
       propertyPath: m_LocalPosition.x
@@ -807,7 +871,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2673545980724217016, guid: a773b19ea596f4d09bb4b9e1b00e9d17, type: 3}
       propertyPath: m_RootOrder
-      value: 8
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 2673545980724217016, guid: a773b19ea596f4d09bb4b9e1b00e9d17, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1153,7 +1217,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 95565c8aafbb24b08ae81dd8adb9ab48, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 4
+  maxHealth: 6
 --- !u!4 &1035755995
 Transform:
   m_ObjectHideFlags: 0
@@ -1167,7 +1231,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 12
+  m_RootOrder: 14
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1043030969
 GameObject:
@@ -1376,7 +1440,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 14
+  m_RootOrder: 16
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1102598861
 PrefabInstance:
@@ -1387,7 +1451,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 4718210437239779760, guid: db6fe8c0088d743beb5c10575200b442, type: 3}
       propertyPath: m_RootOrder
-      value: 4
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 4718210437239779760, guid: db6fe8c0088d743beb5c10575200b442, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1479,7 +1543,7 @@ Transform:
   - {fileID: 868041921}
   - {fileID: 218927792}
   m_Father: {fileID: 0}
-  m_RootOrder: 9
+  m_RootOrder: 11
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1253913939
 MonoBehaviour:
@@ -1618,7 +1682,7 @@ PrefabInstance:
       objectReference: {fileID: 8300000, guid: f39548b04aa423e4dbdca9257d1b8145, type: 3}
     - target: {fileID: 8197935226742742159, guid: daab1e5736f27924b869093878240a6d, type: 3}
       propertyPath: m_RootOrder
-      value: 8
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 8197935226742742159, guid: daab1e5736f27924b869093878240a6d, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1732,7 +1796,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 17
+  m_RootOrder: 18
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1402543747
 GameObject:
@@ -2068,7 +2132,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 19
+  m_RootOrder: 20
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1672200060
 GameObject:
@@ -2279,7 +2343,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2813133937235362993, guid: 6f7fd0b4d6e164d239db818f73f08df5, type: 3}
       propertyPath: m_RootOrder
-      value: 2
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 2813133937235362993, guid: 6f7fd0b4d6e164d239db818f73f08df5, type: 3}
       propertyPath: m_LocalPosition.x
@@ -2440,7 +2504,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 18
+  m_RootOrder: 19
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1944085639
 GameObject:
@@ -2553,7 +2617,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 13
+  m_RootOrder: 15
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2092499443
 GameObject:
@@ -17247,7 +17311,7 @@ PrefabInstance:
     - target: {fileID: 8323884135652395244, guid: e16e068741f5fc749b5b4c4b24c2d4c8, type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: 21300000, guid: 1ed17227c1e1be4439a5e4c9d81b507a, type: 3}
+      objectReference: {fileID: 0}
     - target: {fileID: 8323884135652395247, guid: e16e068741f5fc749b5b4c4b24c2d4c8, type: 3}
       propertyPath: m_AnchoredPosition.x
       value: -50
@@ -17270,7 +17334,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8323884136166519160, guid: e16e068741f5fc749b5b4c4b24c2d4c8, type: 3}
       propertyPath: m_RootOrder
-      value: 13
+      value: 12
       objectReference: {fileID: 0}
     - target: {fileID: 8323884136166519160, guid: e16e068741f5fc749b5b4c4b24c2d4c8, type: 3}
       propertyPath: m_AnchorMax.x
@@ -17354,8 +17418,14 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8323884136767049169, guid: e16e068741f5fc749b5b4c4b24c2d4c8, type: 3}
       propertyPath: m_text
-      value: Here you go! Feel free to fill this in with whatever you need, also,
-        you can remove the image if you want, or put something there, its up to you!
+      value: "You wake up in a dark forest next to your broken time-travel ship.
+        Armored knights roam the dirt roads, and a castle stands ahead. At your side,
+        you find a simple bow and a few arrows\u2014your only tools for both combat
+        and getting around. You\u2019ll need to use the bow to fend off guards and
+        even shoot an arrow at the ground to propel yourself over obstacles (and
+        away from danger). Your goal: avoid or outsmart the knights, cross the drawbridge,
+        and reach a glowing red portal at the end of the path. One wrong move, and
+        you\u2019re stuck in the past. Good luck."
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e16e068741f5fc749b5b4c4b24c2d4c8, type: 3}
