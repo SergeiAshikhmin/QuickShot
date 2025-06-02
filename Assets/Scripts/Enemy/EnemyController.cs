@@ -40,11 +40,18 @@ public class EnemyController : MonoBehaviour, IDamageable
     int lastClipIndex = -1;
 
     private Animator animator;
+    
+    private bool isStunned = false;
+    private Coroutine currentStunRoutine;
 
     public event Action OnEnemyDied;
 
+    public float stuntDuration = 1.5f;
+    private float baseMoveSpeed;
+
     private void Awake()
     {
+        baseMoveSpeed = moveSpeed;
         rb = GetComponent<Rigidbody2D>();
         audioSource = GetComponent<AudioSource>();
         animator = GetComponent<Animator>();
@@ -59,7 +66,7 @@ public class EnemyController : MonoBehaviour, IDamageable
 
     private void FixedUpdate()
     {
-        if (player == null) return;
+        if (!player || isStunned) return;
 
         float distance = Vector2.Distance(transform.position, player.position);
 
@@ -87,7 +94,7 @@ public class EnemyController : MonoBehaviour, IDamageable
             if ((dir.x > 0 && !facingRight) || (dir.x < 0 && facingRight))
                 Flip();
 
-            animator.SetBool("IsWalking", false);
+            
         }
         else
         {
@@ -119,6 +126,11 @@ public class EnemyController : MonoBehaviour, IDamageable
             // Replace with your own health system
             hit.GetComponent<PlayerHealth>()?.TakeDamage(damage);
             Debug.Log("Hit " + hit.name);
+            
+            // Stun after attacking
+            // Stun after attacking
+            if (currentStunRoutine != null) StopCoroutine(currentStunRoutine);
+            currentStunRoutine = StartCoroutine(Stun(stuntDuration));
         }
         // TODO: trigger animation & sound here
     }
@@ -134,6 +146,9 @@ public class EnemyController : MonoBehaviour, IDamageable
 
         // Optional: temporarily stop movement
         StartCoroutine(HitPause(hitPauseDuration));
+
+        if (currentStunRoutine != null) StopCoroutine(currentStunRoutine);
+        currentStunRoutine = StartCoroutine(Stun(stuntDuration));
 
         if (health <= 0) Die();
     }
@@ -205,6 +220,20 @@ public class EnemyController : MonoBehaviour, IDamageable
         Vector2 origin = rb.position + new Vector2(facingRight ? ledgeOffsetX : -ledgeOffsetX, 0f);
         RaycastHit2D hit = Physics2D.Raycast(origin, Vector2.down, ledgeCheckDepth, groundLayer);
         return hit.collider != null;
+    }
+    
+    private IEnumerator Stun(float duration)
+    {
+        isStunned = true;
+        moveSpeed = 0;
+        rb.velocity = Vector2.zero;
+
+        animator.SetBool("IsWalking", false);
+
+        yield return new WaitForSeconds(duration);
+
+        moveSpeed = baseMoveSpeed;
+        isStunned = false;
     }
 
 #if UNITY_EDITOR // draws gizmos in Scene view
