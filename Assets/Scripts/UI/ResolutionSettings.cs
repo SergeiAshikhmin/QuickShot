@@ -15,6 +15,9 @@ public class ResolutionSettings : MonoBehaviour
     {
         PopulateResolutions();
         LoadPreferences();
+
+        // Listen for toggle changes in real-time
+        fullscreenToggle.onValueChanged.AddListener(OnFullscreenToggle);
     }
 
     void PopulateResolutions()
@@ -70,11 +73,11 @@ public class ResolutionSettings : MonoBehaviour
 
     public void OnFullscreenToggle(bool isFullscreen)
     {
-        // Update fullscreen state directly
-        Screen.fullScreen = isFullscreen;
         PlayerPrefs.SetInt("Fullscreen", isFullscreen ? 1 : 0);
+        PlayerPrefs.Save();
 
-        // Optionally reapply resolution to ensure correct mode
+        Screen.fullScreen = isFullscreen;
+
         int index = resolutionDropdown.value;
         if (index >= 0 && index < filteredResolutions.Count)
         {
@@ -89,6 +92,7 @@ public class ResolutionSettings : MonoBehaviour
         {
             Resolution res = filteredResolutions[index];
             Screen.SetResolution(res.width, res.height, fullscreen);
+            Screen.fullScreen = fullscreen; // force toggle enforcement
         }
     }
 }
