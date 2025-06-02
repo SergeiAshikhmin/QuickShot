@@ -51,7 +51,6 @@ public class ResolutionSettings : MonoBehaviour
         int savedIndex = PlayerPrefs.GetInt("ResolutionIndex", currentResolutionIndex);
         bool isFullscreen = PlayerPrefs.GetInt("Fullscreen", 1) == 1;
 
-        // ✅ Clamp to valid index range
         if (savedIndex < 0 || savedIndex >= filteredResolutions.Count)
             savedIndex = currentResolutionIndex;
 
@@ -71,13 +70,17 @@ public class ResolutionSettings : MonoBehaviour
 
     public void OnFullscreenToggle(bool isFullscreen)
     {
-        int index = resolutionDropdown.value;
-
-        // ✅ Check index validity
-        if (index < 0 || index >= filteredResolutions.Count) return;
-
-        ApplyResolution(index, isFullscreen);
+        // Update fullscreen state directly
+        Screen.fullScreen = isFullscreen;
         PlayerPrefs.SetInt("Fullscreen", isFullscreen ? 1 : 0);
+
+        // Optionally reapply resolution to ensure correct mode
+        int index = resolutionDropdown.value;
+        if (index >= 0 && index < filteredResolutions.Count)
+        {
+            Resolution res = filteredResolutions[index];
+            Screen.SetResolution(res.width, res.height, isFullscreen);
+        }
     }
 
     void ApplyResolution(int index, bool fullscreen)
