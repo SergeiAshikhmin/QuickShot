@@ -30,6 +30,14 @@ Quickshot is a time traveling adventure! Follow Quickshot as they travel the tim
 
 5. Enjoy!  
   
+## Controls  
+  
+    You can use the WASD keys to move, space to jump, and the mouse to aim the weapon. Clicking will fire the weapon in the direction you shoot! Last moment, a bug arose which flipped the players weapon when turn to the left. This will fire the weapon from the other end. We apologize for this, it was a last minute issue that we were unable to solve. The game still works, just not a smooth as intended.  
+    
+    Each weapon has it's own reloading mechaninc. The Pistol and Assault Rifle will reload all at once, the shotgun reloads by shell, and the laser pistol has a charge and overheat mechanic. The bow doesn't reload, but has the longest firing time. Each weapon has a different push value, use the weapons to the best of your abilities to defeat enemies and complete the platforming challenges!  
+      
+    The biggest mechanic in the game is the push. Firing your weapon will launch you in the opposite direction. Time your shots, learn how to manage your individual ammo types, and enjoy Quickshot!
+
 ## Sources  
   
   ### Music  
