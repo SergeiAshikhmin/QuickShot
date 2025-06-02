@@ -51,6 +51,8 @@ public class GameManager : MonoBehaviour
         {
            // game over
            OnPlayerDeath?.Invoke();
+           // Reset the entire game by reloading the scene
+           SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         }
     }
 
@@ -67,7 +69,7 @@ public class GameManager : MonoBehaviour
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        ResetRun();
+        // ResetRun();
     }
     
     private void OnDestroy()

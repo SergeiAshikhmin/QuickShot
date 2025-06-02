@@ -111,7 +111,7 @@ public class EnemyController : MonoBehaviour, IDamageable
     {
         // Very simple melee: damage anything in a small circle
         Collider2D hit = Physics2D.OverlapCircle(hitPoint.position, hitRadius, playerLayer);
-        if (hit != null)
+        if (hit)
         {
             animator.SetTrigger("Attack");
             PlayAttackSound();
