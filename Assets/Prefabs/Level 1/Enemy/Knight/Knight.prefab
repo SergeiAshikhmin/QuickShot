@@ -147,7 +147,7 @@ MonoBehaviour:
   playerLayer:
     serializedVersion: 2
     m_Bits: 128
-  stuntDuration: 0.75
+  stuntDuration: 0.5
 --- !u!82 &2813133937235362995
 AudioSource:
   m_ObjectHideFlags: 0

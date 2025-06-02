@@ -10,7 +10,7 @@ public class EnemyController : MonoBehaviour, IDamageable
     public LayerMask groundLayer; // for simple edge detection (optional)
 
     [Tooltip("Assign several different hit sounds; a random one plays each hit")] [SerializeField]
-    private AudioClip[] hitClips;
+    private AudioClip[] attackClips;
 
     [Header("Stats")] public int health = 3;
     public float hitPauseDuration = 0.3f;
@@ -191,15 +191,15 @@ public class EnemyController : MonoBehaviour, IDamageable
     void PlayAttackSound()
     {
         // 2. play sound
-        if (hitClips != null && hitClips.Length > 0)
+        if (attackClips != null && attackClips.Length > 0)
         {
-            int index = Random.Range(0, hitClips.Length);
+            int index = Random.Range(0, attackClips.Length);
 
             // avoid immediate repeat if you have >1 clip
-            if (hitClips.Length > 1 && index == lastClipIndex) index = (index + 1) % hitClips.Length;
+            if (attackClips.Length > 1 && index == lastClipIndex) index = (index + 1) % attackClips.Length;
 
             audioSource.pitch = Random.Range(0.95f, 1.05f); // tiny pitch scatter
-            audioSource.PlayOneShot(hitClips[index]);
+            audioSource.PlayOneShot(attackClips[index]);
             audioSource.pitch = 1f;
 
             lastClipIndex = index;
