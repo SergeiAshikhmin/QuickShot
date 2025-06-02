@@ -5,6 +5,10 @@ using UnityEngine;
 
 public class Attack : MonoBehaviour
 {
+    [Header("Audio")]
+    [SerializeField] private AudioClip attackMusicClip;
+    private AudioSource audioSource;
+    
     [Header("References")]
     public GameObject arrowPrefab;
     public Transform firePoint;
@@ -24,6 +28,9 @@ public class Attack : MonoBehaviour
     {
         // Find the player GameObject on the Player layer
         FindPlayerRB();
+        audioSource = GetComponent<AudioSource>();
+        if (!audioSource)
+            audioSource = gameObject.AddComponent<AudioSource>(); // fallback if none exists
     }
 
     void Update()
@@ -52,6 +59,13 @@ public class Attack : MonoBehaviour
 
     void Shoot()
     {
+        if (attackMusicClip != null)
+        {
+            audioSource.clip = attackMusicClip;
+            audioSource.loop = false; // or true, if you want it to keep playing
+            audioSource.Play();
+        }
+        
         // Instantiate and shoot the arrow
         GameObject arrow = Instantiate(arrowPrefab, firePoint.position, firePoint.rotation);
         Rigidbody2D rb = arrow.GetComponent<Rigidbody2D>();

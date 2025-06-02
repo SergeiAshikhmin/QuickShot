@@ -129,6 +129,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8f70180d24cc3493f930af78931a2b04, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  attackMusicClip: {fileID: 8300000, guid: 13fd282837ea44228a32e04e93c3a104, type: 3}
   arrowPrefab: {fileID: 6547274378827822751, guid: 8a591b333d7e0476dbdf1e8827a17870, type: 3}
   firePoint: {fileID: 1993399369081855698}
   shootForce: 10
